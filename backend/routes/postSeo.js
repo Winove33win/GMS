@@ -9,13 +9,29 @@ import {
 
 const router = Router();
 
-const BASE_URL = (process.env.APP_BASE_URL || 'https://winove.com.br').replace(/\/$/, '');
+const fallbackPort = Number(process.env.PORT || 3333);
+const fallbackBase = `http://localhost:${fallbackPort}`;
+const rawBase =
+  process.env.APP_BASE_URL ||
+  process.env.PUBLIC_BASE_URL ||
+  fallbackBase;
+
+let parsedBase;
+try {
+  const baseWithProtocol = rawBase.includes('://') ? rawBase : `https://${rawBase}`;
+  parsedBase = new URL(baseWithProtocol);
+} catch (_err) {
+  parsedBase = new URL(fallbackBase);
+}
+
+const parsedPath = parsedBase.pathname.replace(/\/$/, '');
+const BASE_URL = `${parsedBase.origin}${parsedPath}`.replace(/\/$/, '');
 const DEFAULT_AUTHOR = process.env.DEFAULT_POST_AUTHOR || 'Equipe Winove';
 const PUBLISHER_NAME = process.env.PUBLISHER_NAME || 'Winove';
 const PUBLISHER_LOGO =
-  process.env.PUBLISHER_LOGO || `${BASE_URL}/assets/images/logo-winove-512.png`;
+  process.env.PUBLISHER_LOGO || `${parsedBase.origin}/favicon.png`;
 const DEFAULT_SHARE_IMAGE =
-  process.env.DEFAULT_SHARE_IMAGE || 'https://www.winove.com.br/imagem-de-compartilhamento.png';
+  process.env.DEFAULT_SHARE_IMAGE || `${parsedBase.origin}/assets/images/default-share.png`;
 
 const toISODate = (value) => {
   try {

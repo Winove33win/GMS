@@ -3,7 +3,7 @@
 
   <!-- Página inicial -->
   <url>
-    <loc>https://winove.com.br/</loc>
+    <loc>https://example.com/</loc>
     <lastmod>2025-08-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -11,7 +11,7 @@
 
   <!-- Exemplo de página do blog -->
   <url>
-    <loc>https://winove.com.br/blog</loc>
+    <loc>https://example.com/blog</loc>
     <lastmod>2025-08-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

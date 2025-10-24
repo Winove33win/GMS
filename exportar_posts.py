@@ -17,7 +17,7 @@ def slug_from_link(link: str, idx: int) -> str:
 
 def fetch_posts():
     """Try to fetch posts from WordPress API; fallback to sample posts."""
-    url = "https://winove.com.br/wp-json/wp/v2/posts?per_page=100&_fields=title.rendered,link,excerpt.rendered,content.rendered,date,author"
+    url = "https://example.com/wp-json/wp/v2/posts?per_page=100&_fields=title.rendered,link,excerpt.rendered,content.rendered,date,author"
     try:
         resp = requests.get(url, timeout=10)
         resp.raise_for_status()

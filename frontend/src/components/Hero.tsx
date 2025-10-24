@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import heroBackground from "@/assets/hero-background.jpg";
 import { Link } from "react-router-dom";
 
 type HeroProps = {
@@ -14,10 +13,27 @@ export const Hero = ({ heading, subheading }: HeroProps) => {
       className="section--first px-4 pb-16 group min-h-screen relative overflow-hidden"
     >
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBackground})` }}
-      />
+      <div className="absolute inset-0 overflow-hidden">
+        <picture className="block h-full w-full" aria-hidden="true">
+          <source
+            type="image/avif"
+            srcSet="/img/hero-768.avif 768w, /img/hero-1120.avif 1120w, /img/hero-1600.avif 1600w"
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcSet="/img/hero-768.webp 768w, /img/hero-1120.webp 1120w, /img/hero-1600.webp 1600w"
+            sizes="100vw"
+          />
+          <img
+            src="/img/hero-1120.jpg"
+            alt=""
+            loading="eager"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        </picture>
+      </div>
 
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/90" />

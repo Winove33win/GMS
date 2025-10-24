@@ -5,7 +5,24 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DEFAULT_IMAGE = 'https://www.winove.com.br/imagem-de-compartilhamento.png';
+const fallbackPort = Number(process.env.PORT || 3333);
+const fallbackBase = `http://localhost:${fallbackPort}`;
+const rawBase =
+  process.env.APP_BASE_URL ||
+  process.env.PUBLIC_BASE_URL ||
+  fallbackBase;
+
+let resolvedBase;
+try {
+  const baseWithProtocol = rawBase.includes('://') ? rawBase : `https://${rawBase}`;
+  const url = new URL(baseWithProtocol);
+  resolvedBase = url.origin;
+} catch (err) {
+  resolvedBase = fallbackBase;
+}
+
+const DEFAULT_IMAGE =
+  process.env.DEFAULT_SHARE_IMAGE || `${resolvedBase}/assets/images/default-share.png`;
 
 const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const escapeHtml = (value) => String(value ?? '')

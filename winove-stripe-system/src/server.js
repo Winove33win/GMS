@@ -8,6 +8,8 @@ dotenv.config();
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const successUrl = process.env.CHECKOUT_SUCCESS_URL || 'http://localhost:3000/sucesso';
+const cancelUrl = process.env.CHECKOUT_CANCEL_URL || 'http://localhost:3000/cancelado';
 
 app.use(bodyParser.json());
 app.use('/webhook', express.raw({ type: 'application/json' }));
@@ -27,8 +29,8 @@ app.post('/create-checkout-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: 'https://winove.com.br/sucesso',
-      cancel_url: 'https://winove.com.br/cancelado',
+      success_url: successUrl,
+      cancel_url: cancelUrl,
     });
 
     res.json({ id: session.id });

@@ -24,6 +24,20 @@ if (!$post) {
   echo "<h1>Post não encontrado</h1>";
   exit;
 }
+
+$baseFromEnv = getenv('APP_BASE_URL') ?: getenv('PUBLIC_BASE_URL');
+if ($baseFromEnv) {
+  $baseUrl = rtrim($baseFromEnv, '/');
+} else {
+  $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+  $scheme = $isHttps ? 'https' : 'http';
+  $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+  $baseUrl = $scheme . '://' . $host;
+}
+
+$normalizedBase = rtrim($baseUrl, '/');
+$canonicalUrl = $normalizedBase . '/blog/' . rawurlencode($slug);
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +46,7 @@ if (!$post) {
   <meta charset="UTF-8" />
   <title><?= htmlspecialchars($post['titulo']) ?></title>
   <meta name="description" content="<?= htmlspecialchars($post['resumo'] ?? '') ?>" />
-  <link rel="canonical" href="https://www.winove.com.br/blog/<?= urlencode($slug) ?>" />
+  <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl, ENT_QUOTES) ?>" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -47,7 +61,7 @@ if (!$post) {
     "dateModified": <?= json_encode(date(DATE_ATOM, strtotime($post['criado_em']))) ?>,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://www.winove.com.br/blog/<?= urlencode($slug) ?>"
+      "@id": <?= json_encode($canonicalUrl) ?>
     },
     "description": <?= json_encode($post['resumo'] ?? '') ?>
   }
