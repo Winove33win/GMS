@@ -1,3 +1,4 @@
+import fs from 'fs';
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -141,8 +142,29 @@ app.use((_req, res, next) => {
   next();
 });
 
-const distPath = path.join(__dirname, '../frontend/dist');
-// Serve frontend build from ../frontend/dist
+const resolveDistPath = () => {
+  const candidateDirs = [
+    process.env.SSR_DIST_DIR && path.resolve(__dirname, process.env.SSR_DIST_DIR),
+    path.join(__dirname, 'dist'),
+    path.join(__dirname, '../frontend/dist'),
+  ].filter(Boolean);
+
+  for (const dir of candidateDirs) {
+    try {
+      if (fs.statSync(dir).isDirectory()) {
+        return dir;
+      }
+    } catch (_err) {
+      // Try next candidate
+    }
+  }
+
+  // Default to last candidate so express still has a path to work with
+  return candidateDirs[candidateDirs.length - 1];
+};
+
+const distPath = resolveDistPath();
+// Serve frontend build (prefer backend/dist but support legacy paths)
 app.use(
   '/assets',
   express.static(path.join(distPath, 'assets'), {
