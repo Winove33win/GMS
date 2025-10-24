@@ -17,6 +17,8 @@ export const CTA = () => {
     }
   ];
 
+  const contactEmail = (import.meta.env.VITE_CONTACT_EMAIL as string | undefined)?.trim() || "contato@example.com";
+
   return (
     <section id="contact" className="py-24 bg-background relative overflow-hidden">
       {/* Background Elements */}
@@ -98,7 +100,7 @@ export const CTA = () => {
             
             <div className="glass rounded-xl p-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <h4 className="font-semibold text-foreground mb-2">Email</h4>
-              <p className="text-primary font-medium">criacao@winove.com.br</p>
+              <p className="text-primary font-medium">{contactEmail}</p>
             </div>
             
             <div className="glass rounded-xl p-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>

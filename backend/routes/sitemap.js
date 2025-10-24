@@ -13,7 +13,25 @@ const pool = mysql.createPool({
   connectionLimit: 10,
 });
 
-const BASE = 'https://winove.com.br';
+const resolveBase = () => {
+  const fallbackPort = Number(process.env.PORT || 3333);
+  const fallbackBase = `http://localhost:${fallbackPort}`;
+  const raw =
+    process.env.APP_BASE_URL ||
+    process.env.PUBLIC_BASE_URL ||
+    fallbackBase;
+
+  try {
+    const withProtocol = raw.includes('://') ? raw : `https://${raw}`;
+    const parsed = new URL(withProtocol);
+    const path = parsed.pathname.replace(/\/$/, '');
+    return `${parsed.origin}${path}` || fallbackBase;
+  } catch (_err) {
+    return fallbackBase;
+  }
+};
+
+const BASE = resolveBase();
 
 const staticUrls = [
   { loc: `${BASE}/`,          changefreq: 'weekly',  priority: '1.0' },

@@ -1,7 +1,7 @@
 # Automação de SEO (sitemap, JSON-LD e metatags)
 
 ## 1. Sitemap dinâmico (`/sitemap.xml`)
-- Endpoint: `GET https://winove.com.br/sitemap.xml`
+- Endpoint: `GET https://example.com/sitemap.xml`
 - Conteúdo: XML válido com `Content-Type: application/xml`.
 - URLs incluídas:
   - Home (`/`) com prioridade `1.0`.
@@ -10,7 +10,7 @@
   - Todos os slugs publicados em `blog_posts` expostos como `/blog/:slug` com prioridade `0.8` e `<lastmod>` baseado na coluna `updated_at` (fallback para `data_publicacao`/`created_at`).
 - Cache: resultado mantido em memória por `SITEMAP_CACHE_SECONDS` (padrão 300s). Atualizações de posts expiram o cache ao reiniciar a API ou após o TTL.
 - Boas práticas:
-  - Rebuild manual via `curl -I https://winove.com.br/sitemap.xml` após publicar posts para confirmar cache novo.
+  - Rebuild manual via `curl -I https://example.com/sitemap.xml` após publicar posts para confirmar cache novo.
   - Invalidar Cloudflare/Plesk cache se estiver ativado.
 
 ## 2. SEO por artigo (`/api/post/:slug/seo`)
@@ -25,7 +25,7 @@
     "@type": "BlogPosting",
     "headline": "Como integrar WhatsApp Cloud API",
     "description": "Guia completo com passos e checklist.",
-    "image": "https://winove.com.br/uploads/whatsapp.png",
+    "image": "https://example.com/uploads/whatsapp.png",
     "author": {
       "@type": "Organization",
       "name": "Equipe Winove"
@@ -35,23 +35,23 @@
       "name": "Winove",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://winove.com.br/assets/images/logo-winove-512.png"
+        "url": "https://example.com/assets/images/publisher-logo.png"
       }
     },
     "datePublished": "2024-07-12T10:00:00.000Z",
     "dateModified": "2024-07-18T15:32:00.000Z",
-    "mainEntityOfPage": "https://winove.com.br/blog/como-integrar-whatsapp-cloud-api"
+    "mainEntityOfPage": "https://example.com/blog/como-integrar-whatsapp-cloud-api"
   },
   "meta": {
     "title": "Como integrar WhatsApp Cloud API | Winove",
     "description": "Guia completo com passos e checklist.",
-    "canonical": "https://winove.com.br/blog/como-integrar-whatsapp-cloud-api",
+    "canonical": "https://example.com/blog/como-integrar-whatsapp-cloud-api",
     "openGraph": {
       "og:type": "article",
-      "og:url": "https://winove.com.br/blog/como-integrar-whatsapp-cloud-api",
+      "og:url": "https://example.com/blog/como-integrar-whatsapp-cloud-api",
       "og:title": "Como integrar WhatsApp Cloud API | Winove",
       "og:description": "Guia completo com passos e checklist.",
-      "og:image": "https://winove.com.br/uploads/whatsapp.png",
+      "og:image": "https://example.com/uploads/whatsapp.png",
       "article:published_time": "2024-07-12T10:00:00.000Z",
       "article:modified_time": "2024-07-18T15:32:00.000Z"
     },
@@ -59,8 +59,8 @@
       "twitter:card": "summary_large_image",
       "twitter:title": "Como integrar WhatsApp Cloud API | Winove",
       "twitter:description": "Guia completo com passos e checklist.",
-      "twitter:image": "https://winove.com.br/uploads/whatsapp.png",
-      "twitter:url": "https://winove.com.br/blog/como-integrar-whatsapp-cloud-api"
+      "twitter:image": "https://example.com/uploads/whatsapp.png",
+      "twitter:url": "https://example.com/blog/como-integrar-whatsapp-cloud-api"
     }
   }
 }
@@ -98,9 +98,9 @@ export function BlogPostSEO({ seo }: { seo: Awaited<ReturnType<typeof fetchSeo>>
 ```
 
 ## 4. Robots.txt e Search Console
-- Adicionar `Sitemap: https://winove.com.br/sitemap.xml` no topo do `robots.txt`.
+- Adicionar `Sitemap: https://example.com/sitemap.xml` no topo do `robots.txt` (ou usar o caminho relativo `/sitemap.xml`).
 - Após publicar posts:
-  1. Acesse o Google Search Console > propriedade `winove.com.br`.
+  1. Acesse o Google Search Console > propriedade `example.com`.
   2. Em **Sitemaps**, envie/atualize `sitemap.xml` para forçar recrawl.
   3. Use **Inspeção de URL** para cada novo slug e solicitar indexação.
 - Se usar Bing/Webmaster Tools, repetir com o mesmo sitemap.

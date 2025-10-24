@@ -2,14 +2,14 @@
 
 ## Project info
 
-**URL**: www.winove.com.br
+**URL**: https://example.com
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
 **Use Winove**
 
-Simply visit the www.winove.com.br
+Simply visit the https://example.com
 
 Changes made via Winove will be committed automatically to this repo.
 
@@ -36,7 +36,7 @@ npm i
 # Step 4: Create a `.env` file based on `.env.example` (required for builds).
 cp .env.example .env
 # Ensure the `VITE_API_URL` variable is present. For production it should be
-# `https://winove.com.br/api`.
+# `https://example.com/api`.
 # When the backend is served from a different domain or port, set
 # `VITE_API_URL` to that backend's base URL (e.g. `https://example.com/api`).
 # If undefined, the application defaults to `/api` and assumes the backend is
@@ -97,7 +97,7 @@ commits. It fetches updates from the `main` branch and only runs the full
 Example cron entry to check for changes every five minutes:
 
 ```
-*/5 * * * * /var/www/vhosts/winove.com.br/httpdocs/deploy/auto-update.sh >> /var/log/winove-deploy.log 2>&1
+*/5 * * * * /var/www/vhosts/example.com/httpdocs/deploy/auto-update.sh >> /var/log/site-deploy.log 2>&1
 ```
 
 This approach avoids rebuilding when there are no changes while ensuring new

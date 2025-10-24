@@ -25,16 +25,27 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BASE_URL = (process.env.APP_BASE_URL || 'https://winove.com.br').replace(/\/$/, '');
+const fallbackPort = Number(process.env.PORT || 3333);
+const fallbackBase = `http://localhost:${fallbackPort}`;
+const rawBase =
+  process.env.APP_BASE_URL ||
+  process.env.PUBLIC_BASE_URL ||
+  fallbackBase;
+
 let canonicalUrl;
 try {
-  canonicalUrl = new URL(BASE_URL.includes('://') ? BASE_URL : `https://${BASE_URL}`);
+  const baseWithProtocol = rawBase.includes('://') ? rawBase : `https://${rawBase}`;
+  canonicalUrl = new URL(baseWithProtocol);
 } catch (_err) {
-  canonicalUrl = new URL('https://winove.com.br');
+  canonicalUrl = new URL(fallbackBase);
 }
+
+const canonicalPath = canonicalUrl.pathname.replace(/\/$/, '');
+const BASE_URL = `${canonicalUrl.origin}${canonicalPath}`.replace(/\/$/, '');
 const canonicalHostname = canonicalUrl.hostname.toLowerCase();
 const canonicalPort = canonicalUrl.port;
 const canonicalProtocol = canonicalUrl.protocol.replace(':', '');
+const canonicalOrigin = canonicalUrl.origin;
 
 const getTemplate = () => {
   const initial = getBaseTemplate();
@@ -117,11 +128,11 @@ app.use((_req, res, next) => {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://winove.com.br https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com",
+      `script-src 'self' 'unsafe-inline' ${canonicalOrigin} https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: blob: https://winove.com.br https://www.winove.com.br https://images.unsplash.com",
+      `img-src 'self' data: blob: ${canonicalOrigin} https://images.unsplash.com`,
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://winove.com.br https://www.google-analytics.com https://api.stripe.com",
+      `connect-src 'self' ${canonicalOrigin} https://www.google-analytics.com https://api.stripe.com`,
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com",
       "frame-ancestors 'none'",
       "object-src 'none'",
@@ -145,7 +156,8 @@ const HOME_DESCRIPTION =
   'A Winove entrega soluções digitais que transformam negócios. Descubra nossos cases de sucesso, serviços e portfólio.';
 const BLOG_DESCRIPTION =
   'Conteúdos exclusivos, tendências e estratégias para manter seu negócio sempre à frente no mundo digital';
-const DEFAULT_IMAGE = 'https://www.winove.com.br/imagem-de-compartilhamento.png';
+const DEFAULT_IMAGE =
+  process.env.DEFAULT_SHARE_IMAGE || `${canonicalOrigin}/assets/images/default-share.png`;
 
 app.get('/blog/', (req, res, next) => {
   const template = getTemplate();

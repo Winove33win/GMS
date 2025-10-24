@@ -14,13 +14,29 @@ const toArray = (value) => {
 };
 
 // Garante URL absoluta para imagens locais do /assets
+const resolvePublicBase = () => {
+  const raw = process.env.PUBLIC_BASE_URL || process.env.APP_BASE_URL || '';
+  if (!raw) return '';
+  try {
+    const withProtocol = raw.includes('://') ? raw : `https://${raw}`;
+    const parsed = new URL(withProtocol);
+    const path = parsed.pathname.replace(/\/$/, '');
+    return `${parsed.origin}${path}`;
+  } catch (_err) {
+    return '';
+  }
+};
+
+const PUBLIC_BASE = resolvePublicBase();
+
 const ABS = (url) => {
   if (!url) return '';
   if (/^https?:\/\//i.test(url)) return url;
-  const base = process.env.PUBLIC_BASE_URL || 'https://winove.com.br';
-  // força /assets/... mesmo se vier "assets/..."
   const clean = url.startsWith('/assets') ? url : url.replace(/^assets\//, '/assets/');
-  return `${base}${clean.startsWith('/') ? '' : '/'}${clean}`;
+  if (!PUBLIC_BASE) {
+    return clean.startsWith('/') ? clean : `/${clean}`;
+  }
+  return `${PUBLIC_BASE}${clean.startsWith('/') ? '' : '/'}${clean}`;
 };
 
 router.get('/', async (req, res) => {

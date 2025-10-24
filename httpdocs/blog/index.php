@@ -29,6 +29,8 @@
           container.appendChild(div);
         });
 
+        const baseUrl = window.location.origin.replace(/\/$/, '');
+
         const ldJson = {
           "@context": "https://schema.org",
           "@type": "Blog",
@@ -44,7 +46,7 @@
             "description": post.resumo,
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": `https://www.winove.com.br/blog/${post.slug}`
+              "@id": `${baseUrl}/blog/${post.slug}`
             }
           }))
         };

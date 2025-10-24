@@ -41,3 +41,8 @@ backend/coverage/
 
 # Stripe system
 winove-stripe-system/node_modules/
+# Generated hero assets
+frontend/public/img/hero-*.avif
+frontend/public/img/hero-*.webp
+frontend/public/img/hero-*.jpg
+frontend/public/fonts/PlayfairDisplay-800.woff2
