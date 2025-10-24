@@ -159,15 +159,27 @@ const resolveDistPath = () => {
 };
 
 const distPath = resolveDistPath();
+const distIndexPath = distPath ? path.join(distPath, 'index.html') : '';
+const hasDistBundle = Boolean(distPath && fs.existsSync(distIndexPath));
+
+if (!hasDistBundle) {
+  console.warn(
+    '⚠️  Nenhum build do frontend encontrado. Execute `npm --prefix ../frontend install && npm --prefix ../frontend run build` ou deixe o postinstall rodar para gerar `frontend/dist`.'
+  );
+}
+
 // Serve frontend build (prefer backend/dist but support legacy paths)
-app.use(
-  '/assets',
-  express.static(path.join(distPath, 'assets'), {
-    immutable: true,
-    maxAge: '1y',
-  })
-);
-app.use(express.static(distPath));
+if (hasDistBundle) {
+  app.use(
+    '/assets',
+    express.static(path.join(distPath, 'assets'), {
+      immutable: true,
+      maxAge: '1y',
+    })
+  );
+  app.use(express.static(distPath));
+}
+
 app.use('/content', express.static(path.join(__dirname, '../content')));
 
 const HOME_DESCRIPTION =
@@ -178,6 +190,13 @@ const DEFAULT_IMAGE =
   process.env.DEFAULT_SHARE_IMAGE || `${canonicalOrigin}/assets/images/default-share.png`;
 
 app.get('/blog/', (req, res, next) => {
+  if (!hasDistBundle) {
+    return res
+      .status(503)
+      .type('text/plain')
+      .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build`.');
+  }
+
   const template = getTemplate();
   if (!template) {
     return next();
@@ -234,6 +253,13 @@ app.use('/api', apiRouter);
 app.use('/', postSeoPageRouter);
 
 app.get('/', (req, res, next) => {
+  if (!hasDistBundle) {
+    return res
+      .status(503)
+      .type('text/plain')
+      .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build`.');
+  }
+
   const template = getTemplate();
   if (!template) {
     return next();
@@ -275,6 +301,12 @@ app.get('/', (req, res, next) => {
 // SPA fallback for React Router
 app.get('*', (req, res) => {
   if (req.path.includes('.')) return res.status(404).end();
+  if (!hasDistBundle) {
+    return res
+      .status(503)
+      .type('text/plain')
+      .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build`.');
+  }
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
