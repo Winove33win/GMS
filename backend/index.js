@@ -28,6 +28,7 @@ app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ---- CANÔNICOS & BASE: usam siteConfig (fonte única de verdade) ----
 const {
   port: fallbackPort,
   canonicalUrl,
@@ -37,6 +38,8 @@ const {
   canonicalProtocol,
   canonicalOrigin,
 } = siteConfig;
+
+// -------------------------------------------------------------------
 
 const getTemplate = () => {
   const initial = getBaseTemplate();
@@ -276,7 +279,9 @@ app.get('*', (req, res) => {
   if (req.path.includes('.')) return res.status(404).end();
   res.sendFile(path.join(distPath, 'index.html'));
 });
+
 // Start server (Plesk sets PORT)
-app.listen(fallbackPort, () => {
-  console.log(`API + Frontend running on port ${fallbackPort}`);
+const port = Number(process.env.PORT || fallbackPort || 3000);
+app.listen(port, () => {
+  console.log(`API + Frontend running on port ${port}`);
 });
