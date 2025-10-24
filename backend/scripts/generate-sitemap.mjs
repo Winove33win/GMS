@@ -1,9 +1,15 @@
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import mysql from 'mysql2/promise';
 
 const BASE = 'https://winove.com.br';
-// AJUSTE o caminho real do seu Plesk, se for diferente:
-const OUT = '/var/www/vhosts/winove.com.br/httpdocs/sitemap.xml';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const backendRoot = path.resolve(__dirname, '..');
+const outOverride = process.env.SITEMAP_OUTPUT;
+const resolvedOut = outOverride
+  ? (path.isAbsolute(outOverride) ? outOverride : path.resolve(backendRoot, outOverride))
+  : path.join(backendRoot, 'dist', 'sitemap.xml');
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'lweb03.appuni.com.br',
@@ -51,8 +57,9 @@ try {
       })).join('')}
 </urlset>`;
 
-  fs.writeFileSync(OUT, xml, 'utf8');
-  console.log('Sitemap escrito em', OUT);
+  fs.mkdirSync(path.dirname(resolvedOut), { recursive: true });
+  fs.writeFileSync(resolvedOut, xml, 'utf8');
+  console.log('Sitemap escrito em', resolvedOut);
   process.exit(0);
 } catch (e) {
   console.error('Erro ao gerar sitemap:', e);
