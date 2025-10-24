@@ -5,8 +5,13 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const FALLBACK_TEMPLATE = `<!doctype html><html lang="pt-br"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Mentoria Solidária</title><link rel="icon" href="/favicon.ico"/></head><body><div id="root"></div><script type="module" src="/assets/index.js"></script></body></html>`;
+const FALLBACK_TEMPLATE =
+  `<!doctype html><html lang="pt-br"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Mentoria Solidária</title><link rel="icon" href="/favicon.ico"/></head><body><div id="root"></div><script type="module" src="/assets/index.js"></script></body></html>`;
 
+/**
+ * Candidatos onde procurar o template base já buildado.
+ * A busca segue a ordem: SSR_INDEX_FILE (se setado) → backend/dist → frontend/dist → frontend/index.html
+ */
 const candidateIndexPaths = [
   process.env.SSR_INDEX_FILE && path.resolve(__dirname, process.env.SSR_INDEX_FILE),
   path.resolve(__dirname, '../../dist/index.html'),
@@ -25,8 +30,8 @@ const locateTemplate = () => {
       if (stats.isFile()) {
         return { filePath, stats };
       }
-    } catch (_err) {
-      // continue searching other candidates
+    } catch {
+      // tenta o próximo candidato
     }
   }
   return null;
@@ -44,7 +49,7 @@ const loadTemplate = () => {
   cachedTemplateMtime = located.stats.mtimeMs;
   try {
     return fs.readFileSync(located.filePath, 'utf8');
-  } catch (_err) {
+  } catch {
     return FALLBACK_TEMPLATE;
   }
 };
@@ -75,7 +80,7 @@ export const ensureTemplateIsFresh = () => {
     cachedTemplateMtime = stats.mtimeMs;
     try {
       cachedTemplate = fs.readFileSync(filePath, 'utf8');
-    } catch (_err) {
+    } catch {
       cachedTemplate = FALLBACK_TEMPLATE;
       cachedTemplatePath = null;
       cachedTemplateMtime = 0;
@@ -101,5 +106,6 @@ export const renderTemplateWithMeta = (tpl, meta) => {
     <meta name="twitter:image" content="${meta.twitter?.['twitter:image'] || ''}"/>
     <script type="application/ld+json">${JSON.stringify(meta.jsonLd || {})}</script>
   `.replace(/\n\s+/g, '');
+
   return tpl.replace('</head>', head + '</head>');
 };

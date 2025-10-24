@@ -179,6 +179,7 @@ if (hasDistBundle) {
   );
   app.use(express.static(distPath));
 }
+
 app.use('/content', express.static(path.join(__dirname, '../content')));
 
 const HOME_DESCRIPTION =
@@ -195,6 +196,7 @@ app.get('/blog/', (req, res, next) => {
       .type('text/plain')
       .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build`.');
   }
+
   const template = getTemplate();
   if (!template) {
     return next();
@@ -257,6 +259,7 @@ app.get('/', (req, res, next) => {
       .type('text/plain')
       .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build`.');
   }
+
   const template = getTemplate();
   if (!template) {
     return next();
