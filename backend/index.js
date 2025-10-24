@@ -23,10 +23,11 @@ dotenv.config();
 
 // Express setup
 const app = express();
+app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const fallbackPort = Number(process.env.PORT || 3333);
+const fallbackPort = Number(process.env.PORT || 3000);
 const fallbackBase = `http://localhost:${fallbackPort}`;
 const rawBase =
   process.env.APP_BASE_URL ||
@@ -281,7 +282,7 @@ app.get('*', (req, res) => {
 });
 
 // Start server (Plesk sets PORT)
-const port = Number(process.env.PORT || 3333);
+const port = Number(process.env.PORT || 3000);
 app.listen(port, () => {
   console.log(`API + Frontend running on port ${port}`);
 });
