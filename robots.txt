@@ -1,4 +1,4 @@
-Sitemap: /sitemap.xml
+Sitemap: https://confident-heyrovsky.168-75-84-128.plesk.page/sitemap.xml
 
 User-agent: Googlebot
 Allow: /

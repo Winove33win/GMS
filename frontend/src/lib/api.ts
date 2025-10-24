@@ -16,19 +16,19 @@ export interface Template {
 }
 
 // In Vite, env vars come from import.meta.env
-const BASE_URL = import.meta.env.VITE_API_URL || '';
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 export const api = axios.create({
-  baseURL: BASE_URL, // empty -> use same-origin relative /api
+  baseURL: API_BASE,
   timeout: 5000,
 });
 
 export const fetchTemplate = async (slug: string): Promise<Template> => {
-  const res = await api.get<Template>(`/api/templates/${slug}`);
+  const res = await api.get<Template>(`/templates/${slug}`);
   return res.data;
 };
 
 export const fetchTemplates = async (): Promise<Template[]> => {
-  const res = await api.get<Template[]>(`/api/templates`);
+  const res = await api.get<Template[]>(`/templates`);
   return res.data;
 };

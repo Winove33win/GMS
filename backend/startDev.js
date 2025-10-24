@@ -26,5 +26,6 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-console.log('✅ Servidor API: http://localhost:3333');
-console.log('✅ Frontend: http://localhost:8080');
+const apiPort = process.env.PORT || 3000;
+console.log(`✅ Servidor API: http://127.0.0.1:${apiPort}`);
+console.log('✅ Frontend: http://127.0.0.1:8080');

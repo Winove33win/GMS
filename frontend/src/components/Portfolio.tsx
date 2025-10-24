@@ -3,6 +3,8 @@ import { ExternalLink, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { normalizeImageUrl } from "@/lib/utils";
 
+const API_BASE = import.meta.env.VITE_API_BASE || "/api";
+
 interface Case {
   id: number;
   title: string;
@@ -28,7 +30,7 @@ export const Portfolio = () => {
   useEffect(() => {
     const loadCases = async () => {
       try {
-        const res = await fetch("/api/cases");
+        const res = await fetch(`${API_BASE}/cases`);
         if (res.ok) {
           const data: Case[] = await res.json();
           setCases(data.slice(0, 4));

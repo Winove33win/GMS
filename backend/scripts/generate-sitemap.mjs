@@ -3,25 +3,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import mysql from 'mysql2/promise';
 
-const resolveBase = () => {
-  const fallbackPort = Number(process.env.PORT || 3333);
-  const fallbackBase = `http://localhost:${fallbackPort}`;
-  const raw =
-    process.env.APP_BASE_URL ||
-    process.env.PUBLIC_BASE_URL ||
-    fallbackBase;
+import { siteConfig } from '../utils/siteConfig.js';
 
-  try {
-    const withProtocol = raw.includes('://') ? raw : `https://${raw}`;
-    const parsed = new URL(withProtocol);
-    const path = parsed.pathname.replace(/\/$/, '');
-    return `${parsed.origin}${path}` || fallbackBase;
-  } catch (_err) {
-    return fallbackBase;
-  }
-};
-
-const BASE = resolveBase();
+const BASE = siteConfig.canonicalBase || siteConfig.canonicalOrigin;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const backendRoot = path.resolve(__dirname, '..');
 const outOverride = process.env.SITEMAP_OUTPUT;

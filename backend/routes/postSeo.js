@@ -6,32 +6,19 @@ import {
   getBaseTemplate,
   renderTemplateWithMeta,
 } from '../utils/htmlTemplate.js';
+import { siteConfig, toAbsoluteFromSite } from '../utils/siteConfig.js';
 
-const router = Router();
+const pageRouter = Router();
+const apiRouter = Router();
 
-const fallbackPort = Number(process.env.PORT || 3333);
-const fallbackBase = `http://localhost:${fallbackPort}`;
-const rawBase =
-  process.env.APP_BASE_URL ||
-  process.env.PUBLIC_BASE_URL ||
-  fallbackBase;
-
-let parsedBase;
-try {
-  const baseWithProtocol = rawBase.includes('://') ? rawBase : `https://${rawBase}`;
-  parsedBase = new URL(baseWithProtocol);
-} catch (_err) {
-  parsedBase = new URL(fallbackBase);
-}
-
-const parsedPath = parsedBase.pathname.replace(/\/$/, '');
-const BASE_URL = `${parsedBase.origin}${parsedPath}`.replace(/\/$/, '');
+const BASE_URL = siteConfig.canonicalBase || siteConfig.canonicalOrigin;
+const BASE_ORIGIN = siteConfig.canonicalOrigin;
 const DEFAULT_AUTHOR = process.env.DEFAULT_POST_AUTHOR || 'Equipe Winove';
 const PUBLISHER_NAME = process.env.PUBLISHER_NAME || 'Winove';
 const PUBLISHER_LOGO =
-  process.env.PUBLISHER_LOGO || `${parsedBase.origin}/favicon.png`;
+  process.env.PUBLISHER_LOGO || `${BASE_ORIGIN}/favicon.png`;
 const DEFAULT_SHARE_IMAGE =
-  process.env.DEFAULT_SHARE_IMAGE || `${parsedBase.origin}/assets/images/default-share.png`;
+  process.env.DEFAULT_SHARE_IMAGE || `${BASE_ORIGIN}/assets/images/default-share.png`;
 
 const toISODate = (value) => {
   try {
@@ -41,9 +28,15 @@ const toISODate = (value) => {
   }
 };
 
-const ensureAbsoluteUrl = (value) => absoluteUrl(BASE_URL, value);
+const ensureAbsoluteUrl = (value) => {
+  const absolute = absoluteUrl(BASE_URL, value);
+  if (absolute && /^https?:\/\//i.test(absolute)) {
+    return absolute;
+  }
+  return toAbsoluteFromSite(value);
+};
 
-router.get('/blog/:slug([^/.]+)/?', async (req, res, next) => {
+pageRouter.get('/blog/:slug([^/.]+)/?', async (req, res, next) => {
   try {
     const { slug } = req.params;
     const [rows] = await pool.query(
@@ -55,7 +48,7 @@ router.get('/blog/:slug([^/.]+)/?', async (req, res, next) => {
       return res.status(404).send('Post não encontrado');
     }
 
-    let template = ensureTemplateIsFresh() || getBaseTemplate();
+    const template = ensureTemplateIsFresh() || getBaseTemplate();
     if (!template) {
       return next();
     }
@@ -130,7 +123,7 @@ router.get('/blog/:slug([^/.]+)/?', async (req, res, next) => {
   }
 });
 
-router.get('/api/post/:slug/seo', async (req, res) => {
+apiRouter.get('/:slug/seo', async (req, res) => {
   try {
     const { slug } = req.params;
 
@@ -203,4 +196,5 @@ router.get('/api/post/:slug/seo', async (req, res) => {
   }
 });
 
-export default router;
+export const postSeoPageRouter = pageRouter;
+export const postSeoApiRouter = apiRouter;

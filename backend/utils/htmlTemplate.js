@@ -2,24 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { siteConfig, toAbsoluteFromSite } from './siteConfig.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const fallbackPort = Number(process.env.PORT || 3333);
-const fallbackBase = `http://localhost:${fallbackPort}`;
-const rawBase =
-  process.env.APP_BASE_URL ||
-  process.env.PUBLIC_BASE_URL ||
-  fallbackBase;
-
-let resolvedBase;
-try {
-  const baseWithProtocol = rawBase.includes('://') ? rawBase : `https://${rawBase}`;
-  const url = new URL(baseWithProtocol);
-  resolvedBase = url.origin;
-} catch (err) {
-  resolvedBase = fallbackBase;
-}
+const resolvedBase = siteConfig.canonicalOrigin;
 
 const DEFAULT_IMAGE =
   process.env.DEFAULT_SHARE_IMAGE || `${resolvedBase}/assets/images/default-share.png`;
@@ -190,5 +178,8 @@ export const absoluteUrl = (baseUrl, value) => {
     return value;
   }
   const normalised = String(value).replace(/^\/+/, '');
-  return `${baseUrl}/${normalised}`;
+  if (baseUrl) {
+    return `${baseUrl}/${normalised}`;
+  }
+  return toAbsoluteFromSite(normalised);
 };

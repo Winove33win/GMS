@@ -2,6 +2,8 @@ import { Calendar, User, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+const API_BASE = import.meta.env.VITE_API_BASE || "/api";
+
 interface Post {
   id: number;
   title: string;
@@ -25,7 +27,7 @@ export const Blog = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/blog-posts");
+        const res = await fetch(`${API_BASE}/blog-posts`);
         if (res.ok) {
           const data: Post[] = await res.json();
           setArticles(data.slice(0, 6));
