@@ -33,8 +33,8 @@ const escapeAttribute = (value) => escapeHtml(value).replace(/"/g, '&quot;');
 
 const candidateIndexPaths = [
   process.env.SSR_INDEX_FILE,
-  path.join(__dirname, '../../frontend/dist/index.html'),
   path.join(__dirname, '../../dist/index.html'),
+  path.join(__dirname, '../../frontend/dist/index.html'),
   path.join(__dirname, '../../frontend/index.html'),
 ].filter(Boolean);
 
