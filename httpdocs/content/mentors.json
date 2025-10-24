@@ -1,0 +1,26 @@
+[
+  {
+    "nome": "Ana Silva",
+    "bio": "Engenheira ambiental com experiência em saneamento básico.",
+    "areas": ["Meio ambiente", "Saneamento"],
+    "cidade": "Campinas/SP",
+    "linkedin": "https://linkedin.com/in/ana-silva",
+    "disponibilidade": "Quintas à tarde"
+  },
+  {
+    "nome": "João Pereira",
+    "bio": "Gestor de projetos sociais com foco em inovação.",
+    "areas": ["Inovação", "Impacto Social"],
+    "cidade": "São Paulo/SP",
+    "linkedin": "https://linkedin.com/in/joao-pereira",
+    "disponibilidade": "Flexível"
+  },
+  {
+    "nome": "Marina Costa",
+    "bio": "Especialista em captação de recursos para OSCs.",
+    "areas": ["Captação", "Governança"],
+    "cidade": "Campinas/SP",
+    "linkedin": "https://linkedin.com/in/marina-costa",
+    "disponibilidade": "Quintas 16h"
+  }
+]

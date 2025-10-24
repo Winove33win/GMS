@@ -1,0 +1,20 @@
+[
+  {
+    "nome": "Coletivo Água Viva",
+    "organizacao": "Associação comunitária",
+    "descricao": "Mobiliza moradores para soluções de acesso à água.",
+    "cidade": "Campinas/SP",
+    "contatos": {
+      "email": "contato@aguaviva.org"
+    }
+  },
+  {
+    "nome": "Projeto Sofia Fala",
+    "organizacao": "Iniciativa educacional",
+    "descricao": "Produz conteúdos acessíveis para educação inclusiva.",
+    "cidade": "Hortolândia/SP",
+    "contatos": {
+      "email": "sofiafala@projetos.org"
+    }
+  }
+]
