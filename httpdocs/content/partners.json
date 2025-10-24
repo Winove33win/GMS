@@ -1,0 +1,20 @@
+[
+  {
+    "nome": "Instituto de Tecnologia e Transformação",
+    "tipo": "Rede de cooperação",
+    "descricao": "Apoio a projetos de inovação social no interior paulista.",
+    "link": "https://itt.example.org"
+  },
+  {
+    "nome": "ANITEC",
+    "tipo": "Associação",
+    "descricao": "Articula empresas de tecnologia para impacto social.",
+    "link": "https://anitec.example.org"
+  },
+  {
+    "nome": "IPISA",
+    "tipo": "Instituto",
+    "descricao": "Parceria para mentoria de projetos socioambientais.",
+    "link": "https://ipisa.example.org"
+  }
+]
