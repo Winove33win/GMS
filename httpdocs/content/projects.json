@@ -1,0 +1,31 @@
+[
+  {
+    "slug": "water-is-life",
+    "titulo": "Water is Life",
+    "descricao_curta": "Acesso à água potável em comunidades vulneráveis.",
+    "status": "andamento",
+    "ods": ["6", "3"],
+    "area": "Meio ambiente",
+    "cidade": "Campinas/SP",
+    "mentores": ["Ana Silva", "João Pereira"],
+    "amentorados": ["Coletivo Água Viva"],
+    "metricas": {"beneficiados": 1200},
+    "midias": [],
+    "ano_inicio": 2024
+  },
+  {
+    "slug": "nasa-space-apps",
+    "titulo": "NASA Space Apps",
+    "descricao_curta": "Mobilização e educação STEAM por desafios da NASA.",
+    "status": "concluido",
+    "ods": ["4", "9", "17"],
+    "area": "Educação",
+    "cidade": "Campinas/SP",
+    "mentores": ["Equipe GMS"],
+    "amentorados": ["Estudantes e educadores"],
+    "metricas": {"participantes": 300},
+    "midias": [],
+    "ano_inicio": 2023,
+    "ano_fim": 2023
+  }
+]

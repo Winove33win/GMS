@@ -1,0 +1,18 @@
+[
+  {
+    "data": "2025-02-06",
+    "formato": "online",
+    "resumo": "Mentoria coletiva para Water is Life",
+    "pauta": "Plano de captação e expansão regional",
+    "link": "https://meet.google.com/example",
+    "projetos": ["water-is-life"]
+  },
+  {
+    "data": "2025-02-13",
+    "formato": "online",
+    "resumo": "Oficina de indicadores ODS",
+    "pauta": "Definição de métricas para projetos em andamento",
+    "link": "https://meet.google.com/example",
+    "projetos": ["nasa-space-apps"]
+  }
+]
