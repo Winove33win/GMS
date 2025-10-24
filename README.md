@@ -35,12 +35,11 @@ npm i
 
 # Step 4: Create a `.env` file based on `.env.example` (required for builds).
 cp .env.example .env
-# Ensure the `VITE_API_URL` variable is present. For production it should be
-# `https://example.com/api`.
-# When the backend is served from a different domain or port, set
-# `VITE_API_URL` to that backend's base URL (e.g. `https://example.com/api`).
-# If undefined, the application defaults to `/api` and assumes the backend is
-# hosted under the same domain.
+# Ensure the `VITE_API_BASE` variable is present. For production it should
+# usually be `/api`, keeping requests relative to the deployed domain.
+# If you expose the backend under a sub-path (e.g. `/backend/api`), update the
+# variable accordingly. Avoid embedding hostnames or `localhost` values in the
+# build so the SPA works behind Plesk's proxy.
 
 # Step 5: Start the development server with auto-reloading and an instant preview.
 npm run dev
@@ -84,7 +83,7 @@ The local server relies on the following packages:
 Simply open [Winove](https://lovable.dev/projects/47e97737-0d5b-4617-a6fc-0cc3a9fb4b6b) and click on Share -> Publish.
 
 When building locally or running `deploy.sh`, make sure a `.env` file exists
-with `VITE_API_URL` defined. The provided `deploy.sh` script will create a
+with `VITE_API_BASE` defined. The provided `deploy.sh` script will create a
 minimal `.env` automatically.
 
 ### Automatic deploys

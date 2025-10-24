@@ -1,6 +1,8 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
 
+import { siteConfig } from '../utils/siteConfig.js';
+
 const router = express.Router();
 
 const pool = mysql.createPool({
@@ -13,25 +15,7 @@ const pool = mysql.createPool({
   connectionLimit: 10,
 });
 
-const resolveBase = () => {
-  const fallbackPort = Number(process.env.PORT || 3333);
-  const fallbackBase = `http://localhost:${fallbackPort}`;
-  const raw =
-    process.env.APP_BASE_URL ||
-    process.env.PUBLIC_BASE_URL ||
-    fallbackBase;
-
-  try {
-    const withProtocol = raw.includes('://') ? raw : `https://${raw}`;
-    const parsed = new URL(withProtocol);
-    const path = parsed.pathname.replace(/\/$/, '');
-    return `${parsed.origin}${path}` || fallbackBase;
-  } catch (_err) {
-    return fallbackBase;
-  }
-};
-
-const BASE = resolveBase();
+const BASE = siteConfig.canonicalBase || siteConfig.canonicalOrigin;
 
 const staticUrls = [
   { loc: `${BASE}/`,          changefreq: 'weekly',  priority: '1.0' },

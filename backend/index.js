@@ -1,3 +1,4 @@
+import fs from 'fs';
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -10,42 +11,32 @@ import blogPostsRoute from './routes/blogPosts.js';
 import casesRoute from './routes/cases.js';
 import templatesRoute from './routes/templates.js';
 import leadsRoutes from './routes/leads.js';
-import postSeoRoute from './routes/postSeo.js';
+import { postSeoApiRouter, postSeoPageRouter } from './routes/postSeo.js';
 import {
   ensureTemplateIsFresh,
   getBaseTemplate,
   renderTemplateWithMeta,
 } from './utils/htmlTemplate.js';
+import { siteConfig } from './utils/siteConfig.js';
 
 // Env vars
 dotenv.config();
 
 // Express setup
 const app = express();
+app.set('trust proxy', 1);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const fallbackPort = Number(process.env.PORT || 3333);
-const fallbackBase = `http://localhost:${fallbackPort}`;
-const rawBase =
-  process.env.APP_BASE_URL ||
-  process.env.PUBLIC_BASE_URL ||
-  fallbackBase;
-
-let canonicalUrl;
-try {
-  const baseWithProtocol = rawBase.includes('://') ? rawBase : `https://${rawBase}`;
-  canonicalUrl = new URL(baseWithProtocol);
-} catch (_err) {
-  canonicalUrl = new URL(fallbackBase);
-}
-
-const canonicalPath = canonicalUrl.pathname.replace(/\/$/, '');
-const BASE_URL = `${canonicalUrl.origin}${canonicalPath}`.replace(/\/$/, '');
-const canonicalHostname = canonicalUrl.hostname.toLowerCase();
-const canonicalPort = canonicalUrl.port;
-const canonicalProtocol = canonicalUrl.protocol.replace(':', '');
-const canonicalOrigin = canonicalUrl.origin;
+const {
+  port: fallbackPort,
+  canonicalUrl,
+  canonicalBase: BASE_URL,
+  canonicalHostname,
+  canonicalPort,
+  canonicalProtocol,
+  canonicalOrigin,
+} = siteConfig;
 
 const getTemplate = () => {
   const initial = getBaseTemplate();
@@ -66,21 +57,26 @@ app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan('dev'));
 
+const apiRouter = express.Router();
+
 // Sitemap must be served before static middlewares
-const isLocalRequest = (host) => {
+const LOOPBACKS = new Set(['127.0.0.1', '0.0.0.0', '::1']);
+const isLoopback = (value) => LOOPBACKS.has(value);
+const isLocalRequest = (req) => {
+  const host = req.headers.host || '';
   if (!host) return true;
   const hostname = host.split(':')[0]?.toLowerCase() || '';
-  return (
-    hostname === 'localhost' ||
-    hostname === '127.0.0.1' ||
-    hostname === '0.0.0.0' ||
-    hostname.endsWith('.local')
-  );
+  if (isLoopback(hostname) || hostname.endsWith('.local')) {
+    return true;
+  }
+  const ip = (req.ip || '').toLowerCase();
+  const normalisedIp = ip.startsWith('::ffff:') ? ip.slice(7) : ip;
+  return isLoopback(normalisedIp);
 };
 
 app.use((req, res, next) => {
   const hostHeader = req.headers.host || '';
-  if (isLocalRequest(hostHeader) || process.env.NODE_ENV === 'development') {
+  if (isLocalRequest(req) || process.env.NODE_ENV === 'development') {
     return next();
   }
 
@@ -141,8 +137,29 @@ app.use((_req, res, next) => {
   next();
 });
 
-const distPath = path.join(__dirname, '../frontend/dist');
-// Serve frontend build from ../frontend/dist
+const resolveDistPath = () => {
+  const candidateDirs = [
+    process.env.SSR_DIST_DIR && path.resolve(__dirname, process.env.SSR_DIST_DIR),
+    path.join(__dirname, 'dist'),
+    path.join(__dirname, '../frontend/dist'),
+  ].filter(Boolean);
+
+  for (const dir of candidateDirs) {
+    try {
+      if (fs.statSync(dir).isDirectory()) {
+        return dir;
+      }
+    } catch (_err) {
+      // Try next candidate
+    }
+  }
+
+  // Default to last candidate so express still has a path to work with
+  return candidateDirs[candidateDirs.length - 1];
+};
+
+const distPath = resolveDistPath();
+// Serve frontend build (prefer backend/dist but support legacy paths)
 app.use(
   '/assets',
   express.static(path.join(distPath, 'assets'), {
@@ -199,11 +216,21 @@ app.get('/blog/', (req, res, next) => {
 });
 
 // API routes
-app.use('/api/blog-posts', blogPostsRoute);
-app.use('/api/cases', casesRoute);
-app.use('/api/templates', templatesRoute);
-app.use('/api/leads', leadsRoutes);
-app.use('/', postSeoRoute);
+apiRouter.use('/blog-posts', blogPostsRoute);
+apiRouter.use('/cases', casesRoute);
+apiRouter.use('/templates', templatesRoute);
+apiRouter.use('/leads', leadsRoutes);
+apiRouter.use('/post', postSeoApiRouter);
+
+apiRouter.get('/health', (_req, res) => {
+  res.json({ ok: true, env: process.env.NODE_ENV || 'production' });
+});
+
+apiRouter.use((_req, res) => res.status(404).json({ error: 'not_found' }));
+
+app.use('/api', apiRouter);
+
+app.use('/', postSeoPageRouter);
 
 app.get('/', (req, res, next) => {
   const template = getTemplate();
@@ -244,22 +271,12 @@ app.get('/', (req, res, next) => {
   sendHtml(res, html);
 });
 
-// Health check
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, env: process.env.NODE_ENV || 'production' });
-});
-
-// API 404
-app.use('/api', (_req, res) => res.status(404).json({ error: 'not_found' }));
-
 // SPA fallback for React Router
 app.get('*', (req, res) => {
   if (req.path.includes('.')) return res.status(404).end();
   res.sendFile(path.join(distPath, 'index.html'));
 });
-
 // Start server (Plesk sets PORT)
-const port = Number(process.env.PORT || 3333);
-app.listen(port, () => {
-  console.log(`API + Frontend running on port ${port}`);
+app.listen(fallbackPort, () => {
+  console.log(`API + Frontend running on port ${fallbackPort}`);
 });

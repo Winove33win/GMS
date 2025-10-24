@@ -3,7 +3,7 @@
 
   <!-- Página inicial -->
   <url>
-    <loc>https://example.com/</loc>
+    <loc>https://confident-heyrovsky.168-75-84-128.plesk.page/</loc>
     <lastmod>2025-08-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -11,7 +11,7 @@
 
   <!-- Exemplo de página do blog -->
   <url>
-    <loc>https://example.com/blog</loc>
+    <loc>https://confident-heyrovsky.168-75-84-128.plesk.page/blog</loc>
     <lastmod>2025-08-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

@@ -8,7 +8,8 @@ if (!$slug) {
   exit;
 }
 
-$conn = new mysqli("localhost", "winove", "9*19avmU0", "fernando_winove_com_br_");
+$dbHost = getenv('DB_HOST') ?: '127.0.0.1';
+$conn = new mysqli($dbHost, "winove", "9*19avmU0", "fernando_winove_com_br_");
 if ($conn->connect_error) {
   die("Erro de conexão com o banco de dados.");
 }
@@ -32,7 +33,9 @@ if ($baseFromEnv) {
   $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
     (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
   $scheme = $isHttps ? 'https' : 'http';
-  $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+  $defaultSite = getenv('SITE_URL') ?: 'https://confident-heyrovsky.168-75-84-128.plesk.page';
+  $fallbackHost = parse_url($defaultSite, PHP_URL_HOST) ?: 'confident-heyrovsky.168-75-84-128.plesk.page';
+  $host = $_SERVER['HTTP_HOST'] ?? $fallbackHost;
   $baseUrl = $scheme . '://' . $host;
 }
 

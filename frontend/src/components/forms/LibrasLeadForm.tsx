@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+const API_BASE = import.meta.env.VITE_API_BASE || "/api";
+
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
@@ -21,7 +23,7 @@ export function LibrasLeadForm({ onSuccess }: Props) {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/leads/libras", {
+      const res = await fetch(`${API_BASE}/leads/libras`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
