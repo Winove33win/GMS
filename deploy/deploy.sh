@@ -16,14 +16,9 @@ fi
 echo "Building frontend..."
 npm run build
 
-# Copy build to backend
-cd "$ROOT_DIR"
-rm -rf "$BACKEND_DIR/dist"
-cp -r "$FRONTEND_DIR/dist" "$BACKEND_DIR/"
-
-echo "Frontend build copied to backend/dist"
-
 # Generate sitemaps
-npm --prefix "$BACKEND_DIR" run sitemap
-echo "Sitemaps generated in backend/dist (override with SITEMAP_OUTPUT)"
+cd "$ROOT_DIR"
+echo "Generating sitemap..."
+SITEMAP_OUTPUT="$FRONTEND_DIR/dist/sitemap.xml" node "$BACKEND_DIR/scripts/generate-sitemap.mjs"
+echo "Sitemap generated at $FRONTEND_DIR/dist/sitemap.xml"
 
