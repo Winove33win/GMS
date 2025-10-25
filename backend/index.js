@@ -131,7 +131,7 @@ app.use((_req, res, next) => {
       `script-src 'self' 'unsafe-inline' ${canonicalOrigin} https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       `img-src 'self' data: blob: ${canonicalOrigin} https://images.unsplash.com`,
-      "font-src 'self' https://fonts.gstatic.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
       `connect-src 'self' ${canonicalOrigin} https://www.google-analytics.com https://api.stripe.com`,
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com",
       "frame-ancestors 'none'",
