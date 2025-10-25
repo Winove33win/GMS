@@ -14,11 +14,7 @@ export default defineConfig({
       allow: [path.resolve(__dirname, '..', 'content')],
     },
   },
-  build: {
-    outDir: path.resolve(__dirname, '../backend/dist'),
-    assetsDir: 'assets',
-    emptyOutDir: true,
-  },
+
   base: '/',
   resolve: {
     alias: {
