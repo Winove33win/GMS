@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Compass, Lightbulb, Sparkles, Quote } from 'lucide-react';
 import { Hero } from '@/components/Hero';
 import { CTA } from '@/components/CTA';
 import { PartnerCard } from '@/components/PartnerCard';
@@ -35,6 +36,44 @@ const stats = [
 
 const partners = content.partners.slice(0, 4);
 
+const mentorshipTracks = [
+  {
+    icon: Lightbulb,
+    title: 'Diagnóstico colaborativo',
+    description:
+      'Mapeamos desafios prioritários com metodologias de design sistêmico, alinhando expectativas entre mentores e projetos.',
+  },
+  {
+    icon: Compass,
+    title: 'Roteiro de experimentação',
+    description:
+      'Construímos planos enxutos, combinando sprints, entrevistas com usuários e prototipação orientada a dados territoriais.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Ciclos de aprendizagem',
+    description:
+      'Facilitamos momentos de troca e revisão de indicadores para garantir evolução contínua e ampliar o impacto social.',
+  },
+];
+
+const impactStories = [
+  {
+    quote:
+      'Os encontros com a GMS ajudaram nosso coletivo a transformar ideias dispersas em um plano integrado de impacto educacional.',
+    author: 'Clara Rodrigues',
+    role: 'Coordenadora do Projeto Trilhas do Saber',
+    project: 'Projeto participante da turma 2023',
+  },
+  {
+    quote:
+      'A mentoria trouxe clareza para medir resultados e atrair parceiros estratégicos que hoje apoiam nossas ações ambientais.',
+    author: 'João Mendes',
+    role: 'Fundador da Rede Verde Circular',
+    project: 'Projeto acelerado pela rede em 2022',
+  },
+];
+
 export default function Home() {
   const highlights = getProjectHighlights(3);
 
@@ -68,6 +107,38 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section space-y-8">
+        <div className="space-y-3 text-center">
+          <h2 className="text-3xl font-bold text-ink-900">Trilhas de mentoria</h2>
+          <p className="mx-auto max-w-2xl text-lg text-ink-600">
+            Cada jornada combina ferramentas práticas, indicadores e curadoria de especialistas para gerar resultados mensuráveis.
+          </p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {mentorshipTracks.map((track, index) => {
+            const Icon = track.icon;
+            return (
+              <motion.div
+                key={track.title}
+                className="card-surface flex h-full flex-col gap-4 rounded-3xl p-6 text-left"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.2, ease: 'easeOut', delay: index * 0.08 }}
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-green/10 text-brand-green">
+                  <Icon className="h-6 w-6" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-ink-900">{track.title}</h3>
+                  <p className="text-sm text-ink-600">{track.description}</p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
       <section className="section">
         <div className="space-y-6 text-center">
           <h2 className="text-3xl font-bold text-ink-900">Indicadores da comunidade</h2>
@@ -93,6 +164,40 @@ export default function Home() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {highlights.map((project) => (
             <ProjectCard key={project.slug} project={project} />
+          ))}
+        </div>
+      </section>
+
+      <section className="section space-y-8">
+        <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+          <div className="space-y-3">
+            <h2 className="text-3xl font-bold text-ink-900">Histórias da rede</h2>
+            <p className="max-w-2xl text-lg text-ink-600">
+              Projetos participantes compartilham como a mentoria voluntária potencializou seus resultados e fortaleceu a atuação no território.
+            </p>
+          </div>
+          <Button asChild variant="ghost">
+            <a href="/projetos">Conhecer casos completos</a>
+          </Button>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {impactStories.map((story, index) => (
+            <motion.blockquote
+              key={story.author}
+              className="card-surface flex h-full flex-col gap-4 rounded-3xl p-8"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.24, ease: 'easeOut', delay: index * 0.12 }}
+            >
+              <Quote className="h-8 w-8 text-brand-green" />
+              <p className="text-lg font-medium text-ink-900">“{story.quote}”</p>
+              <div className="space-y-1 text-sm text-ink-600">
+                <p className="font-semibold text-ink-900">{story.author}</p>
+                <p>{story.role}</p>
+                <p className="text-brand-green">{story.project}</p>
+              </div>
+            </motion.blockquote>
           ))}
         </div>
       </section>
