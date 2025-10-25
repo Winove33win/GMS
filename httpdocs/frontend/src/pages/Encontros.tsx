@@ -1,68 +1,83 @@
-import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { Seo } from '@/components/Seo';
+import { Button } from '@/components/ui/button';
+import { content } from '@/lib/content';
 
-interface Meeting {
-  data: string;
-  formato: string;
-  resumo: string;
-  pauta: string;
-  link: string;
-  projetos: string[];
-}
+const meetingLink = 'https://meet.google.com/exemplo-gms';
 
-const Encontros: React.FC = () => {
-  const [meetings, setMeetings] = useState<Meeting[]>([]);
-
-  useEffect(() => {
-    fetch('/content/meetings.json')
-      .then((res) => res.json() as Promise<Meeting[]>)
-      .then((items) =>
-        [...items].sort((a, b) => a.data.localeCompare(b.data)).reverse()
-      )
-      .then(setMeetings)
-      .catch((err) => console.error('Erro ao carregar agenda', err));
-  }, []);
+export default function Encontros() {
+  const meetings = content.meetings
+    .slice()
+    .sort((a, b) => a.data.localeCompare(b.data));
 
   return (
-    <section className="space-y-6">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold text-brand-dark">Encontros de mentoria</h1>
-        <p className="text-neutral-600">
-          As sessões acontecem às quintas-feiras, das 16h às 17h30, via Google Meet. Escolha uma data e traga seu projeto para a roda
-          colaborativa.
-        </p>
-        <a
-          href="https://meet.google.com/example"
-          className="inline-flex w-fit rounded-full border border-brand-green px-5 py-2 text-brand-green hover:bg-brand-green/10"
-        >
-          Entrar no encontro (link fixo)
-        </a>
-      </header>
-
-      <div className="space-y-4">
-        {meetings.map((meeting) => (
-          <div key={meeting.data} className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-              <span className="font-semibold text-brand-dark">
-                {new Date(meeting.data).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })}
-              </span>
-              <span className="uppercase tracking-wide text-xs text-neutral-500">{meeting.formato}</span>
-            </div>
-            <p className="mt-2 text-sm text-neutral-600">{meeting.resumo}</p>
-            <p className="mt-2 text-sm text-neutral-500">Pauta: {meeting.pauta}</p>
-            <p className="mt-2 text-xs text-neutral-500">Projetos: {meeting.projetos.join(', ')}</p>
-            {meeting.link && (
-              <a
-                href={meeting.link}
-                className="mt-3 inline-flex text-sm font-semibold text-brand-green underline"
-              >
-                Acessar link do encontro
-              </a>
-            )}
+    <div className="space-y-12">
+      <Seo
+        title="Encontros de mentoria"
+        description="Agenda fixa da GMS: quintas-feiras, 16h às 17h30, encontros híbridos para projetos mentorados."
+      />
+      <section className="space-y-4">
+        <div className="space-y-2">
+          <span className="text-sm font-semibold uppercase tracking-wide text-brand-green">Agenda viva</span>
+          <h1 className="text-4xl font-bold text-ink-900">Encontros GMS</h1>
+          <p className="max-w-3xl text-lg text-ink-600">
+            Reuniões híbridas (online + presencial em Campinas/SP) todas as quintas-feiras, das 16h às 17h30. Aberto para
+            mentores, mentorados e novos parceiros conhecerem a rede.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 rounded-3xl bg-white p-6 shadow-card ring-1 ring-black/5">
+          <div className="space-y-1 text-sm text-ink-600">
+            <p>
+              <span className="font-semibold text-ink-900">Dia fixo:</span> quintas-feiras
+            </p>
+            <p>
+              <span className="font-semibold text-ink-900">Horário:</span> 16h — 17h30 (BRT)
+            </p>
+            <p>
+              <span className="font-semibold text-ink-900">Formato:</span> híbrido (Google Meet + presença em Campinas/SP)
+            </p>
           </div>
-        ))}
-      </div>
-    </section>
-  );
-};
+          <Button asChild size="lg">
+            <a href={meetingLink} target="_blank" rel="noreferrer">
+              Entrar no encontro
+            </a>
+          </Button>
+        </div>
+      </section>
 
-export default Encontros;
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold text-ink-900">Próximas pautas</h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          {meetings.map((meeting) => {
+            const formattedDate = format(new Date(meeting.data), "d 'de' MMMM", { locale: ptBR });
+            return (
+              <div key={meeting.data} className="card-surface flex flex-col gap-4 rounded-3xl p-6">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-base font-semibold text-ink-900">{formattedDate}</span>
+                  <span className="rounded-full bg-surface-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-green">
+                    {meeting.formato}
+                  </span>
+                </div>
+                <p className="text-sm text-ink-600">{meeting.resumo}</p>
+                <div className="space-y-1 text-sm text-ink-500">
+                  <p>
+                    <span className="font-semibold text-ink-700">Pauta:</span> {meeting.pauta}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-ink-700">Projetos:</span> {meeting.projetos.join(', ')}
+                  </p>
+                </div>
+                <Button asChild variant="secondary" size="sm">
+                  <a href={meeting.link} target="_blank" rel="noreferrer">
+                    Link do encontro
+                  </a>
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -9,13 +9,14 @@ export type ProjectRecord = {
   descricao_long?: string;
   status: string;
   ods: string[];
-  area: string;
+  area?: string;
   cidade?: string;
-  mentores?: string[];
-  amentorados?: string[];
-  metricas?: Record<string, number>;
+  mentores: string[];
+  amentorados: string[];
+  metricas?: { label: string; value: string }[];
   ano_inicio?: number;
   ano_fim?: number;
+  links?: { label: string; url: string }[];
 };
 
 export type BlogSummary = {

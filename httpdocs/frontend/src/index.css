@@ -1,11 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-white text-neutral-900;
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface-50 text-ink-900 font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-semibold text-ink-900;
+  }
+
+  main {
+    @apply focus:outline-none;
+  }
+
+  a {
+    @apply text-brand-green underline-offset-4 transition-colors duration-150 ease-out hover:text-brand-amber;
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-brand-green;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
-.container {
-  @apply max-w-6xl mx-auto px-4;
+@layer components {
+  .app-container {
+    @apply max-w-page mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section {
+    @apply py-12 md:py-16;
+  }
+
+  .card-surface {
+    @apply rounded-2xl bg-white shadow-card ring-1 ring-black/5;
+  }
 }

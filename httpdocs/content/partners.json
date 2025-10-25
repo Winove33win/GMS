@@ -2,19 +2,25 @@
   {
     "nome": "Instituto de Tecnologia e Transformação",
     "tipo": "Rede de cooperação",
-    "descricao": "Apoio a projetos de inovação social no interior paulista.",
+    "descricao": "Apoia estudos aplicados e oferece infraestrutura para mentorias presenciais na região.",
     "link": "https://itt.example.org"
   },
   {
     "nome": "ANITEC",
-    "tipo": "Associação",
-    "descricao": "Articula empresas de tecnologia para impacto social.",
+    "tipo": "Associação empresarial",
+    "descricao": "Mobiliza empresas de tecnologia para mentorias e abertura de dados de impacto.",
     "link": "https://anitec.example.org"
   },
   {
     "nome": "IPISA",
-    "tipo": "Instituto",
-    "descricao": "Parceria para mentoria de projetos socioambientais.",
+    "tipo": "Instituto parceiro",
+    "descricao": "Coorganiza agendas de inovação socioambiental e apoia editais de impacto.",
     "link": "https://ipisa.example.org"
+  },
+  {
+    "nome": "Lab Educativo Horizonte",
+    "tipo": "Universidade comunitária",
+    "descricao": "Desenvolve trilhas de aprendizagem acessível em parceria com escolas públicas e a rede GMS.",
+    "link": "https://horizonte.example.org"
   }
 ]

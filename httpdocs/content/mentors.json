@@ -2,25 +2,46 @@
   {
     "id": "ana-silva",
     "nome": "Ana Silva",
-    "bio": "Inovação social, captação de recursos e impacto.",
-    "areas": ["Inovação", "Captação", "ODS 17"],
+    "bio": "Especialista em inovação social e métricas de impacto com 12 anos de experiência em organizações híbridas.",
+    "areas": ["Inovação", "Métricas", "ODS 17"],
     "cidade": "Campinas/SP",
-    "linkedin": "https://www.linkedin.com/in/exemplo-ana"
+    "linkedin": "https://www.linkedin.com/in/exemplo-ana",
+    "fotoUrl": ""
   },
   {
     "id": "joao-pereira",
     "nome": "João Pereira",
-    "bio": "Educação STEAM e comunidades de aprendizagem.",
-    "areas": ["Educação", "STEAM", "ODS 4"],
+    "bio": "Facilitador de aprendizagem STEAM e tecnologia cidadã, cofundador de laboratórios criativos comunitários.",
+    "areas": ["Educação", "Tecnologia", "ODS 4"],
     "cidade": "Campinas/SP",
-    "linkedin": "https://www.linkedin.com/in/exemplo-joao"
+    "linkedin": "https://www.linkedin.com/in/exemplo-joao",
+    "fotoUrl": ""
   },
   {
     "id": "bianca-rocha",
     "nome": "Bianca Rocha",
-    "bio": "Saneamento e água potável em territórios vulneráveis.",
-    "areas": ["Meio ambiente", "Saneamento", "ODS 6"],
+    "bio": "Engenheira sanitarista focada em saneamento ecológico e soluções de acesso à água em territórios periféricos.",
+    "areas": ["Saneamento", "ODS 6", "Infraestrutura"],
     "cidade": "Hortolândia/SP",
-    "linkedin": "https://www.linkedin.com/in/exemplo-bianca"
+    "linkedin": "https://www.linkedin.com/in/exemplo-bianca",
+    "fotoUrl": ""
+  },
+  {
+    "id": "marcos-freitas",
+    "nome": "Marcos Freitas",
+    "bio": "Designer de serviços e estrategista ESG, apoiando negócios de impacto na estruturação de modelos financeiros.",
+    "areas": ["Design de Serviços", "Finanças", "ODS 8"],
+    "cidade": "Valinhos/SP",
+    "linkedin": "https://www.linkedin.com/in/exemplo-marcos",
+    "fotoUrl": ""
+  },
+  {
+    "id": "luciana-macedo",
+    "nome": "Luciana Macedo",
+    "bio": "Comunicadora e jornalista de dados, articula narrativas e campanhas para organizações da sociedade civil.",
+    "areas": ["Comunicação", "Mobilização", "ODS 10"],
+    "cidade": "Sumaré/SP",
+    "linkedin": "https://www.linkedin.com/in/exemplo-luciana",
+    "fotoUrl": ""
   }
 ]

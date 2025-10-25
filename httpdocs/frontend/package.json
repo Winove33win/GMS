@@ -9,14 +9,26 @@
     "postinstall": "node ./scripts/decode-assets.mjs"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.3",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-select": "^2.1.5",
+    "@radix-ui/react-slot": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "class-variance-authority": "^0.7.0",
+    "date-fns": "^3.6.0",
+    "framer-motion": "^11.3.21",
+    "lucide-react": "^0.446.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2"
+    "react-helmet-async": "^2.0.5",
+    "react-router-dom": "^6.26.2",
+    "tailwind-merge": "^2.5.3"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
+    "@tailwindcss/forms": "^0.5.8",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
     "vite": "^5.4.0"
