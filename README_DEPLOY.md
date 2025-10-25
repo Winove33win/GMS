@@ -2,7 +2,7 @@ Deploy to Plesk
 ===============
 
 This repository now ships a full-stack app (`httpdocs/backend` + `httpdocs/frontend`).
-The backend serves the SPA build from `frontend/dist` and exposes the JSON
+The backend serves the SPA build from `backend/dist` and exposes the JSON
 endpoints under `/api`. When the backend dependencies are installed, a
 `postinstall` hook automatically installs the frontend packages and generates
 the production bundle. Follow the steps below to keep the temporary Plesk domain
@@ -22,8 +22,8 @@ Install & build
 2. In the same panel, click **Install NPM Packages**. Plesk runs
    `npm install` which now triggers the script
    `npm --prefix ../frontend install && npm --prefix ../frontend run build`.
-3. After the command finishes, verify that `../frontend/dist/index.html`
-   and `../frontend/dist/assets/*` exist (File Manager → `httpdocs/frontend/dist`).
+3. After the command finishes, verify that `../backend/dist/index.html`
+   and `../backend/dist/assets/*` exist (File Manager → `httpdocs/backend/dist`).
 4. Click **Restart Application**.
 
 If the site still shows “Frontend build ausente…”, it means the automatic build
@@ -54,6 +54,6 @@ structured data use the correct canonical origin.
 Rollback
 --------
 If a deploy fails, you can restore the previous bundle by copying a known-good
-`frontend/dist` directory back into place and restarting the Node app. The API
+`backend/dist` directory back into place and restarting the Node app. The API
 endpoints continue to serve JSON from `httpdocs/content`, so no database restore
 is required.

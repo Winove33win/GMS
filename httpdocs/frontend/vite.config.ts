@@ -14,7 +14,7 @@ export default defineConfig({
       allow: [path.resolve(__dirname, '..', 'content')],
     },
   },
-  build: { outDir: 'dist', assetsDir: 'assets' },
+
   base: '/',
   resolve: {
     alias: {
