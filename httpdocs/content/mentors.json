@@ -1,26 +1,26 @@
 [
   {
+    "id": "ana-silva",
     "nome": "Ana Silva",
-    "bio": "Engenheira ambiental com experiência em saneamento básico.",
-    "areas": ["Meio ambiente", "Saneamento"],
+    "bio": "Inovação social, captação de recursos e impacto.",
+    "areas": ["Inovação", "Captação", "ODS 17"],
     "cidade": "Campinas/SP",
-    "linkedin": "https://linkedin.com/in/ana-silva",
-    "disponibilidade": "Quintas à tarde"
+    "linkedin": "https://www.linkedin.com/in/exemplo-ana"
   },
   {
+    "id": "joao-pereira",
     "nome": "João Pereira",
-    "bio": "Gestor de projetos sociais com foco em inovação.",
-    "areas": ["Inovação", "Impacto Social"],
-    "cidade": "São Paulo/SP",
-    "linkedin": "https://linkedin.com/in/joao-pereira",
-    "disponibilidade": "Flexível"
+    "bio": "Educação STEAM e comunidades de aprendizagem.",
+    "areas": ["Educação", "STEAM", "ODS 4"],
+    "cidade": "Campinas/SP",
+    "linkedin": "https://www.linkedin.com/in/exemplo-joao"
   },
   {
-    "nome": "Marina Costa",
-    "bio": "Especialista em captação de recursos para OSCs.",
-    "areas": ["Captação", "Governança"],
-    "cidade": "Campinas/SP",
-    "linkedin": "https://linkedin.com/in/marina-costa",
-    "disponibilidade": "Quintas 16h"
+    "id": "bianca-rocha",
+    "nome": "Bianca Rocha",
+    "bio": "Saneamento e água potável em territórios vulneráveis.",
+    "areas": ["Meio ambiente", "Saneamento", "ODS 6"],
+    "cidade": "Hortolândia/SP",
+    "linkedin": "https://www.linkedin.com/in/exemplo-bianca"
   }
 ]

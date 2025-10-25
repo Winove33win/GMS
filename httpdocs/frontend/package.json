@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node ./scripts/decode-assets.mjs",
     "build": "vite build",
     "postinstall": "node ./scripts/decode-assets.mjs"
   },
