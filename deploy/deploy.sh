@@ -3,23 +3,6 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-FRONT="$ROOT_DIR/frontend"
-BACK="$ROOT_DIR/backend"
-BACK_DIST="${SSR_DIST_DIR:-$BACK/dist}"
-
-echo "▶ Deploy iniciado: $(date)"
-
-cd "$FRONT"
-echo "📦 Frontend install/build"
-npm ci --no-audit --prefer-offline
-npm run build
-
-echo "⤳ Copiando dist para $BACK_DIST"
-mkdir -p "$BACK_DIST"
-rm -rf "$BACK_DIST"
-mkdir -p "$BACK_DIST"
-cp -r "$FRONT/dist/"* "$BACK_DIST/"
-=======
 FRONTEND_DIR="$ROOT_DIR/frontend"
 BACKEND_DIR="$ROOT_DIR/backend"
 BACK_DIST="${SSR_DIST_DIR:-$BACKEND_DIR/dist}"
@@ -35,12 +18,11 @@ if ! npm ci --no-audit --prefer-offline; then
 fi
 npm run build
 
-echo "🗺️ Gerando sitemap"
 cd "$ROOT_DIR"
+echo "🗺️ Gerando sitemap"
 SITEMAP_OUTPUT="$FRONTEND_DIR/dist/sitemap.xml" node "$BACKEND_DIR/scripts/generate-sitemap.mjs"
 
 echo "🧹 Limpando dist antigo em $BACK_DIST"
-mkdir -p "$BACK_DIST"
 rm -rf "$BACK_DIST"
 mkdir -p "$BACK_DIST"
 
@@ -52,8 +34,8 @@ if [ ! -f "$BACK_DIST/index.html" ]; then
   exit 1
 fi
 
-echo "📦 Backend: install"
 cd "$BACKEND_DIR"
+echo "📦 Backend: install"
 if ! npm ci --no-audit --prefer-offline; then
   echo "npm ci falhou, executando npm install"
   npm install
@@ -64,14 +46,3 @@ mkdir -p "$BACKEND_DIR/tmp"
 touch "$BACKEND_DIR/tmp/restart.txt"
 
 echo "✅ Deploy concluído: $(date)"
-
-
-cd "$BACK"
-echo "📦 Backend install"
-npm ci --no-audit --prefer-offline
-
-echo "🔁 Reiniciando app (Passenger)"
-mkdir -p "$BACK/tmp"
-touch "$BACK/tmp/restart.txt"
-
-echo "🟢 Deploy concluído: $(date)"
