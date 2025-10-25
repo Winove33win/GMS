@@ -11,6 +11,7 @@ import blogPostsRoute from './routes/blogPosts.js';
 import casesRoute from './routes/cases.js';
 import templatesRoute from './routes/templates.js';
 import leadsRoutes from './routes/leads.js';
+import mentorsRoute from './routes/mentors.js';
 import { postSeoApiRouter, postSeoPageRouter } from './routes/postSeo.js';
 import {
   ensureTemplateIsFresh,
@@ -173,9 +174,9 @@ app.use(
 app.use(express.static(distPath));
 
 const HOME_DESCRIPTION =
-  'A Winove entrega soluções digitais que transformam negócios. Descubra nossos cases de sucesso, serviços e portfólio.';
+  'Conectamos mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos Objetivos de Desenvolvimento Sustentável.';
 const BLOG_DESCRIPTION =
-  'Conteúdos exclusivos, tendências e estratégias para manter seu negócio sempre à frente no mundo digital';
+  'Aprendizados, relatos e boas práticas da comunidade Mentoria Solidária.';
 const DEFAULT_IMAGE =
   process.env.DEFAULT_SHARE_IMAGE || `${canonicalOrigin}/assets/images/default-share.png`;
 
@@ -187,25 +188,25 @@ app.get('/blog/', (req, res, next) => {
 
   const canonical = `${BASE_URL}/blog/`;
   const html = renderTemplateWithMeta(template, {
-    title: 'Blog & Insights | Winove',
+    title: 'Blog & Insights | Mentoria Solidária',
     description: BLOG_DESCRIPTION,
     canonical,
     openGraph: {
       'og:type': 'website',
-      'og:title': 'Blog & Insights | Winove',
+      'og:title': 'Blog & Insights | Mentoria Solidária',
       'og:description': BLOG_DESCRIPTION,
       'og:image': DEFAULT_IMAGE,
     },
     twitter: {
       'twitter:card': 'summary_large_image',
-      'twitter:title': 'Blog & Insights | Winove',
+      'twitter:title': 'Blog & Insights | Mentoria Solidária',
       'twitter:description': BLOG_DESCRIPTION,
       'twitter:image': DEFAULT_IMAGE,
     },
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'Blog',
-      name: 'Winove Blog',
+      name: 'Mentoria Solidária Blog',
       description: BLOG_DESCRIPTION,
       url: canonical,
     },
@@ -222,6 +223,7 @@ app.get('/blog/', (req, res, next) => {
 apiRouter.use('/blog-posts', blogPostsRoute);
 apiRouter.use('/cases', casesRoute);
 apiRouter.use('/templates', templatesRoute);
+apiRouter.use('/mentores', mentorsRoute);
 apiRouter.use('/leads', leadsRoutes);
 apiRouter.use('/post', postSeoApiRouter);
 
@@ -243,25 +245,25 @@ app.get('/', (req, res, next) => {
 
   const canonical = `${BASE_URL}/`;
   const html = renderTemplateWithMeta(template, {
-    title: 'Winove - Soluções Criativas e Resultados Reais',
+    title: 'Mentoria Solidária - Rede colaborativa de impacto',
     description: HOME_DESCRIPTION,
     canonical,
     openGraph: {
       'og:type': 'website',
-      'og:title': 'Winove - Soluções Criativas e Resultados Reais',
+      'og:title': 'Mentoria Solidária - Rede colaborativa de impacto',
       'og:description': HOME_DESCRIPTION,
       'og:image': DEFAULT_IMAGE,
     },
     twitter: {
       'twitter:card': 'summary_large_image',
-      'twitter:title': 'Winove - Soluções Criativas e Resultados Reais',
+      'twitter:title': 'Mentoria Solidária - Rede colaborativa de impacto',
       'twitter:description': HOME_DESCRIPTION,
       'twitter:image': DEFAULT_IMAGE,
     },
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Início - Winove',
+      name: 'Início - Mentoria Solidária',
       url: canonical,
       description: HOME_DESCRIPTION,
     },

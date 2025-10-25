@@ -22,6 +22,7 @@ import Promocoes from "./pages/Promocoes";
 import NotFound from "./pages/NotFound";
 import LibrasPage from "./pages/Libras";
 import Cursos from "./pages/Cursos";
+import Mentores from "./pages/Mentores";
 
 const queryClient = new QueryClient();
 
@@ -32,10 +33,11 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Header />
-        <main id="app" className="flex min-h-screen flex-col">
+        <main id="app" className="flex min-h-screen flex-col bg-white text-neutral-900">
           <div className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/mentores" element={<Mentores />} />
               <Route path="/blog" element={<BlogList />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/cases" element={<CasesList />} />
