@@ -1,8 +1,14 @@
 {
+  "name": "gms-workspace",
+  "private": true,
+  "scripts": {
+    "postinstall": "node backend/scripts/build-and-sync.mjs || echo \"(postinstall) build-and-sync falhou\"",
+=======
   "name": "gms-monorepo",
   "private": true,
   "scripts": {
     "postinstall": "node backend/scripts/build-and-sync.mjs || echo \"(postinstall) build-and-sync falhou, continuei…\"",
+
     "deploy": "bash ./deploy/deploy.sh"
   }
 }
