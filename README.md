@@ -86,6 +86,21 @@ When building locally or running `deploy.sh`, make sure a `.env` file exists
 with `VITE_API_BASE` defined. The provided `deploy.sh` script will create a
 minimal `.env` automatically.
 
+### Sincronização automática do build do frontend
+
+- O comando `npm run build` executado em `frontend/` dispara o script
+  `frontend/scripts/postbuild-sync.mjs`, que replica o conteúdo de
+  `frontend/dist` para `backend/dist` e garante que
+  `backend/dist/index.html` esteja presente antes de concluir com sucesso.
+- O script `deploy/deploy.sh` (chamado por `deploy/auto-update.sh` quando há
+  novos commits) utiliza `npm run build`, portanto a cópia para `backend/dist`
+  também acontece automaticamente durante deploys agendados no servidor ou via
+  Plesk, sem necessidade de passos manuais adicionais após o build.
+- Para pipelines de CI/CD que já cuidam da instalação de dependências, é
+  possível usar `node backend/scripts/build-and-sync.mjs --skip-install`
+  (ou definir `CI_SKIP_FRONTEND_INSTALL=true`) para evitar reinstalações
+  redundantes antes do build completo.
+
 ### Automatic deploys
 
 For servers that host this repository directly, the helper script
