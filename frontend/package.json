@@ -12,7 +12,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postinstall": "node frontend/scripts/decode-assets.mjs"
+    "postinstall": "node frontend/scripts/decode-assets.mjs",
+    "postbuild": "node ./scripts/postbuild-sync.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

@@ -18,9 +18,19 @@ function run(cmd, cwd) {
   execSync(cmd, { stdio: 'inherit', cwd });
 }
 
+const args = new Set(process.argv.slice(2));
+const skipInstall =
+  args.has('--skip-install') ||
+  process.env.BYPASS_FRONTEND_INSTALL === '1' ||
+  process.env.BYPASS_FRONTEND_INSTALL?.toLowerCase() === 'true' ||
+  process.env.SKIP_FRONTEND_INSTALL === '1' ||
+  process.env.SKIP_FRONTEND_INSTALL?.toLowerCase() === 'true' ||
+  process.env.CI_SKIP_FRONTEND_INSTALL === '1' ||
+  process.env.CI_SKIP_FRONTEND_INSTALL?.toLowerCase() === 'true';
+
 try {
   // 1) Install and build frontend
-  if (!process.env.BYPASS_FRONTEND_INSTALL) {
+  if (!skipInstall) {
     try {
       run('npm ci', frontendDir);
     } catch (e) {
@@ -28,7 +38,7 @@ try {
       run('npm install', frontendDir);
     }
   } else {
-    console.log('Skipping frontend install due to BYPASS_FRONTEND_INSTALL=1');
+    console.log('Skipping frontend install (flag or environment variable detected)');
   }
 
   run('npm run build', frontendDir);
