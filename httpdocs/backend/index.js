@@ -45,7 +45,7 @@ const getTemplate = () => {
   return fresh || initial;
 };
 
-const sendHtml = (res, html, cacheControl = 'public, max-age=300, s-maxage=300') => {
+const sendHtml = (res, html, cacheControl = 'no-store') => {
   res
     .status(200)
     .set('Content-Type', 'text/html; charset=UTF-8')
@@ -139,8 +139,15 @@ app.use((_req, res, next) => {
 });
 
 const resolveDistPath = () => {
+  const envDistDir = process.env.SSR_DIST_DIR;
+  const normalisedEnvDistDir = envDistDir
+    ? path.isAbsolute(envDistDir)
+      ? envDistDir
+      : path.resolve(__dirname, envDistDir)
+    : null;
+
   const candidateDirs = [
-    process.env.SSR_DIST_DIR && path.resolve(__dirname, process.env.SSR_DIST_DIR),
+    normalisedEnvDistDir,
     path.join(__dirname, 'dist'),
     path.join(__dirname, '../frontend/dist'),
   ].filter(Boolean);
@@ -169,16 +176,31 @@ if (!hasDistBundle) {
   );
 }
 
-// Serve frontend build (prefer backend/dist but support legacy paths)
+// Cache-control helpers for static frontend assets
+app.use((req, res, next) => {
+  const acceptHeader = req.headers.accept || '';
+  const wantsHTML = acceptHeader.includes('text/html');
+  if (wantsHTML) {
+    res.setHeader('Cache-Control', 'no-store');
+  }
+  next();
+});
+
+// Serve frontend build (prefer SSR_DIST_DIR with fallback to legacy paths)
 if (hasDistBundle) {
   app.use(
-    '/assets',
-    express.static(path.join(distPath, 'assets'), {
-      immutable: true,
+    express.static(distPath, {
+      index: false,
       maxAge: '1y',
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-store');
+        } else {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+      },
     })
   );
-  app.use(express.static(distPath));
 }
 
 app.use('/content', express.static(path.join(__dirname, '../content')));
@@ -309,11 +331,18 @@ app.get('*', (req, res) => {
       .type('text/plain')
       .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build`.');
   }
+  res.setHeader('Cache-Control', 'no-store');
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
 // Start server (Plesk sets PORT)
 const port = Number(process.env.PORT || fallbackPort || 3000);
-app.listen(port, () => {
-  console.log(`API + Frontend running on port ${port}`);
+const host = '0.0.0.0';
+app.listen(port, host, () => {
+  console.log(`API + Frontend running on http://${host}:${port}`);
+  if (hasDistBundle) {
+    console.log(`Servindo build do frontend a partir de: ${distPath}`);
+  } else {
+    console.warn('⚠️  Nenhum build do frontend disponível para servir.');
+  }
 });

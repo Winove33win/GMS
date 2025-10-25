@@ -1,0 +1,7 @@
+{
+  "name": "gms-deploy",
+  "private": true,
+  "scripts": {
+    "deploy": "bash ./deploy/deploy.sh"
+  }
+}
