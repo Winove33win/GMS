@@ -1,45 +1,61 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "node:fs";
+import path from "node:path";
+import https from "node:https";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const manifestPath = path.resolve(__dirname, '../assets/manifest.json');
+const root = path.resolve(process.cwd(), "./");
+const manifestPath = path.join(root, "assets.manifest.json");
 
-function ensureDir(filePath) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+function ensureDir(p) {
+  if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
 }
 
-function writeBinary(targetPath, base64String) {
-  ensureDir(targetPath);
-  const buffer = Buffer.from(base64String, 'base64');
-  fs.writeFileSync(targetPath, buffer);
-  console.log('✅ wrote', targetPath, buffer.length, 'bytes');
+function download(url, dest) {
+  return new Promise((ok, fail) => {
+    const f = fs.createWriteStream(dest);
+    https
+      .get(url, (r) => {
+        if (r.statusCode !== 200) return fail(new Error(`GET ${url} -> ${r.statusCode}`));
+        r.pipe(f);
+        f.on("finish", () => f.close(ok));
+      })
+      .on("error", (e) => {
+        fs.unlink(dest, () => fail(e));
+      });
+  });
 }
 
-try {
+function readParts(files) {
+  return files
+    .map((f) => fs.readFileSync(path.join(root, f), "utf8").trim())
+    .join("");
+}
+
+async function run() {
   if (!fs.existsSync(manifestPath)) {
-    console.log('ℹ️ no manifest, skipping');
-    process.exit(0);
+    console.warn("[assets] manifest not found. skip.");
+    return;
   }
-
-  const raw = fs.readFileSync(manifestPath, 'utf8');
-  const map = JSON.parse(raw);
-  const projectRoot = path.resolve(__dirname, '../../');
-
-  for (const [relativeOut, base64] of Object.entries(map)) {
-    if (!base64 || base64.includes('TODO')) {
-      console.warn('⚠️ skip', relativeOut);
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  for (const entry of manifest.assets) {
+    const out = path.join(root, entry.out);
+    ensureDir(path.dirname(out));
+    if (entry.b64 || entry.parts) {
+      const b64 = entry.b64 || readParts(entry.parts);
+      const buf = Buffer.from(b64, "base64");
+      fs.writeFileSync(out, buf);
+      console.log(`[assets] wrote ${entry.out} (${buf.length} bytes)`);
       continue;
     }
-
-    const outPath = path.resolve(projectRoot, relativeOut);
-    writeBinary(outPath, base64);
+    if (entry.url) {
+      await download(entry.url, out);
+      console.log(`[assets] downloaded ${entry.url} -> ${entry.out}`);
+      continue;
+    }
+    console.warn(`[assets] skipped ${entry.out} (no b64, parts or url)`);
   }
-
-  console.log('🧩 assets decoded');
-  process.exit(0);
-} catch (error) {
-  console.error('❌ decode error', error);
-  process.exit(1);
 }
+
+run().catch((e) => {
+  console.error("[assets] error:", e);
+  process.exit(1);
+});
