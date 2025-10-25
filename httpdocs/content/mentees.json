@@ -1,20 +1,37 @@
 [
   {
+    "id": "coletivo-agua-viva",
     "nome": "Coletivo Água Viva",
-    "organizacao": "Associação comunitária",
-    "descricao": "Mobiliza moradores para soluções de acesso à água.",
+    "descricao": "Mobiliza moradores de ocupações urbanas para implantar sistemas comunitários de água e saneamento.",
+    "necessidades": ["Captação de recursos", "Engajamento comunitário"],
     "cidade": "Campinas/SP",
     "contatos": {
-      "email": "contato@aguaviva.org"
-    }
+      "email": "contato@aguaviva.org",
+      "site": "https://aguaviva.example.org"
+    },
+    "ods": ["6", "11"]
   },
   {
+    "id": "projeto-sofia-fala",
     "nome": "Projeto Sofia Fala",
-    "organizacao": "Iniciativa educacional",
-    "descricao": "Produz conteúdos acessíveis para educação inclusiva.",
+    "descricao": "Cria trilhas de aprendizagem acessíveis para crianças com deficiências de fala e audição em escolas públicas.",
+    "necessidades": ["Parcerias com escolas", "Produção de conteúdo"],
     "cidade": "Hortolândia/SP",
     "contatos": {
-      "email": "sofiafala@projetos.org"
-    }
+      "email": "sofiafala@projetos.org",
+      "site": "https://sofiafala.example.org"
+    },
+    "ods": ["4", "10"]
+  },
+  {
+    "id": "rede-circular",
+    "nome": "Rede Circular",
+    "descricao": "Rede de cooperativas que desenvolve soluções de logística reversa com mulheres catadoras.",
+    "necessidades": ["Modelagem financeira", "Ferramentas digitais"],
+    "cidade": "Sumaré/SP",
+    "contatos": {
+      "email": "contato@redecircular.org"
+    },
+    "ods": ["8", "12", "5"]
   }
 ]

@@ -165,7 +165,7 @@ const hasDistBundle = Boolean(distPath && fs.existsSync(distIndexPath));
 
 if (!hasDistBundle) {
   console.warn(
-    '⚠️  Nenhum build do frontend encontrado. Execute `npm --prefix ../frontend install && npm --prefix ../frontend run build` ou deixe o postinstall rodar para gerar `frontend/dist`.'
+    '⚠️  Nenhum build do frontend encontrado. Execute `npm --prefix ../frontend install && npm --prefix ../frontend run build` ou deixe o postinstall rodar para gerar `backend/dist`.'
   );
 }
 
@@ -195,7 +195,7 @@ app.get('/blog/', (req, res, next) => {
     return res
       .status(503)
       .type('text/plain')
-      .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build`.');
+      .send('Frontend build ausente. Rode `npm --prefix ../frontend install && npm --prefix ../frontend run build` para popular `backend/dist`.');
   }
 
   const template = getTemplate();

@@ -8,12 +8,22 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react()],
-  server: { port: 5173 },
-  build: { outDir: 'dist', assetsDir: 'assets' },
+  server: {
+    port: 5173,
+    fs: {
+      allow: [path.resolve(__dirname, '..', 'content')],
+    },
+  },
+  build: {
+    outDir: path.resolve(__dirname, '../backend/dist'),
+    assetsDir: 'assets',
+    emptyOutDir: true,
+  },
   base: '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@content': path.resolve(__dirname, '..', 'content'),
     },
   },
 });

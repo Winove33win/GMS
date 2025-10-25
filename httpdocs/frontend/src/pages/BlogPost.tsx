@@ -1,53 +1,92 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { api, BlogPost as BlogPostData } from '../lib/api';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Seo } from '@/components/Seo';
+import { Button } from '@/components/ui/button';
+import { api, type BlogPost as BlogPostData } from '@/lib/api';
 
-const renderMarkdown = (markdown: string) => {
-  const lines = markdown.split(/\r?\n/).map((line, index) => {
-    if (line.startsWith('# ')) {
-      return (
-        <h1 key={index} className="text-3xl font-semibold text-brand-dark">
-          {line.replace(/^#\s+/, '')}
-        </h1>
-      );
+function parseMarkdown(markdown: string) {
+  const lines = markdown.split(/\r?\n/);
+  const elements: { type: 'h1' | 'h2' | 'p'; content: string }[] = [];
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      return;
     }
-    if (line.startsWith('## ')) {
-      return (
-        <h2 key={index} className="text-2xl font-semibold text-brand-dark">
-          {line.replace(/^##\s+/, '')}
-        </h2>
-      );
+    if (trimmed.startsWith('## ')) {
+      elements.push({ type: 'h2', content: trimmed.replace(/^##\s+/, '') });
+    } else if (trimmed.startsWith('# ')) {
+      elements.push({ type: 'h1', content: trimmed.replace(/^#\s+/, '') });
+    } else {
+      elements.push({ type: 'p', content: trimmed });
     }
-    if (!line.trim()) {
-      return <br key={index} />;
-    }
-    return (
-      <p key={index} className="text-neutral-700">
-        {line}
-      </p>
-    );
   });
 
-  return <div className="space-y-4">{lines}</div>;
-};
+  return elements;
+}
 
-const BlogPost: React.FC = () => {
-  const { slug } = useParams();
+export default function BlogPost() {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [post, setPost] = useState<BlogPostData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!slug) return;
     api
       .getPost(slug)
       .then(setPost)
-      .catch((err) => console.error('Erro ao carregar post', err));
+      .catch(() => setError('Não foi possível carregar este conteúdo.'));
   }, [slug]);
 
-  if (!post) {
-    return <p className="text-neutral-500">Carregando post…</p>;
+  const parsed = useMemo(() => (post ? parseMarkdown(post.markdown) : []), [post]);
+  const title = parsed.find((item) => item.type === 'h1')?.content ?? 'Conteúdo GMS';
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <Seo title="Post não encontrado" description="Conteúdo indisponível." />
+        <p className="text-sm text-ink-600">{error}</p>
+        <Button variant="secondary" onClick={() => navigate('/blog')}>
+          Voltar para o blog
+        </Button>
+      </div>
+    );
   }
 
-  return <article className="space-y-6">{renderMarkdown(post.markdown)}</article>;
-};
+  if (!post) {
+    return <p className="text-sm text-ink-600">Carregando post…</p>;
+  }
 
-export default BlogPost;
+  return (
+    <article className="space-y-6">
+      <Seo title={title} description={post.markdown.slice(0, 140)} />
+      <Button variant="ghost" onClick={() => navigate(-1)} className="px-0 text-brand-green">
+        ← Voltar
+      </Button>
+      <div className="space-y-6">
+        {parsed.map((item, index) => {
+          if (item.type === 'h1') {
+            return (
+              <h1 key={index} className="text-4xl font-bold text-ink-900">
+                {item.content}
+              </h1>
+            );
+          }
+          if (item.type === 'h2') {
+            return (
+              <h2 key={index} className="text-2xl font-semibold text-ink-900">
+                {item.content}
+              </h2>
+            );
+          }
+          return (
+            <p key={index} className="text-lg leading-8 text-ink-700">
+              {item.content}
+            </p>
+          );
+        })}
+      </div>
+    </article>
+  );
+}

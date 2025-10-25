@@ -1,18 +1,34 @@
 [
   {
-    "ano": 2025,
-    "objetivo": "Expandir rede de mentores para 80 profissionais ativos",
-    "resultados_chave": [
-      "Realizar 48 encontros de mentoria",
-      "Cadastrar 20 novos projetos socioambientais"
+    "ods": "4",
+    "meta": "Garantir acesso a trilhas de aprendizagem inclusivas para educadores e estudantes.",
+    "indicadores": [
+      "Formar 120 educadores em metodologias inclusivas até 2026",
+      "Disponibilizar 60 recursos educacionais abertos acessíveis"
     ]
   },
   {
-    "ano": 2026,
-    "objetivo": "Lançar programa de incubação colaborativa",
-    "resultados_chave": [
-      "Estruturar trilhas de aprendizagem",
-      "Atender 15 projetos em estágio inicial"
+    "ods": "6",
+    "meta": "Expandir soluções comunitárias de água e saneamento em territórios vulneráveis.",
+    "indicadores": [
+      "Instalar 30 sistemas de captação de água de chuva",
+      "Publicar relatórios trimestrais de qualidade da água"
+    ]
+  },
+  {
+    "ods": "8",
+    "meta": "Fortalecer negócios de impacto e economia solidária apoiados pela rede.",
+    "indicadores": [
+      "Acompanhar 20 planos financeiros sustentáveis",
+      "Gerar aumento médio de 25% na renda de participantes"
+    ]
+  },
+  {
+    "ods": "12",
+    "meta": "Impulsionar iniciativas de logística reversa com participação de cooperativas de catadoras.",
+    "indicadores": [
+      "Conectar 10 novas cooperativas à rede",
+      "Implementar sistema de rastreio digital para resíduos coletados"
     ]
   }
 ]
