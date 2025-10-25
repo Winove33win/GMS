@@ -8,10 +8,28 @@ import { siteConfig } from '../utils/siteConfig.js';
 const BASE = siteConfig.canonicalBase || siteConfig.canonicalOrigin;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const backendRoot = path.resolve(__dirname, '..');
-const outOverride = process.env.SITEMAP_OUTPUT;
-const resolvedOut = outOverride
-  ? (path.isAbsolute(outOverride) ? outOverride : path.resolve(backendRoot, outOverride))
-  : path.join(backendRoot, 'dist', 'sitemap.xml');
+
+const resolveOutputPath = () => {
+  const outOverride = process.env.SITEMAP_OUTPUT;
+  if (outOverride) {
+    return path.isAbsolute(outOverride)
+      ? outOverride
+      : path.resolve(backendRoot, outOverride);
+  }
+
+  const ssrDistDirEnv = process.env.SSR_DIST_DIR;
+  if (ssrDistDirEnv) {
+    const ssrDistDir = path.isAbsolute(ssrDistDirEnv)
+      ? ssrDistDirEnv
+      : path.resolve(backendRoot, ssrDistDirEnv);
+
+    return path.join(ssrDistDir, 'sitemap.xml');
+  }
+
+  return path.resolve(backendRoot, '../frontend/dist/sitemap.xml');
+};
+
+const resolvedOut = resolveOutputPath();
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'lweb03.appuni.com.br',

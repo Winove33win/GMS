@@ -131,7 +131,7 @@ app.use((_req, res, next) => {
       `script-src 'self' 'unsafe-inline' ${canonicalOrigin} https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com`,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       `img-src 'self' data: blob: ${canonicalOrigin} https://images.unsplash.com`,
-      "font-src 'self' https://fonts.gstatic.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
       `connect-src 'self' ${canonicalOrigin} https://www.google-analytics.com https://api.stripe.com`,
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com",
       "frame-ancestors 'none'",
@@ -163,6 +163,7 @@ const resolveDistPath = () => {
 };
 
 const distPath = resolveDistPath();
+console.log('🧱 distPath selecionado:', distPath);
 // Serve frontend build (prefer backend/dist but support legacy paths)
 app.use(
   '/assets',
@@ -274,6 +275,20 @@ app.get('/', (req, res, next) => {
   }
 
   sendHtml(res, html);
+});
+
+app.use((req, res, next) => {
+  const accept = (req.headers.accept || '').toLowerCase();
+  const isHtml =
+    accept.includes('text/html') ||
+    req.path.endsWith('.html') ||
+    (!req.path.includes('.') && !req.path.startsWith('/api/'));
+  if (isHtml) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
 });
 
 // SPA fallback for React Router
