@@ -163,6 +163,7 @@ const resolveDistPath = () => {
 };
 
 const distPath = resolveDistPath();
+console.log('🧱 distPath selecionado:', distPath);
 // Serve frontend build (prefer backend/dist but support legacy paths)
 app.use(
   '/assets',
@@ -274,6 +275,20 @@ app.get('/', (req, res, next) => {
   }
 
   sendHtml(res, html);
+});
+
+app.use((req, res, next) => {
+  const accept = (req.headers.accept || '').toLowerCase();
+  const isHtml =
+    accept.includes('text/html') ||
+    req.path.endsWith('.html') ||
+    (!req.path.includes('.') && !req.path.startsWith('/api/'));
+  if (isHtml) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
 });
 
 // SPA fallback for React Router
