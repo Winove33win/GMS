@@ -165,6 +165,10 @@ const resolveDistPath = () => {
 
 const distPath = resolveDistPath();
 console.log('🧱 distPath selecionado:', distPath);
+const distIndexPath = path.join(distPath, 'index.html');
+if (!fs.existsSync(distIndexPath)) {
+  console.warn('⚠️ Nenhum build de frontend encontrado em', distIndexPath);
+}
 // Serve frontend build (prefer backend/dist but support legacy paths)
 app.use(
   '/assets',
@@ -173,7 +177,17 @@ app.use(
     maxAge: '1y',
   })
 );
-app.use(express.static(distPath));
+app.use(
+  express.static(distPath, {
+    index: false,
+    maxAge: '1y',
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-store');
+      }
+    },
+  })
+);
 
 const HOME_DESCRIPTION =
   'Conectamos mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos Objetivos de Desenvolvimento Sustentável.';
@@ -296,7 +310,12 @@ app.use((req, res, next) => {
 // SPA fallback for React Router
 app.get('*', (req, res) => {
   if (req.path.includes('.')) return res.status(404).end();
-  res.sendFile(path.join(distPath, 'index.html'));
+  if (!fs.existsSync(distIndexPath)) {
+    console.error('index.html não encontrado em', distIndexPath);
+    return res.status(503).json({ error: 'frontend_unavailable' });
+  }
+  res.setHeader('Cache-Control', 'no-store');
+  res.sendFile(distIndexPath);
 });
 
 // Start server (Plesk sets PORT)
