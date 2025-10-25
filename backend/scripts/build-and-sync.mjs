@@ -11,7 +11,14 @@ const backendDir = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(backendDir, '..');
 const frontendDir = path.resolve(repoRoot, 'frontend');
 const srcDist = path.resolve(frontendDir, 'dist');
-const dstDist = path.resolve(backendDir, 'dist');
+const distOverride = process.env.SSR_DIST_DIR;
+const dstDist = distOverride
+  ? path.resolve(path.isAbsolute(distOverride) ? distOverride : path.join(backendDir, distOverride))
+  : path.resolve(backendDir, 'dist');
+
+if (distOverride) {
+  console.log(`Using SSR_DIST_DIR override: ${dstDist}`);
+}
 
 function run(cmd, cwd) {
   console.log(`$ ${cmd}`);
@@ -44,6 +51,7 @@ try {
   run('npm run build', frontendDir);
 
   // 2) Sync dist -> backend/dist
+  console.log(`Syncing frontend build to ${dstDist}`);
   fs.rmSync(dstDist, { recursive: true, force: true });
   fs.mkdirSync(dstDist, { recursive: true });
   // Node 16+ has cpSync with recursive
