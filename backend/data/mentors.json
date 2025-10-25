@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ana-silva",
+    "nome": "Ana Silva",
+    "bio": "Inovação social, captação de recursos e impacto.",
+    "areas": ["Inovação", "Captação", "ODS 17"],
+    "cidade": "Campinas/SP",
+    "linkedin": "https://www.linkedin.com/in/exemplo-ana"
+  },
+  {
+    "id": "joao-pereira",
+    "nome": "João Pereira",
+    "bio": "Educação STEAM e comunidades de aprendizagem.",
+    "areas": ["Educação", "STEAM", "ODS 4"],
+    "cidade": "Campinas/SP",
+    "linkedin": "https://www.linkedin.com/in/exemplo-joao"
+  },
+  {
+    "id": "bianca-rocha",
+    "nome": "Bianca Rocha",
+    "bio": "Saneamento e água potável em territórios vulneráveis.",
+    "areas": ["Meio ambiente", "Saneamento", "ODS 6"],
+    "cidade": "Hortolândia/SP",
+    "linkedin": "https://www.linkedin.com/in/exemplo-bianca"
+  }
+]

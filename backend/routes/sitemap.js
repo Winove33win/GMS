@@ -18,11 +18,10 @@ const pool = mysql.createPool({
 const BASE = siteConfig.canonicalBase || siteConfig.canonicalOrigin;
 
 const staticUrls = [
-  { loc: `${BASE}/`,          changefreq: 'weekly',  priority: '1.0' },
-  { loc: `${BASE}/blog/`,     changefreq: 'weekly',  priority: '0.9' },
-  { loc: `${BASE}/cases`,     changefreq: 'monthly', priority: '0.7' },
-  { loc: `${BASE}/servicos`,  changefreq: 'monthly', priority: '0.7' },
-  { loc: `${BASE}/contato`,   changefreq: 'monthly', priority: '0.6' },
+  { loc: `${BASE}/`, changefreq: 'weekly', priority: '1.0' },
+  { loc: `${BASE}/mentores`, changefreq: 'weekly', priority: '0.9' },
+  { loc: `${BASE}/blog/`, changefreq: 'weekly', priority: '0.8' },
+  { loc: `${BASE}/contato`, changefreq: 'monthly', priority: '0.6' },
 ];
 
 const toUrlXml = ({ loc, changefreq, priority, lastmod }) => `
