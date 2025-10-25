@@ -11,6 +11,7 @@ import blogPostsRoute from './routes/blogPosts.js';
 import casesRoute from './routes/cases.js';
 import templatesRoute from './routes/templates.js';
 import leadsRoutes from './routes/leads.js';
+import healthRoutes from './routes/health.js';
 import mentorsRoute from './routes/mentors.js';
 import { postSeoApiRouter, postSeoPageRouter } from './routes/postSeo.js';
 import {
@@ -221,6 +222,7 @@ app.get('/blog/', (req, res, next) => {
 });
 
 // API routes
+apiRouter.use(healthRoutes);
 apiRouter.use('/blog-posts', blogPostsRoute);
 apiRouter.use('/cases', casesRoute);
 apiRouter.use('/templates', templatesRoute);

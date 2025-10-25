@@ -1,24 +1,30 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-FRONTEND_DIR="$ROOT_DIR/frontend"
-BACKEND_DIR="$ROOT_DIR/backend"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+FRONT="$ROOT_DIR/frontend"
+BACK="$ROOT_DIR/backend"
+BACK_DIST="${SSR_DIST_DIR:-$BACK/dist}"
 
-# Build frontend
-cd "$FRONTEND_DIR"
-echo "Installing frontend dependencies..."
-if ! npm ci; then
-  echo "npm ci failed, falling back to npm install"
-  npm install
-fi
+echo "▶ Deploy iniciado: $(date)"
 
-echo "Building frontend..."
+cd "$FRONT"
+echo "📦 Frontend install/build"
+npm ci --no-audit --prefer-offline
 npm run build
 
-# Generate sitemaps
-cd "$ROOT_DIR"
-echo "Generating sitemap..."
-SITEMAP_OUTPUT="$FRONTEND_DIR/dist/sitemap.xml" node "$BACKEND_DIR/scripts/generate-sitemap.mjs"
-echo "Sitemap generated at $FRONTEND_DIR/dist/sitemap.xml"
+echo "⤳ Copiando dist para $BACK_DIST"
+mkdir -p "$BACK_DIST"
+rm -rf "$BACK_DIST"
+mkdir -p "$BACK_DIST"
+cp -r "$FRONT/dist/." "$BACK_DIST/"
 
+cd "$BACK"
+echo "📦 Backend install"
+npm ci --no-audit --prefer-offline
+
+echo "🔁 Reiniciando app (Passenger)"
+mkdir -p "$BACK/tmp"
+touch "$BACK/tmp/restart.txt"
+
+echo "🟢 Deploy concluído: $(date)"

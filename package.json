@@ -1,0 +1,8 @@
+{
+  "name": "gms-workspace",
+  "private": true,
+  "scripts": {
+    "postinstall": "node backend/scripts/build-and-sync.mjs || echo \"(postinstall) build-and-sync falhou\"",
+    "deploy": "bash ./deploy/deploy.sh"
+  }
+}
