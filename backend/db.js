@@ -1,4 +1,2 @@
-import pool from './db/pool.js';
-
-export { pool };
-export default pool;
+const pool = require('./db/pool.js');
+module.exports = { pool, default: pool };

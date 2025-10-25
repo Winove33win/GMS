@@ -17,7 +17,7 @@ echo "⤳ Copiando dist para $BACK_DIST"
 mkdir -p "$BACK_DIST"
 rm -rf "$BACK_DIST"
 mkdir -p "$BACK_DIST"
-cp -r "$FRONT/dist/." "$BACK_DIST/"
+cp -r "$FRONT/dist/"* "$BACK_DIST/"
 
 cd "$BACK"
 echo "📦 Backend install"
