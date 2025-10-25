@@ -1,23 +1,11 @@
 import { Router } from "express";
-import mysql from "mysql2/promise";
-import dotenv from "dotenv";
-dotenv.config();
+import { pool } from "../db.js";
 
 const router = Router();
 
-async function getConnection() {
-  return await mysql.createConnection({
-    host: 'lweb03.appuni.com.br',
-    port: 3306,
-    user: 'winove',
-    password: '9*19avmU0',
-    database: 'fernando_winove_com_br_'
-  });
-}
-
 router.post("/libras", async (req, res) => {
   try {
-    const hp = req.body?.hp_field?.trim();
+    const hp = typeof req.body?.hp_field === "string" ? req.body.hp_field.trim() : "";
     if (hp) return res.status(200).json({ ok: true });
 
     const {
@@ -27,21 +15,45 @@ router.post("/libras", async (req, res) => {
       lgpdConsent
     } = req.body || {};
 
-    if (!nome || !email) return res.status(400).json({ error: "nome e email são obrigatórios" });
+    const normalise = (value) => {
+      if (value === undefined || value === null) return null;
+      const trimmed = String(value).trim();
+      return trimmed.length ? trimmed : null;
+    };
 
-    const conn = await getConnection();
-    await conn.execute(
-      `INSERT INTO leads_libras 
+    const nomeLimpo = normalise(nome);
+    const emailLimpo = normalise(email);
+
+    if (!nomeLimpo || !emailLimpo) {
+      return res.status(400).json({ error: "nome e email são obrigatórios" });
+    }
+
+    const consentValue = (() => {
+      if (typeof lgpdConsent === "string") {
+        return ["1", "true", "on", "yes"].includes(lgpdConsent.trim().toLowerCase()) ? 1 : 0;
+      }
+      return lgpdConsent ? 1 : 0;
+    })();
+
+    await pool.execute(
+      `INSERT INTO leads_libras
        (nome, email, telefone, empresa, tipoServico, dataEvento, local_evento, tamanhoPublico, duracao, linkVideo, descricao, lgpdConsent)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        nome, email, telefone || null, empresa || null,
-        tipoServico || null, dataEvento || null, local_evento || null,
-        tamanhoPublico || null, duracao || null, linkVideo || null,
-        descricao || null, lgpdConsent ? 1 : 0
+        nomeLimpo,
+        emailLimpo,
+        normalise(telefone),
+        normalise(empresa),
+        normalise(tipoServico),
+        normalise(dataEvento),
+        normalise(local_evento),
+        normalise(tamanhoPublico),
+        normalise(duracao),
+        normalise(linkVideo),
+        normalise(descricao),
+        consentValue
       ]
     );
-    await conn.end();
 
     res.json({ ok: true });
   } catch (err) {
