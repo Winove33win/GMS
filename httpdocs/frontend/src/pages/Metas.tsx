@@ -1,46 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import { Seo } from '@/components/Seo';
+import { Badge } from '@/components/ui/badge';
+import { content } from '@/lib/content';
 
-interface Goal {
-  ano: number;
-  objetivo: string;
-  resultados_chave: string[];
-}
-
-const Metas: React.FC = () => {
-  const [goals, setGoals] = useState<Goal[]>([]);
-
-  useEffect(() => {
-    fetch('/content/goals.json')
-      .then((res) => res.json() as Promise<Goal[]>)
-      .then(setGoals)
-      .catch((err) => console.error('Erro ao carregar metas', err));
-  }, []);
+export default function Metas() {
+  const goals = content.goals;
 
   return (
-    <section className="space-y-6">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold text-brand-dark">Metas 2025-2028</h1>
-        <p className="text-neutral-600">
-          Nosso plano plurianual combina expansão da rede de mentores, fortalecimento de projetos e aprimoramento das métricas de
-          impacto socioambiental.
-        </p>
-      </header>
+    <div className="space-y-12">
+      <Seo
+        title="Metas por ODS"
+        description="Metas atuais da GMS alinhadas aos Objetivos de Desenvolvimento Sustentável prioritários."
+      />
+      <section className="space-y-4">
+        <div className="space-y-2">
+          <span className="text-sm font-semibold uppercase tracking-wide text-brand-green">Impacto monitorado</span>
+          <h1 className="text-4xl font-bold text-ink-900">Metas e indicadores por ODS</h1>
+          <p className="max-w-3xl text-lg text-ink-600">
+            Acompanhamos metas vivas e indicadores que orientam os esforços da comunidade GMS. Cada card conecta um objetivo de
+            desenvolvimento sustentável com metas concretas para a rede.
+          </p>
+        </div>
+      </section>
 
-      <div className="space-y-4">
+      <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {goals.map((goal) => (
-          <div key={goal.ano} className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-semibold text-brand-dark">{goal.ano}</h2>
-            <p className="mt-1 text-sm text-neutral-600">{goal.objetivo}</p>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-neutral-600">
-              {goal.resultados_chave.map((item) => (
-                <li key={item}>{item}</li>
+          <div key={goal.ods} className="card-surface flex h-full flex-col gap-4 rounded-3xl p-6">
+            <Badge variant="selected">ODS {goal.ods}</Badge>
+            <h2 className="text-xl font-semibold text-ink-900">{goal.meta}</h2>
+            <ul className="space-y-2 text-sm text-ink-600">
+              {goal.indicadores.map((indicador) => (
+                <li key={indicador} className="flex items-start gap-2">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-brand-green" aria-hidden />
+                  <span>{indicador}</span>
+                </li>
               ))}
             </ul>
           </div>
         ))}
-      </div>
-    </section>
+      </section>
+    </div>
   );
-};
-
-export default Metas;
+}

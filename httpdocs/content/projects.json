@@ -2,30 +2,78 @@
   {
     "slug": "water-is-life",
     "titulo": "Water is Life",
-    "descricao_curta": "Acesso à água potável em comunidades vulneráveis.",
+    "descricao_curta": "Acesso à água potável em comunidades vulneráveis com soluções de baixo custo.",
+    "descricao_long": "O coletivo atua em ocupações urbanas implementando cisternas modulares e gestão comunitária de recursos hídricos.",
     "status": "andamento",
-    "ods": ["6", "3"],
-    "area": "Meio ambiente",
+    "ods": ["6", "3", "11"],
     "cidade": "Campinas/SP",
-    "mentores": ["Ana Silva", "João Pereira"],
+    "mentores": ["Ana Silva", "Bianca Rocha"],
     "amentorados": ["Coletivo Água Viva"],
-    "metricas": {"beneficiados": 1200},
-    "midias": [],
+    "metricas": [
+      { "label": "Famílias atendidas", "value": "85" },
+      { "label": "Reservatórios instalados", "value": "12" }
+    ],
+    "links": [
+      { "label": "Plano de captação", "url": "https://exemplo.org/plano-agua" }
+    ],
     "ano_inicio": 2024
   },
   {
     "slug": "nasa-space-apps",
-    "titulo": "NASA Space Apps",
-    "descricao_curta": "Mobilização e educação STEAM por desafios da NASA.",
+    "titulo": "NASA Space Apps Campinas",
+    "descricao_curta": "Hackathon regional que conecta jovens a desafios globais da NASA com foco em STEAM.",
+    "descricao_long": "A GMS coordena mentorias antes, durante e após o evento para transformar protótipos em iniciativas contínuas.",
     "status": "concluido",
     "ods": ["4", "9", "17"],
-    "area": "Educação",
     "cidade": "Campinas/SP",
-    "mentores": ["Equipe GMS"],
+    "mentores": ["João Pereira", "Luciana Macedo"],
     "amentorados": ["Estudantes e educadores"],
-    "metricas": {"participantes": 300},
-    "midias": [],
+    "metricas": [
+      { "label": "Participantes", "value": "320" },
+      { "label": "Equipes mentoradas", "value": "28" }
+    ],
+    "links": [
+      { "label": "Case completo", "url": "https://exemplo.org/case-nasa" }
+    ],
     "ano_inicio": 2023,
     "ano_fim": 2023
+  },
+  {
+    "slug": "rede-circular-logistica",
+    "titulo": "Rede Circular",
+    "descricao_curta": "Logística reversa e geração de renda com catadoras da Região Metropolitana de Campinas.",
+    "descricao_long": "Projeto desenvolve tecnologia social para gestão de resíduos e remuneração justa das cooperadas.",
+    "status": "andamento",
+    "ods": ["8", "12", "5"],
+    "cidade": "Sumaré/SP",
+    "mentores": ["Marcos Freitas"],
+    "amentorados": ["Rede Circular"],
+    "metricas": [
+      { "label": "Toneladas recuperadas", "value": "45" },
+      { "label": "Renda média mensal", "value": "R$ 1.600" }
+    ],
+    "links": [
+      { "label": "Mapa de parceiros", "url": "https://exemplo.org/rede-circular" }
+    ],
+    "ano_inicio": 2022
+  },
+  {
+    "slug": "laboratorio-educacao-inclusiva",
+    "titulo": "Laboratório Educação Inclusiva",
+    "descricao_curta": "Rede de professores e famílias que desenvolvem recursos acessíveis e formação continuada.",
+    "descricao_long": "O laboratório oferece mentorias, produção de conteúdo adaptado e testes em escolas públicas da região.",
+    "status": "ideacao",
+    "ods": ["4", "10"],
+    "cidade": "Hortolândia/SP",
+    "mentores": ["Luciana Macedo", "João Pereira"],
+    "amentorados": ["Projeto Sofia Fala"],
+    "metricas": [
+      { "label": "Educadores envolvidos", "value": "48" },
+      { "label": "Recursos acessíveis produzidos", "value": "26" }
+    ],
+    "links": [
+      { "label": "Guia do laboratório", "url": "https://exemplo.org/lab-inclusao" }
+    ],
+    "ano_inicio": 2025
   }
 ]
