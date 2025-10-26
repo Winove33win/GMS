@@ -2,21 +2,22 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 
-process.on('uncaughtException', e => { console.error('[uncaught]', e); });
-process.on('unhandledRejection', e => { console.error('[unhandled]', e); });
+process.on('uncaughtException', e => console.error('[uncaught]', e));
+process.on('unhandledRejection', e => console.error('[unhandled]', e));
 
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json());
 
-// === Paths e logs de diagnóstico ===
+// Caminhos
 const distDir = process.env.SSR_DIST_DIR || path.join(__dirname, 'dist');
 const indexFile = path.join(distDir, 'index.html');
 
+// Logs de diagnóstico no boot
 console.log('[startup] SSR_DIST_DIR =', distDir);
 console.log('[startup] index.html existe? ', fs.existsSync(indexFile));
 
-// === Cache policy: HTML no-store; assets cache longo ===
+// Cache: HTML no-store; assets cache longo
 app.use((req, res, next) => {
   if ((req.headers.accept || '').includes('text/html')) {
     res.setHeader('Cache-Control', 'no-store');
@@ -24,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// === Estático do bundle ===
+// Estático do build
 app.use(express.static(distDir, {
   index: false,
   maxAge: '1y',
@@ -33,13 +34,13 @@ app.use(express.static(distDir, {
   }
 }));
 
-// === API (mantenha outras rotas existentes) ===
+// API (preservar outras rotas que já existam)
 try { app.use('/api/leads', require('./routes/leads')); } catch (e) {
   console.warn('[startup] /api/leads indisponível:', e.message);
 }
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
-// === Fallback SPA: qualquer rota que não comece com /api ===
+// Fallback SPA: qualquer rota que NÃO comece com /api
 app.get(/^\/(?!api\/).*/, (_req, res) => {
   if (!fs.existsSync(indexFile)) {
     console.error('[fallback] index.html não encontrado em', indexFile);
