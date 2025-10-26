@@ -32,12 +32,59 @@ const __dirname = path.dirname(__filename);
 const {
   port: fallbackPort,
   canonicalUrl,
-  canonicalBase: BASE_URL,
   canonicalHostname,
   canonicalPort,
   canonicalProtocol,
   canonicalOrigin,
+  hasCanonical,
 } = siteConfig;
+
+const getForwardedProtocol = (req) => {
+  const rawProto = req.headers['x-forwarded-proto'] || '';
+  const firstProto = rawProto.split(',')[0]?.trim();
+  return (firstProto || req.protocol || 'https').toLowerCase();
+};
+
+const resolveRequestOrigin = (req) => {
+  if (canonicalOrigin) {
+    return canonicalOrigin;
+  }
+
+  const hostHeader = req.headers.host;
+  if (!hostHeader) {
+    return '';
+  }
+
+  const protocol = getForwardedProtocol(req);
+  return `${protocol}://${hostHeader}`;
+};
+
+const buildAbsoluteUrl = (req, pathname) => {
+  const baseOrigin = resolveRequestOrigin(req);
+  if (!baseOrigin) {
+    return pathname;
+  }
+
+  try {
+    return new URL(pathname, baseOrigin).toString();
+  } catch (_err) {
+    const normalisedBase = baseOrigin.endsWith('/') ? baseOrigin.slice(0, -1) : baseOrigin;
+    const normalisedPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
+    return `${normalisedBase}${normalisedPath}`;
+  }
+};
+
+const resolveDefaultShareImage = (req) => {
+  const configuredImage = (process.env.DEFAULT_SHARE_IMAGE || '').trim();
+  if (configuredImage) {
+    if (/^https?:\/\//i.test(configuredImage)) {
+      return configuredImage;
+    }
+    return buildAbsoluteUrl(req, configuredImage);
+  }
+
+  return buildAbsoluteUrl(req, '/assets/images/default-share.png');
+};
 
 const getTemplate = () => {
   const initial = getBaseTemplate();
@@ -77,7 +124,7 @@ const isLocalRequest = (req) => {
 
 app.use((req, res, next) => {
   const hostHeader = req.headers.host || '';
-  if (isLocalRequest(req) || process.env.NODE_ENV === 'development') {
+  if (!hasCanonical || isLocalRequest(req) || process.env.NODE_ENV === 'development') {
     return next();
   }
 
@@ -209,9 +256,6 @@ const HOME_DESCRIPTION =
   'A Mentoria Solidária conecta mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos ODS.';
 const BLOG_DESCRIPTION =
   'Aprendizados, relatos e boas práticas produzidas pela comunidade Mentoria Solidária.';
-const DEFAULT_IMAGE =
-  process.env.DEFAULT_SHARE_IMAGE || `${canonicalOrigin}/assets/images/default-share.png`;
-
 app.get('/blog/', (req, res, next) => {
   if (!hasDistBundle) {
     return res
@@ -225,7 +269,8 @@ app.get('/blog/', (req, res, next) => {
     return next();
   }
 
-  const canonical = `${BASE_URL}/blog/`;
+  const canonical = buildAbsoluteUrl(req, '/blog/');
+  const defaultImage = resolveDefaultShareImage(req);
   const html = renderTemplateWithMeta(template, {
     title: 'Blog & Insights | Mentoria Solidária',
     description: BLOG_DESCRIPTION,
@@ -234,13 +279,13 @@ app.get('/blog/', (req, res, next) => {
       'og:type': 'website',
       'og:title': 'Blog & Insights | Mentoria Solidária',
       'og:description': BLOG_DESCRIPTION,
-      'og:image': DEFAULT_IMAGE,
+      'og:image': defaultImage,
     },
     twitter: {
       'twitter:card': 'summary_large_image',
       'twitter:title': 'Blog & Insights | Mentoria Solidária',
       'twitter:description': BLOG_DESCRIPTION,
-      'twitter:image': DEFAULT_IMAGE,
+      'twitter:image': defaultImage,
     },
     jsonLd: {
       '@context': 'https://schema.org',
@@ -289,7 +334,8 @@ app.get('/', (req, res, next) => {
     return next();
   }
 
-  const canonical = `${BASE_URL}/`;
+  const canonical = buildAbsoluteUrl(req, '/');
+  const defaultImage = resolveDefaultShareImage(req);
   const html = renderTemplateWithMeta(template, {
     title: 'Mentoria Solidária - Rede colaborativa de impacto',
     description: HOME_DESCRIPTION,
@@ -298,13 +344,13 @@ app.get('/', (req, res, next) => {
       'og:type': 'website',
       'og:title': 'Mentoria Solidária - Rede colaborativa de impacto',
       'og:description': HOME_DESCRIPTION,
-      'og:image': DEFAULT_IMAGE,
+      'og:image': defaultImage,
     },
     twitter: {
       'twitter:card': 'summary_large_image',
       'twitter:title': 'Mentoria Solidária - Rede colaborativa de impacto',
       'twitter:description': HOME_DESCRIPTION,
-      'twitter:image': DEFAULT_IMAGE,
+      'twitter:image': defaultImage,
     },
     jsonLd: {
       '@context': 'https://schema.org',
