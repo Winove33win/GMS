@@ -171,12 +171,32 @@
   }
   
   /* Button variants */
-  .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:shadow-xl hover:scale-105 glow-primary;
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+    @apply motion-reduce:transition-none;
   }
-  
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 glow-primary;
+    @apply motion-safe:hover:scale-105 motion-reduce:hover:scale-100;
+  }
+
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 px-6 py-3 rounded-lg font-medium transition-all duration-300;
+    @apply bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 px-6 py-3;
+    @apply motion-reduce:transition-none;
+  }
+
+  .card {
+    @apply rounded-2xl border border-neutral-200 bg-white shadow-sm transition-shadow duration-300;
+    @apply focus-within:outline-none focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2 focus-within:ring-offset-white;
+  }
+
+  .card:hover {
+    @apply shadow-lg;
+  }
+
+  .link {
+    @apply inline-flex items-center gap-2 text-sm font-semibold text-primary underline-offset-4 transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
   
   /* Animations */
