@@ -1,6 +1,2 @@
-
-const pool = require('./db/pool.js');
-module.exports = { pool, default: pool };
-export { pool } from './db/pool.js';
-export { pool as default } from './db/pool.js';
-
+/** CJS shim: exporta o pool diretamente */
+module.exports = require('./db/pool.js');
