@@ -1,22 +1,36 @@
+const rawCanonicalBase = (process.env.SITE_URL || '').trim();
+const canonicalBase = rawCanonicalBase
+  ? rawCanonicalBase.includes('://')
+    ? rawCanonicalBase
+    : `https://${rawCanonicalBase}`
+  : '';
+
+let canonicalUrl = null;
+if (canonicalBase) {
+  try {
+    canonicalUrl = new URL(canonicalBase);
+  } catch (_err) {
+    canonicalUrl = null;
+  }
+}
+
 export const siteConfig = {
   port: Number(process.env.PORT || 3000),
-  canonicalBase: process.env.SITE_URL || 'https://gms.example.com',
-  get canonicalUrl() {
-    const base = this.canonicalBase.includes('://')
-      ? this.canonicalBase
-      : `https://${this.canonicalBase}`;
-    return new URL(base);
-  },
+  canonicalBase,
+  canonicalUrl,
   get canonicalHostname() {
-    return this.canonicalUrl.hostname.toLowerCase();
+    return canonicalUrl ? canonicalUrl.hostname.toLowerCase() : '';
   },
   get canonicalPort() {
-    return this.canonicalUrl.port || '';
+    return canonicalUrl ? canonicalUrl.port || '' : '';
   },
   get canonicalProtocol() {
-    return this.canonicalUrl.protocol.replace(':', '');
+    return canonicalUrl ? canonicalUrl.protocol.replace(':', '') : '';
   },
   get canonicalOrigin() {
-    return this.canonicalUrl.origin;
+    return canonicalUrl ? canonicalUrl.origin : '';
+  },
+  get hasCanonical() {
+    return Boolean(canonicalUrl);
   },
 };
