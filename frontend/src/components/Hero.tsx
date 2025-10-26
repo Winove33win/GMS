@@ -11,8 +11,7 @@ export const Hero = () => {
           Mentoria Solidária
         </h1>
         <p className="text-lg text-neutral-600">
-          Conectamos mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos Objetivos de
-          Desenvolvimento Sustentável.
+          Conectamos mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos ODS.
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
@@ -21,12 +20,12 @@ export const Hero = () => {
           >
             Conheça os mentores
           </Link>
-          <a
-            href="#como-participar"
+          <Link
+            to="/participar"
             className="inline-flex items-center justify-center rounded-xl border border-neutral-300 px-5 py-3 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-50"
           >
             Quero participar
-          </a>
+          </Link>
         </div>
       </div>
     </section>

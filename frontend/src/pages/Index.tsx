@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const Index = () => (
   <div className="bg-white">
     <SEO
-      title="Mentoria Solidária - Rede colaborativa de impacto"
-      description="Conectamos mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos Objetivos de Desenvolvimento Sustentável."
+      title="Mentoria Solidária — Rede colaborativa de impacto"
+      description="Conectamos mentores voluntários e iniciativas para acelerar soluções alinhadas aos ODS."
     />
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
       <Hero />
@@ -28,12 +28,12 @@ const Index = () => (
           <p className="mt-2 text-neutral-600">
             Traga sua ideia: seguimos um roteiro simples de cinco perguntas para evoluir juntos.
           </p>
-          <a
-            href="/contato"
+          <Link
+            to="/participar"
             className="mt-4 inline-flex items-center justify-center rounded-xl border border-neutral-300 px-4 py-2 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-50"
           >
             Apresentar projeto
-          </a>
+          </Link>
         </div>
       </section>
     </div>
