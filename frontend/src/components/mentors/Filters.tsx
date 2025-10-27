@@ -1,27 +1,13 @@
 import type { KeyboardEvent } from "react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  ADVANCED_SENIORITY_VALUE,
-  type AppliedFilters,
-  type FilterCounts,
-} from "@/lib/mentors/search";
-
-interface FilterOptions {
-  expertise: string[];
-  ods: number[];
-  languages: string[];
-  seniority: string[];
-}
+import { ADVANCED_SENIORITY_VALUE, type AppliedFilters } from "@/lib/mentors/search";
 
 interface FiltersProps {
   value: AppliedFilters;
   initialValue: AppliedFilters;
-  counts: FilterCounts;
-  options: FilterOptions;
   totalResults: number;
   onApply: (value: AppliedFilters) => void;
-  onClear: () => void;
 }
 
 function filtersAreEqual(a: AppliedFilters, b: AppliedFilters): boolean {
@@ -43,10 +29,6 @@ function arraysAreEqual<T>(a: T[], b: T[]): boolean {
   }
 
   return a.every((item, index) => item === b[index]);
-}
-
-function toggleValue<T>(values: T[], item: T): T[] {
-  return values.includes(item) ? values.filter((value) => value !== item) : [...values, item];
 }
 
 function Chip({
@@ -94,15 +76,7 @@ function Chip({
   );
 }
 
-export function Filters({
-  value,
-  initialValue,
-  counts,
-  options,
-  totalResults,
-  onApply,
-  onClear,
-}: FiltersProps) {
+export function Filters({ value, initialValue, totalResults, onApply }: FiltersProps) {
   const [draft, setDraft] = useState<AppliedFilters>(value);
   const hasHydratedRef = useRef(false);
   const skipAutoApplyRef = useRef(false);
@@ -140,13 +114,6 @@ export function Filters({
     onApply(draft);
   };
 
-  const handleClear = () => {
-    setDraft(initialValue);
-    skipAutoApplyRef.current = true;
-    onClear();
-    onApply(initialValue);
-  };
-
   const handleQuickToggle = (key: "available" | "remote" | "seniority" | "lang") => {
     setDraft((current) => {
       if (key === "available") {
@@ -162,11 +129,7 @@ export function Filters({
         return { ...current, seniority: nextValue };
       }
 
-      const targetLanguage = options.languages.find((language) => language.toLowerCase().includes("ingl"));
-      if (!targetLanguage) {
-        return current;
-      }
-
+      const targetLanguage = "Inglês";
       const currentLang = current.lang ?? [];
       const nextLang = currentLang.includes(targetLanguage)
         ? currentLang.filter((item) => item !== targetLanguage)
@@ -234,118 +197,6 @@ export function Filters({
           <div role="status" aria-live="polite" className="text-sm text-slate-500">
             {totalResults === 1 ? "1 resultado" : `${totalResults} resultados`}
           </div>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          <fieldset className="flex flex-col gap-3" aria-label="Filtrar por expertise">
-            <legend className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Expertise</legend>
-            <div className="flex flex-wrap gap-2">
-              {options.expertise.map((item) => (
-                <Chip
-                  key={item}
-                  label={item}
-                  active={draft.expertise.includes(item)}
-                  count={counts.expertise[item] ?? 0}
-                  onToggle={() =>
-                    setDraft((current) => ({
-                      ...current,
-                      expertise: toggleValue(current.expertise, item),
-                    }))
-                  }
-                />
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="flex flex-col gap-3" aria-label="Filtrar por ODS">
-            <legend className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">ODS</legend>
-            <div className="flex flex-wrap gap-2">
-              {options.ods.map((item) => (
-                <Chip
-                  key={item}
-                  label={`ODS ${item}`}
-                  active={draft.ods.includes(item)}
-                  count={counts.ods[item] ?? 0}
-                  onToggle={() =>
-                    setDraft((current) => ({
-                      ...current,
-                      ods: toggleValue(current.ods, item),
-                    }))
-                  }
-                />
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="flex flex-col gap-3" aria-label="Filtrar por idiomas">
-            <legend className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Idiomas</legend>
-            <div className="flex flex-wrap gap-2">
-              {options.languages.map((item) => (
-                <Chip
-                  key={item}
-                  label={item}
-                  active={(draft.lang ?? []).includes(item)}
-                  count={counts.lang[item] ?? 0}
-                  onToggle={() =>
-                    setDraft((current) => {
-                      const currentLang = current.lang ?? [];
-                      return {
-                        ...current,
-                        lang: toggleValue(currentLang, item),
-                      };
-                    })
-                  }
-                />
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="flex flex-col gap-3" aria-label="Filtrar por senioridade">
-            <legend className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Senioridade</legend>
-            <div className="flex flex-wrap gap-2">
-              {options.seniority.map((item) => (
-                <Chip
-                  key={item}
-                  label={item}
-                  active={draft.seniority === item}
-                  onToggle={() =>
-                    setDraft((current) => ({
-                      ...current,
-                      seniority: current.seniority === item ? undefined : item,
-                    }))
-                  }
-                />
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="flex flex-col gap-3 lg:col-span-2" aria-label="Filtrar por localização">
-            <legend className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Localização</legend>
-            <input
-              type="search"
-              placeholder="Cidade, estado ou país"
-              value={draft.location ?? ""}
-              onChange={(event) => setDraft((current) => ({ ...current, location: event.target.value }))}
-              className="h-12 rounded-full border border-slate-200 px-5 text-sm text-slate-700 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-              aria-label="Buscar por localização"
-            />
-          </fieldset>
-        </div>
-
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
-          <button
-            type="button"
-            onClick={handleClear}
-            className="inline-flex items-center justify-center rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-          >
-            Limpar
-          </button>
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-2 text-sm font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-          >
-            Aplicar
-          </button>
         </div>
       </form>
     </section>
