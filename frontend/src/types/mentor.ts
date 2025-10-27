@@ -33,6 +33,7 @@ export interface Mentor {
   education: MentorEducation[];
   experience: MentorExperience[];
   links: MentorLink[];
+  nextWindow?: string;
   recommendationScore: number;
   lastActiveAt: string;
   joinedAt: string;
