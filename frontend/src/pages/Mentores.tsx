@@ -39,17 +39,6 @@ const sortOptions: Array<{ value: NonNullable<QueryFilters["sort"]>; label: stri
   { value: "recent", label: "Mais recentes" },
 ];
 
-const expertiseOptions = Array.from(new Set(mentors.flatMap((mentor) => mentor.expertise))).sort((a, b) =>
-  a.localeCompare(b, "pt-BR"),
-);
-const odsOptions = Array.from(new Set(mentors.flatMap((mentor) => mentor.ods))).sort((a, b) => a - b);
-const seniorityOptions = Array.from(new Set(mentors.map((mentor) => mentor.seniority))).sort((a, b) =>
-  a.localeCompare(b, "pt-BR"),
-);
-const languageOptions = Array.from(new Set(mentors.flatMap((mentor) => mentor.languages))).sort((a, b) =>
-  a.localeCompare(b, "pt-BR"),
-);
-
 function normalizeFilters(state: QueryFilters): AppliedFilters {
   const { sort: _sort, ...rest } = state;
   return {
@@ -90,7 +79,7 @@ export default function Mentores() {
     setPage(1);
   }, [filtersSignature]);
 
-  const { items, counts } = useMemo(
+  const { items } = useMemo(
     () => filterMentors(mentors, { ...activeFilters, sort: sortOrder }),
     [activeFilters, sortOrder],
   );
@@ -129,10 +118,6 @@ export default function Mentores() {
     },
     [setQueryState],
   );
-
-  const handleClearFilters = useCallback(() => {
-    applyFilters(BASE_FILTERS);
-  }, [applyFilters]);
 
   const handleSortChange = (value: NonNullable<QueryFilters["sort"]>) => {
     setQueryState((prev) => ({
@@ -226,7 +211,7 @@ export default function Mentores() {
     <>
       <SEO
         title="Rede de mentores e mentoras voluntárias"
-        description="Conheça especialistas que apoiam iniciativas socioambientais com mentorias estratégicas. Filtre por expertise, ODS, senioridade, idiomas, disponibilidade e formato de atuação."
+        description="Conheça especialistas que apoiam iniciativas socioambientais com mentorias estratégicas. Utilize a busca e os filtros rápidos para encontrar quem está disponível, atende remoto ou fala inglês."
         canonical="/mentores"
       />
       <Section
@@ -265,16 +250,8 @@ export default function Mentores() {
                 <Filters
                   value={activeFilters}
                   initialValue={BASE_FILTERS}
-                  counts={counts}
-                  options={{
-                    expertise: expertiseOptions,
-                    ods: odsOptions,
-                    languages: languageOptions,
-                    seniority: seniorityOptions,
-                  }}
                   totalResults={totalResults}
                   onApply={applyFilters}
-                  onClear={handleClearFilters}
                 />
               </div>
             </div>
@@ -301,18 +278,10 @@ export default function Mentores() {
                   <Filters
                     value={activeFilters}
                     initialValue={BASE_FILTERS}
-                    counts={counts}
-                    options={{
-                      expertise: expertiseOptions,
-                      ods: odsOptions,
-                      languages: languageOptions,
-                      seniority: seniorityOptions,
-                    }}
                     totalResults={totalResults}
                     onApply={(next) => {
                       applyFilters(next);
                     }}
-                    onClear={handleClearFilters}
                   />
                 </div>
               </div>
