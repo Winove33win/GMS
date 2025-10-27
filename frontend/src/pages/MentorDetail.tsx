@@ -1,16 +1,13 @@
-import { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
-import mentorsData from "@/data/mentors.json";
-import type { Mentor } from "@/types/mentor";
-import { SEO } from "@/lib/seo";
-import { Section } from "@/components/Section";
+import { useMemo, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import { ExternalLink } from "lucide-react"
+import mentorsData from "@/data/mentors.json"
+import type { Mentor } from "@/types/mentor"
+import { SEO } from "@/lib/seo"
+import { Section } from "@/components/Section"
+import { PolicyModal } from "@/components/PolicyModal"
 
-const mentors = mentorsData as Mentor[];
-
-function formatDescription(summary: string) {
-  const maxLength = 155;
-  return summary.length > maxLength ? `${summary.slice(0, maxLength - 3)}...` : summary;
-}
+const mentors = mentorsData as Mentor[]
 
 function getInitials(name: string) {
   return name
@@ -18,13 +15,71 @@ function getInitials(name: string) {
     .filter(Boolean)
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+    .join("")
+}
+
+function formatLocation(location?: Mentor["location"]) {
+  if (!location) {
+    return undefined
+  }
+
+  const parts = [location.city, location.state, location.country].filter(Boolean)
+  if (parts.length === 0) {
+    return undefined
+  }
+  return parts.join(", ")
+}
+
+function formatWindowDates(start?: string, end?: string) {
+  if (!start || !end) {
+    return undefined
+  }
+
+  const startDate = new Date(start)
+  const endDate = new Date(end)
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+    return undefined
+  }
+
+  const startLabel = startDate.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })
+  const endLabel = endDate.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })
+
+  return `${startLabel} a ${endLabel}`
+}
+
+function formatWindowLabel(label?: string, start?: string, end?: string) {
+  if (label) {
+    return label
+  }
+
+  const dates = formatWindowDates(start, end)
+  return dates ?? "Janela do programa"
+}
+
+function getVerifiedLinks(links?: Mentor["links"]) {
+  if (!links) {
+    return []
+  }
+
+  const labels: Record<string, string> = {
+    linkedin: "LinkedIn",
+    lattes: "Lattes",
+    website: "Website",
+  }
+
+  return Object.entries(links)
+    .filter(([, url]) => Boolean(url))
+    .map(([key, url]) => ({
+      label: labels[key] ?? key,
+      url: url as string,
+    }))
 }
 
 export default function MentorDetail() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams<{ slug: string }>()
+  const [isPolicyOpen, setPolicyOpen] = useState(false)
 
-  const mentor = useMemo(() => mentors.find((item) => item.slug === slug), [slug]);
+  const mentor = useMemo(() => mentors.find((item) => item.slug === slug), [slug])
 
   if (!mentor) {
     return (
@@ -41,207 +96,163 @@ export default function MentorDetail() {
           </Link>
         </div>
       </Section>
-    );
+    )
   }
 
-  const metaTitle = `${mentor.name} · Mentoria Solidária`;
-  const metaDescription = formatDescription(mentor.summary);
-  const canonical = `/mentores/${mentor.slug}`;
-  const remoteLabel = mentor.remote ? "Atendimento remoto disponível" : "Atendimento presencial";
+  const metaTitle = `${mentor.name} · Mentoria Solidária`
+  const metaDescription = mentor.summary
+  const canonical = `/mentores/${mentor.slug}`
+  const locationLabel = formatLocation(mentor.location)
+  const verifiedLinks = getVerifiedLinks(mentor.links)
+  const languagesLabel = mentor.languages.join(" · ")
+  const programWindows = mentor.program.windows
 
   return (
     <>
       <SEO title={metaTitle} description={metaDescription} canonical={canonical} />
       <Section className="pb-24" introClassName="hidden">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-          <article className="flex flex-col gap-8">
-            <header className="flex flex-col gap-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-start gap-4">
-                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-slate-100 bg-slate-50">
-                    {mentor.avatarUrl ? (
-                      <img
-                        src={mentor.avatarUrl}
-                        alt={`Foto de ${mentor.name}`}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <span className="flex h-full w-full items-center justify-center text-2xl font-semibold uppercase text-slate-600">
-                        {getInitials(mentor.name)}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">{mentor.seniority}</p>
-                    <h1 className="mt-2 text-3xl font-extrabold text-slate-900">{mentor.name}</h1>
-                    <p className="mt-2 text-base text-slate-600">{mentor.headline}</p>
-                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+        <article className="flex flex-col gap-8">
+          <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="flex gap-4">
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-slate-100 bg-slate-50">
+                  {mentor.avatarUrl ? (
+                    <img src={mentor.avatarUrl} alt={`Foto de ${mentor.name}`} className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <span className="flex h-full w-full items-center justify-center text-2xl font-semibold uppercase text-slate-600">
+                      {getInitials(mentor.name)}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">{mentor.seniority}</span>
+                  <h1 className="text-3xl font-extrabold text-slate-900">{mentor.name}</h1>
+                  <p className="text-base text-slate-600">{mentor.headline}</p>
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                    {locationLabel && (
                       <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1">
                         <span aria-hidden>📍</span>
-                        {mentor.location}
+                        {locationLabel}
                       </span>
-                      <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1">
-                        <span aria-hidden>💻</span>
-                        {remoteLabel}
-                      </span>
-                      <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1">
-                        <span aria-hidden>🗣️</span>
-                        {mentor.languages.join(" · ")}
-                      </span>
-                    </div>
+                    )}
+                    <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1">
+                      <span aria-hidden>🗣️</span>
+                      {languagesLabel}
+                    </span>
+                    <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1">
+                      <span aria-hidden>🗓️</span>
+                      Sessões 1×/semana · 60 min · remoto
+                    </span>
                   </div>
                 </div>
-                <span
-                  className={`self-start rounded-full bg-emerald-100 px-4 py-1 text-sm font-semibold text-emerald-800`}
-                  aria-label={`Disponibilidade: ${mentor.availability}`}
-                >
-                  {mentor.availability}
-                </span>
               </div>
-              <div className="flex flex-wrap gap-2" aria-label="Áreas de expertise">
-                {mentor.expertise.map((area) => (
-                  <span
-                    key={area}
-                    className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"
-                  >
-                    {area}
-                  </span>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2" aria-label="ODS de atuação">
-                {mentor.ods.map((goal) => (
-                  <span
-                    key={goal}
-                    className="inline-flex items-center rounded-full bg-slate-900/90 px-3 py-1 text-xs font-semibold text-white"
-                  >
-                    ODS {goal}
-                  </span>
-                ))}
-              </div>
-            </header>
+              <Link
+                to={`/participar?mentor=${mentor.slug}`}
+                className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              >
+                Solicitar mentoria pelo programa
+              </Link>
+            </div>
+          </header>
 
-            <section aria-labelledby="sobre" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 id="sobre" className="text-xl font-semibold text-slate-900">
-                Sobre
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-slate-700">{mentor.summary}</p>
-            </section>
+          <section aria-labelledby="sobre" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 id="sobre" className="text-xl font-semibold text-slate-900">
+              Sobre a mentoria
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-700">{mentor.summary}</p>
+          </section>
 
-            <section aria-labelledby="areas" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 id="areas" className="text-xl font-semibold text-slate-900">
-                Áreas de atuação
-              </h2>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {mentor.expertise.map((area) => (
-                  <span
-                    key={area}
-                    className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700"
-                  >
-                    {area}
-                  </span>
-                ))}
-              </div>
-            </section>
+          <section aria-labelledby="como-ajudo" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 id="como-ajudo" className="text-xl font-semibold text-slate-900">
+              Como posso ajudar
+            </h2>
+            <ul className="mt-4 flex list-disc flex-col gap-2 pl-5 text-base text-slate-700">
+              {mentor.helpsWith.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
 
-            <section aria-labelledby="interesses" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 id="interesses" className="text-xl font-semibold text-slate-900">
-                Interesses atuais
+          {mentor.cases && mentor.cases.length > 0 && (
+            <section aria-labelledby="cases" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 id="cases" className="text-xl font-semibold text-slate-900">
+                Casos acompanhados
               </h2>
-              <ul className="mt-4 flex list-disc flex-col gap-2 pl-5 text-base text-slate-700">
-                {mentor.interests.map((interest) => (
-                  <li key={interest}>{interest}</li>
-                ))}
-              </ul>
-            </section>
-
-            <section aria-labelledby="experiencia" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 id="experiencia" className="text-xl font-semibold text-slate-900">
-                Experiência profissional
-              </h2>
-              <div className="mt-4 flex flex-col gap-6">
-                {mentor.experience.map((item) => (
-                  <article key={`${item.organization}-${item.role}`} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                    <h3 className="text-lg font-semibold text-slate-900">{item.role}</h3>
-                    <p className="text-sm font-medium text-slate-600">{item.organization}</p>
-                    <p className="text-sm text-slate-500">{item.period}</p>
-                    <p className="mt-3 text-sm text-slate-700">{item.description}</p>
+              <div className="mt-4 flex flex-col gap-4">
+                {mentor.cases.map((caseItem) => (
+                  <article key={`${caseItem.title}-${caseItem.result}`} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <h3 className="text-lg font-semibold text-slate-900">{caseItem.title}</h3>
+                    <p className="text-sm text-slate-600">{caseItem.result}</p>
+                    {caseItem.ods && (
+                      <span className="mt-2 inline-flex items-center rounded-full bg-slate-900/90 px-3 py-1 text-xs font-semibold text-white">
+                        ODS {caseItem.ods}
+                      </span>
+                    )}
                   </article>
                 ))}
               </div>
             </section>
+          )}
 
-            <section aria-labelledby="educacao" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 id="educacao" className="text-xl font-semibold text-slate-900">
-                Educação
-              </h2>
-              <ul className="mt-4 flex flex-col gap-3 text-base text-slate-700">
-                {mentor.education.map((item) => (
-                  <li key={`${item.institution}-${item.course}`}>
-                    <p className="font-semibold text-slate-900">{item.course}</p>
-                    <p className="text-sm text-slate-600">
-                      {item.institution} · {item.year}
-                    </p>
+          <section aria-labelledby="idiomas" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 id="idiomas" className="text-xl font-semibold text-slate-900">
+              Idiomas
+            </h2>
+            <p className="mt-4 text-base text-slate-700">{languagesLabel}</p>
+          </section>
+
+          <section aria-labelledby="agenda-programa" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 id="agenda-programa" className="text-xl font-semibold text-slate-900">
+              Agenda do programa
+            </h2>
+            <ul className="mt-4 flex flex-col gap-3 text-base text-slate-700">
+              {programWindows.map((window) => {
+                const period = formatWindowDates(window.start, window.end)
+                const label = formatWindowLabel(window.label, window.start, window.end)
+                return (
+                  <li key={`${window.start}-${window.end}`} className="flex flex-col gap-1 rounded-2xl bg-slate-50 p-4">
+                    <span className="font-semibold text-slate-900">{label}</span>
+                    {period && <span className="text-sm text-slate-600">{period}</span>}
                   </li>
-                ))}
-              </ul>
-            </section>
+                )
+              })}
+            </ul>
+          </section>
 
-            <section aria-labelledby="idiomas" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 id="idiomas" className="text-xl font-semibold text-slate-900">
-                Idiomas
-              </h2>
-              <p className="mt-4 text-base text-slate-700">{mentor.languages.join(", ")}</p>
-            </section>
-
+          {verifiedLinks.length > 0 && (
             <section aria-labelledby="links" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 id="links" className="text-xl font-semibold text-slate-900">
                 Links verificados
               </h2>
               <ul className="mt-4 flex flex-col gap-3">
-                {mentor.links.map((link) => (
-                  <li key={link.url}>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-                    >
+                {verifiedLinks.map((link) => (
+                  <li key={link.url} className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
+                    <ExternalLink className="h-4 w-4" aria-hidden />
+                    <a href={link.url} target="_blank" rel="nofollow noopener" className="underline-offset-4 hover:underline">
                       {link.label}
                     </a>
                   </li>
                 ))}
               </ul>
             </section>
+          )}
 
-            <div className="sticky bottom-6 z-10 w-full lg:hidden">
-              <Link
-                to={`/participar?mentor=${mentor.slug}`}
-                className="flex items-center justify-center rounded-full bg-emerald-600 px-6 py-3 text-base font-semibold text-white shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-                aria-label={`Solicitar mentoria com ${mentor.name}`}
-              >
-                Solicitar mentoria
-              </Link>
-            </div>
-          </article>
-
-          <aside className="hidden lg:block">
-            <div className="sticky top-28 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-              <h2 className="text-lg font-semibold text-slate-900">Pronto para conectar?</h2>
-              <p className="mt-3 text-sm text-slate-600">
-                Conte um pouco sobre sua iniciativa e objetivos para receber o melhor apoio desta mentoria.
-              </p>
-              <Link
-                to={`/participar?mentor=${mentor.slug}`}
-                className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-                aria-label={`Solicitar mentoria com ${mentor.name}`}
-              >
-                Solicitar mentoria
-              </Link>
-            </div>
-          </aside>
-        </div>
+          <div className="rounded-3xl border border-emerald-100 bg-emerald-50 p-6 text-sm text-emerald-900">
+            <h2 className="text-base font-semibold text-emerald-900">Política do programa</h2>
+            <p className="mt-2 text-sm text-emerald-900">
+              Mentoria voluntária, com encontros semanais de 60 minutos e comunicação mediada pelo Mentoria Solidária.
+            </p>
+            <button
+              type="button"
+              onClick={() => setPolicyOpen(true)}
+              className="mt-4 inline-flex items-center justify-center rounded-full border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:border-emerald-400 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+            >
+              Entenda como funciona
+            </button>
+          </div>
+        </article>
       </Section>
+      <PolicyModal open={isPolicyOpen} onOpenChange={setPolicyOpen} />
     </>
-  );
+  )
 }
