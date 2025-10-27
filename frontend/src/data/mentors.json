@@ -1,0 +1,534 @@
+[
+  {
+    "slug": "lia-monteiro",
+    "name": "Lia Monteiro",
+    "headline": "Estrategista de impacto socioambiental e governança",
+    "avatarUrl": "https://avatar.vercel.sh/lia.monteiro",
+    "summary": "Com mais de 12 anos apoiando organizações do terceiro setor, ajudo lideranças a traduzir estratégia em resultados mensuráveis. Coordenei processos de planejamento e monitoramento em redes de educação, saúde e clima, criando indicadores simples de acompanhar e rituais de decisão baseados em dados. Também facilito jornadas de governança participativa e desenho de conselhos consultivos para iniciativas em expansão.",
+    "expertise": [
+      "Planejamento Estratégico",
+      "Governança",
+      "Métricas de Impacto"
+    ],
+    "ods": [
+      4,
+      10,
+      13
+    ],
+    "location": "São Paulo, SP",
+    "remote": true,
+    "availability": "Disponível para novas mentorias",
+    "seniority": "Sênior",
+    "languages": [
+      "Português",
+      "Inglês"
+    ],
+    "interests": [
+      "Governança participativa",
+      "Avaliação de impacto",
+      "Formação de lideranças"
+    ],
+    "education": [
+      {
+        "course": "MBA em Gestão de Impacto",
+        "institution": "Escola Brasileira de Negócios Sociais",
+        "year": "2018"
+      },
+      {
+        "course": "Administração",
+        "institution": "Universidade Federal do Paraná",
+        "year": "2010"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Head de Estratégia de Impacto",
+        "organization": "Instituto Horizonte",
+        "period": "2020 - atual",
+        "description": "Conduz ciclos de planejamento, desenha indicadores e apoia comitês de governança em projetos multissetoriais."
+      },
+      {
+        "role": "Consultora associada",
+        "organization": "Coletivo Evoluir",
+        "period": "2016 - 2020",
+        "description": "Desenvolveu avaliações de impacto e facilitou programas de aceleração para negócios sociais em três estados."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/liamonteiro"
+      }
+    ],
+    "recommendationScore": 96,
+    "lastActiveAt": "2024-05-02",
+    "joinedAt": "2020-09-15"
+  },
+  {
+    "slug": "caio-ferraz",
+    "name": "Caio Ferraz",
+    "headline": "Especialista em dados e produtos digitais de impacto",
+    "avatarUrl": "https://avatar.vercel.sh/caio.ferraz",
+    "summary": "Sou product manager com forte base em ciência de dados e foco em produtos digitais que resolvem dores reais de comunidades. Atuo ajudando equipes a priorizar hipóteses com evidências qualitativas e quantitativas, desenhando roadmaps enxutos e celebrando entregas incrementais. Tenho experiência na estruturação de times multidisciplinares, na criação de indicadores de adoção e no desenho de experimentos éticos para validar soluções de impacto.",
+    "expertise": [
+      "Produto Digital",
+      "Analytics",
+      "Discovery"
+    ],
+    "ods": [
+      4,
+      8,
+      9
+    ],
+    "location": "Belo Horizonte, MG",
+    "remote": true,
+    "availability": "Agenda limitada para ciclos curtos",
+    "seniority": "Especialista",
+    "languages": [
+      "Português",
+      "Inglês",
+      "Espanhol"
+    ],
+    "interests": [
+      "Comunidades de aprendizagem",
+      "Cultura de produto",
+      "Tecnologia responsável"
+    ],
+    "education": [
+      {
+        "course": "MBA em Produto Digital",
+        "institution": "Tera",
+        "year": "2021"
+      },
+      {
+        "course": "Engenharia de Computação",
+        "institution": "CEFET-MG",
+        "year": "2013"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Principal Product Manager",
+        "organization": "Plataforma Aurora",
+        "period": "2021 - atual",
+        "description": "Lidera squads de produto cívico, priorizando hipóteses baseadas em dados e entrevistas com beneficiários."
+      },
+      {
+        "role": "Coordenador de Dados",
+        "organization": "Movimento Pró-Futuro",
+        "period": "2016 - 2021",
+        "description": "Estruturou pipeline analítico e métricas de impacto para programas de educação profissionalizante."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/caioferraz"
+      },
+      {
+        "label": "Portfólio",
+        "url": "https://caioferraz.dev"
+      }
+    ],
+    "recommendationScore": 92,
+    "lastActiveAt": "2024-04-28",
+    "joinedAt": "2021-05-10"
+  },
+  {
+    "slug": "marina-salles",
+    "name": "Marina Salles",
+    "headline": "Captadora e estrategista de parcerias institucionais",
+    "avatarUrl": "https://avatar.vercel.sh/marina.salles",
+    "summary": "Construo pontes sustentáveis entre organizações sociais e financiadores, com escuta ativa e narrativa baseada em resultados. Já conduzi roadshows internacionais, redesenhei jornadas de relacionamento com grandes doadores e implementei programas de fidelização com comunidades locais. Gosto de apoiar equipes na precificação de propostas, no desenho de contrapartidas coerentes e na criação de relatórios que encantam e prestam contas com transparência.",
+    "expertise": [
+      "Captação de Recursos",
+      "Parcerias",
+      "Comunicação"
+    ],
+    "ods": [
+      5,
+      8,
+      17
+    ],
+    "location": "Recife, PE",
+    "remote": true,
+    "availability": "Disponível para mentorias pontuais",
+    "seniority": "Sênior",
+    "languages": [
+      "Português",
+      "Inglês",
+      "Francês"
+    ],
+    "interests": [
+      "Filantropia colaborativa",
+      "Storytelling de impacto",
+      "Diversidade em liderança"
+    ],
+    "education": [
+      {
+        "course": "Especialização em Gestão de Projetos Sociais",
+        "institution": "Universidade Federal de Pernambuco",
+        "year": "2015"
+      },
+      {
+        "course": "Comunicação Social",
+        "institution": "Universidade Católica de Pernambuco",
+        "year": "2010"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Gerente de Parcerias",
+        "organization": "Fundo Conecta",
+        "period": "2019 - atual",
+        "description": "Negocia acordos com empresas e fundações e cria trilhas de relacionamento com organizações da sociedade civil."
+      },
+      {
+        "role": "Coordenadora de Captação",
+        "organization": "Rede Elas por Elas",
+        "period": "2014 - 2019",
+        "description": "Implantou estratégia de captação recorrente e desenvolveu campanhas digitais de mobilização."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/marinasalles"
+      }
+    ],
+    "recommendationScore": 94,
+    "lastActiveAt": "2024-05-05",
+    "joinedAt": "2019-11-03"
+  },
+  {
+    "slug": "thiago-prado",
+    "name": "Thiago Prado",
+    "headline": "Consultor em operações e escala de programas sociais",
+    "avatarUrl": "https://avatar.vercel.sh/thiago.prado",
+    "summary": "Sou operador nato: desenho fluxos, dimensiono equipes e crio rituais que mantêm programas sociais funcionando com eficiência e cuidado. Apoio organizações em processos de expansão territorial, definindo padrões de atendimento, indicadores de qualidade e mecanismos de mitigação de riscos. Tenho experiência em logística de campo, estruturação de CRMs sociais e integração entre áreas técnicas e administrativas.",
+    "expertise": [
+      "Operações",
+      "Processos",
+      "Indicadores"
+    ],
+    "ods": [
+      3,
+      11,
+      16
+    ],
+    "location": "Curitiba, PR",
+    "remote": true,
+    "availability": "Disponível para mentorias estruturadas",
+    "seniority": "Sênior",
+    "languages": [
+      "Português",
+      "Inglês"
+    ],
+    "interests": [
+      "Melhoria contínua",
+      "Gestão de riscos",
+      "Inovação em serviços públicos"
+    ],
+    "education": [
+      {
+        "course": "Lean Six Sigma Black Belt",
+        "institution": "Instituto Kaizen Brasil",
+        "year": "2017"
+      },
+      {
+        "course": "Administração Pública",
+        "institution": "Universidade Federal do Paraná",
+        "year": "2011"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Consultor independente",
+        "organization": "Prado ImpactOps",
+        "period": "2018 - atual",
+        "description": "Acompanha organizações na modelagem de operações e na definição de indicadores chave de desempenho."
+      },
+      {
+        "role": "Coordenador de Operações",
+        "organization": "Programa Cidades Vivas",
+        "period": "2013 - 2018",
+        "description": "Estruturou processos logísticos e suporte a equipes regionais, reduzindo custos operacionais em 18%."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/thiagoprado"
+      }
+    ],
+    "recommendationScore": 88,
+    "lastActiveAt": "2024-03-30",
+    "joinedAt": "2018-08-19"
+  },
+  {
+    "slug": "renata-guedes",
+    "name": "Renata Guedes",
+    "headline": "Especialista em finanças sociais e sustentabilidade",
+    "avatarUrl": "https://avatar.vercel.sh/renata.guedes",
+    "summary": "Atuo na interseção entre finanças, sustentabilidade e governança para destravar recursos a iniciativas climáticas. Acompanho organizações em diagnósticos de maturidade, desenho indicadores ESG e traduções financeiras para conselhos e investidores. Sou reconhecida por combinar rigor técnico com linguagem acessível, ajudando times a construir projeções realistas e relatórios transparentes. Também apoio conselhos a estruturar políticas de investimento socioambiental e promovo formações em finanças regenerativas para equipes diversas.",
+    "expertise": [
+      "Finanças Sustentáveis",
+      "ESG",
+      "Modelagem de Negócios"
+    ],
+    "ods": [
+      7,
+      12,
+      13
+    ],
+    "location": "São José dos Campos, SP",
+    "remote": true,
+    "availability": "Agenda aberta para novos projetos",
+    "seniority": "Especialista",
+    "languages": [
+      "Português",
+      "Inglês",
+      "Alemão"
+    ],
+    "interests": [
+      "Transição energética justa",
+      "Gestão financeira transparente",
+      "Governança climática"
+    ],
+    "education": [
+      {
+        "course": "Mestrado em Administração Sustentável",
+        "institution": "Universidade de São Paulo",
+        "year": "2016"
+      },
+      {
+        "course": "Ciências Contábeis",
+        "institution": "Universidade do Vale do Paraíba",
+        "year": "2011"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Consultora líder em ESG",
+        "organization": "Impacta360",
+        "period": "2020 - atual",
+        "description": "Desenha planos financeiros para projetos climáticos e conduz processos de reporte alinhados a padrões globais."
+      },
+      {
+        "role": "Analista de Finanças Sociais",
+        "organization": "Banco do Desenvolvimento Inclusivo",
+        "period": "2014 - 2020",
+        "description": "Estruturou fundos híbridos e monitorou indicadores de retorno socioambiental."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/renataguedes"
+      }
+    ],
+    "recommendationScore": 97,
+    "lastActiveAt": "2024-05-06",
+    "joinedAt": "2020-02-01"
+  },
+  {
+    "slug": "davi-albuquerque",
+    "name": "Davi Albuquerque",
+    "headline": "Facilitador de inovação e design de serviços públicos",
+    "avatarUrl": "https://avatar.vercel.sh/davi.albuquerque",
+    "summary": "Trabalho com laboratórios de inovação pública para transformar insights em serviços que fazem sentido para o cidadão. Facilito jornadas colaborativas, uso métodos de design estratégico e apoio equipes a navegarem por restrições legais e tecnológicas. Minha atuação equilibra pesquisa em campo, prototipagem rápida e governança de dados para garantir que as soluções criadas sejam implementáveis e sustentáveis.",
+    "expertise": [
+      "Design de Serviços",
+      "Inovação Pública",
+      "Facilitação"
+    ],
+    "ods": [
+      9,
+      11,
+      16
+    ],
+    "location": "Brasília, DF",
+    "remote": true,
+    "availability": "Agenda limitada para sprints",
+    "seniority": "Pleno",
+    "languages": [
+      "Português",
+      "Inglês"
+    ],
+    "interests": [
+      "Laboratórios de inovação",
+      "Design centrado no cidadão",
+      "GovTech inclusiva"
+    ],
+    "education": [
+      {
+        "course": "Pós-graduação em Design Estratégico",
+        "institution": "Istituto Europeo di Design",
+        "year": "2019"
+      },
+      {
+        "course": "Gestão Pública",
+        "institution": "Universidade de Brasília",
+        "year": "2014"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Especialista em inovação",
+        "organization": "Lab Cívico Nacional",
+        "period": "2021 - atual",
+        "description": "Cocriou serviços digitais com equipes governamentais e facilitou jornadas com cidadãos diversos."
+      },
+      {
+        "role": "Consultor de Design",
+        "organization": "ImpactLab",
+        "period": "2016 - 2021",
+        "description": "Desenvolveu protótipos de serviços e implementou métodos ágeis em organizações públicas."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/davialbuquerque"
+      }
+    ],
+    "recommendationScore": 90,
+    "lastActiveAt": "2024-04-18",
+    "joinedAt": "2021-09-22"
+  },
+  {
+    "slug": "sofia-vilar",
+    "name": "Sofia Vilar",
+    "headline": "Líder de programas de diversidade e inclusão",
+    "avatarUrl": "https://avatar.vercel.sh/sofia.vilar",
+    "summary": "Minha carreira é dedicada a criar ambientes de trabalho inclusivos e sustentáveis. Lidero programas de diversidade que combinam governança, desenvolvimento de pessoas e comunicação transparente para gerar resultados de longo prazo. Ajudo organizações a mapear indicadores, promover letramento em equidade racial e de gênero e construir redes de suporte para grupos minorizados. Acredito em mudanças estruturais guiadas por dados e escuta ativa.",
+    "expertise": [
+      "Diversidade e Inclusão",
+      "Cultura Organizacional",
+      "Formação de Lideranças"
+    ],
+    "ods": [
+      5,
+      8,
+      10
+    ],
+    "location": "Porto Alegre, RS",
+    "remote": true,
+    "availability": "Disponível para mentorias em organizações",
+    "seniority": "Sênior",
+    "languages": [
+      "Português",
+      "Inglês",
+      "Espanhol"
+    ],
+    "interests": [
+      "Equidade racial",
+      "Governança inclusiva",
+      "Programas de mentoria interna"
+    ],
+    "education": [
+      {
+        "course": "MBA em Gestão de Pessoas",
+        "institution": "Fundação Getulio Vargas",
+        "year": "2017"
+      },
+      {
+        "course": "Psicologia",
+        "institution": "Pontifícia Universidade Católica do Rio Grande do Sul",
+        "year": "2011"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Head de Diversidade",
+        "organization": "Grupo Horizonte",
+        "period": "2019 - atual",
+        "description": "Estruturou estratégia de D&I e indicadores de representatividade para oito unidades de negócios."
+      },
+      {
+        "role": "Consultora de Desenvolvimento Humano",
+        "organization": "Instituto Vidas Plenas",
+        "period": "2013 - 2019",
+        "description": "Conduziu programas de formação de lideranças inclusivas e círculos de cuidado."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/sofiavilar"
+      }
+    ],
+    "recommendationScore": 93,
+    "lastActiveAt": "2024-05-03",
+    "joinedAt": "2019-04-10"
+  },
+  {
+    "slug": "hugo-caires",
+    "name": "Hugo Caires",
+    "headline": "Mentor em tecnologia aberta e dados para impacto social",
+    "avatarUrl": "https://avatar.vercel.sh/hugo.caires",
+    "summary": "Ajudo organizações sociais e governos a adotarem tecnologias abertas com segurança e participação. Tenho experiência na criação de políticas de dados, infraestrutura digital e comunidades colaborativas. Gosto de conectar voluntários técnicos a desafios públicos e de desenvolver guias práticos que permitem replicabilidade e governança contínua. Minha atuação combina arquitetura de sistemas, engajamento comunitário e formação de equipes internas.",
+    "expertise": [
+      "Tecnologia Aberta",
+      "Governança de Dados",
+      "Engajamento Comunitário"
+    ],
+    "ods": [
+      9,
+      16,
+      17
+    ],
+    "location": "Florianópolis, SC",
+    "remote": true,
+    "availability": "Disponível para mentorias pro bono",
+    "seniority": "Especialista",
+    "languages": [
+      "Português",
+      "Inglês"
+    ],
+    "interests": [
+      "GovTech aberta",
+      "Infraestrutura cívica",
+      "Comunidades de código aberto"
+    ],
+    "education": [
+      {
+        "course": "Mestrado em Ciência da Computação",
+        "institution": "Universidade Federal de Santa Catarina",
+        "year": "2015"
+      },
+      {
+        "course": "Sistemas de Informação",
+        "institution": "Universidade Federal de Santa Catarina",
+        "year": "2012"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Tech Lead",
+        "organization": "Rede Dados Livres",
+        "period": "2020 - atual",
+        "description": "Coordena equipes voluntárias para desenvolver plataformas abertas de transparência e dados geoespaciais."
+      },
+      {
+        "role": "Especialista em Dados",
+        "organization": "Instituto Vozes do Sul",
+        "period": "2015 - 2020",
+        "description": "Implementou pipelines de dados e treinou organizações sociais em boas práticas de governança digital."
+      }
+    ],
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/hugocaires"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/hugocaires"
+      }
+    ],
+    "recommendationScore": 91,
+    "lastActiveAt": "2024-04-30",
+    "joinedAt": "2020-06-17"
+  }
+]
