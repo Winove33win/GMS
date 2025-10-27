@@ -1,184 +1,187 @@
 import { useMemo, useState } from "react";
+import mentorsData from "@/data/mentors.json";
+import type { Mentor } from "@/types/mentor";
 import { SEO } from "@/lib/seo";
 import { Section } from "@/components/Section";
-import { Card } from "@/components/Card";
-import { Badge } from "@/components/Badge";
+import { MentorCard } from "@/components/mentors/MentorCard";
+import { Filters, type MentorFiltersState } from "@/components/mentors/Filters";
 
-type Mentor = {
-  name: string;
-  bio: string;
-  areas: string[];
-  ods: string[];
-  mode: "Remoto" | "Híbrido" | "Presencial";
+const mentors = mentorsData as Mentor[];
+
+const expertiseOptions = Array.from(new Set(mentors.flatMap((mentor) => mentor.expertise))).sort((a, b) =>
+  a.localeCompare(b, "pt-BR"),
+);
+const odsOptions = Array.from(new Set(mentors.flatMap((mentor) => mentor.ods))).sort((a, b) => a - b);
+const seniorityOptions = Array.from(new Set(mentors.map((mentor) => mentor.seniority))).sort((a, b) =>
+  a.localeCompare(b, "pt-BR"),
+);
+const languagesOptions = Array.from(new Set(mentors.flatMap((mentor) => mentor.languages))).sort((a, b) =>
+  a.localeCompare(b, "pt-BR"),
+);
+const availabilityOptions = Array.from(new Set(mentors.map((mentor) => mentor.availability))).sort((a, b) =>
+  a.localeCompare(b, "pt-BR"),
+);
+
+const initialFilters: MentorFiltersState = {
+  expertise: [],
+  ods: [],
+  seniority: "",
+  languages: [],
+  location: "",
+  availability: "",
 };
 
-const mentors: Mentor[] = [
-  {
-    name: "Ana Lima",
-    bio: "Consultora em estratégia e impacto socioambiental com 12 anos de atuação em organizações da sociedade civil.",
-    areas: ["Estratégia", "Governança"],
-    ods: ["ODS 4", "ODS 10", "ODS 17"],
-    mode: "Remoto",
-  },
-  {
-    name: "Bruno Medeiros",
-    bio: "Especialista em dados e avaliação de impacto, com experiência em métricas de educação inclusiva.",
-    areas: ["Dados", "Avaliação"],
-    ods: ["ODS 4", "ODS 13"],
-    mode: "Híbrido",
-  },
-  {
-    name: "Carla Souza",
-    bio: "Profissional de ESG e governança, apoiando empresas e ONGs na estruturação de políticas ambientais.",
-    areas: ["ESG", "Governança"],
-    ods: ["ODS 13", "ODS 16"],
-    mode: "Remoto",
-  },
-  {
-    name: "Diego Freitas",
-    bio: "Product manager com foco em validação de MVPs e experiência em negócios de impacto.",
-    areas: ["Produto", "Inovação"],
-    ods: ["ODS 8", "ODS 9"],
-    mode: "Remoto",
-  },
-  {
-    name: "Elisa Cardoso",
-    bio: "Captadora de recursos e articuladora de parcerias com redes de filantropia colaborativa.",
-    areas: ["Captação", "Parcerias"],
-    ods: ["ODS 8", "ODS 17"],
-    mode: "Híbrido",
-  },
-  {
-    name: "Fábio Nunes",
-    bio: "Especialista em operações e escala de programas sociais, com foco em eficiência e processos.",
-    areas: ["Operações", "Processos"],
-    ods: ["ODS 11", "ODS 3"],
-    mode: "Presencial",
-  },
+type SortOption = "recommended" | "active" | "recent";
+
+const sortOptions: Array<{ value: SortOption; label: string }> = [
+  { value: "recommended", label: "Mais recomendados" },
+  { value: "active", label: "Mais ativos" },
+  { value: "recent", label: "Recentes" },
 ];
 
-const allAreas = Array.from(new Set(mentors.flatMap((mentor) => mentor.areas))).sort();
-const allOds = Array.from(new Set(mentors.flatMap((mentor) => mentor.ods))).sort();
-const allModes = Array.from(new Set(mentors.map((mentor) => mentor.mode))).sort();
+function sortMentors(list: Mentor[], sort: SortOption) {
+  return [...list].sort((a, b) => {
+    if (sort === "recommended") {
+      return b.recommendationScore - a.recommendationScore || a.name.localeCompare(b.name, "pt-BR");
+    }
+
+    if (sort === "active") {
+      return new Date(b.lastActiveAt).getTime() - new Date(a.lastActiveAt).getTime();
+    }
+
+    return new Date(b.joinedAt).getTime() - new Date(a.joinedAt).getTime();
+  });
+}
+
+function applyFilters(list: Mentor[], filters: MentorFiltersState) {
+  const locationQuery = filters.location.trim().toLowerCase();
+
+  return list.filter((mentor) => {
+    if (filters.expertise.length > 0 && !mentor.expertise.some((item) => filters.expertise.includes(item))) {
+      return false;
+    }
+
+    if (filters.ods.length > 0 && !mentor.ods.some((item) => filters.ods.includes(item))) {
+      return false;
+    }
+
+    if (filters.seniority && mentor.seniority !== filters.seniority) {
+      return false;
+    }
+
+    if (filters.languages.length > 0 && !filters.languages.every((lang) => mentor.languages.includes(lang))) {
+      return false;
+    }
+
+    if (locationQuery) {
+      const haystack = `${mentor.location}${mentor.remote ? " remoto" : ""}`.toLowerCase();
+      if (!haystack.includes(locationQuery)) {
+        return false;
+      }
+    }
+
+    if (filters.availability && mentor.availability !== filters.availability) {
+      return false;
+    }
+
+    return true;
+  });
+}
 
 export default function Mentores() {
-  const [areaFilter, setAreaFilter] = useState<string>("");
-  const [odsFilter, setOdsFilter] = useState<string>("");
-  const [modeFilter, setModeFilter] = useState<string>("");
-  const [search, setSearch] = useState("");
+  const [draftFilters, setDraftFilters] = useState<MentorFiltersState>(initialFilters);
+  const [activeFilters, setActiveFilters] = useState<MentorFiltersState>(initialFilters);
+  const [sort, setSort] = useState<SortOption>("recommended");
 
-  const filteredMentors = useMemo(() => {
-    const query = search.trim().toLowerCase();
+  const filteredMentors = useMemo(() => applyFilters(mentors, activeFilters), [activeFilters]);
+  const sortedMentors = useMemo(() => sortMentors(filteredMentors, sort), [filteredMentors, sort]);
 
-    return mentors.filter((mentor) => {
-      const matchesArea = !areaFilter || mentor.areas.includes(areaFilter);
-      const matchesOds = !odsFilter || mentor.ods.includes(odsFilter);
-      const matchesMode = !modeFilter || mentor.mode === modeFilter;
-      const matchesQuery =
-        !query ||
-        mentor.name.toLowerCase().includes(query) ||
-        mentor.bio.toLowerCase().includes(query) ||
-        mentor.areas.some((area) => area.toLowerCase().includes(query));
+  const handleApply = (value: MentorFiltersState) => {
+    setActiveFilters(value);
+  };
 
-      return matchesArea && matchesOds && matchesMode && matchesQuery;
-    });
-  }, [areaFilter, odsFilter, modeFilter, search]);
+  const handleClear = () => {
+    setDraftFilters(initialFilters);
+    setActiveFilters(initialFilters);
+  };
 
   return (
     <>
       <SEO
-        title="Mentores voluntários - Mentoria Solidária"
-        description="Conheça a rede de mentores voluntários que apoiam projetos socioambientais alinhados aos ODS."
+        title="Rede de mentores e mentoras voluntárias"
+        description="Conheça especialistas que apoiam iniciativas socioambientais com mentorias estratégicas. Filtre por expertise, ODS, senioridade, idiomas e disponibilidade."
         canonical="/mentores"
       />
-      <main>
-        <Section
-          title="Mentores"
-          description="Explore especialistas com diferentes trajetórias e disponibilidade para mentorias sob demanda. Utilize os filtros para encontrar a pessoa certa para a sua iniciativa."
-        >
-          <form className="grid gap-4 rounded-[1.25rem] border border-[rgba(15,15,15,0.08)] bg-white p-6 shadow-card-soft md:grid-cols-2 lg:grid-cols-4">
-            <label className="flex flex-col gap-2 text-sm font-semibold text-brand-dark">
-              Busca
-              <input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Buscar por nome ou palavra-chave"
-                className="h-11 rounded-full border border-[rgba(15,15,15,0.1)] px-4 text-sm font-normal text-ink placeholder:text-ink-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green"
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm font-semibold text-brand-dark">
-              Área de atuação
-              <select
-                value={areaFilter}
-                onChange={(event) => setAreaFilter(event.target.value)}
-                className="h-11 rounded-full border border-[rgba(15,15,15,0.1)] px-4 text-sm font-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green"
-              >
-                <option value="">Todas</option>
-                {allAreas.map((area) => (
-                  <option key={area}>{area}</option>
-                ))}
-              </select>
-            </label>
-            <label className="flex flex-col gap-2 text-sm font-semibold text-brand-dark">
-              ODS de atuação
-              <select
-                value={odsFilter}
-                onChange={(event) => setOdsFilter(event.target.value)}
-                className="h-11 rounded-full border border-[rgba(15,15,15,0.1)] px-4 text-sm font-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green"
-              >
-                <option value="">Todos</option>
-                {allOds.map((ods) => (
-                  <option key={ods}>{ods}</option>
-                ))}
-              </select>
-            </label>
-            <label className="flex flex-col gap-2 text-sm font-semibold text-brand-dark">
-              Forma de atuação
-              <select
-                value={modeFilter}
-                onChange={(event) => setModeFilter(event.target.value)}
-                className="h-11 rounded-full border border-[rgba(15,15,15,0.1)] px-4 text-sm font-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green"
-              >
-                <option value="">Todas</option>
-                {allModes.map((mode) => (
-                  <option key={mode}>{mode}</option>
-                ))}
-              </select>
-            </label>
-          </form>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            {filteredMentors.map((mentor) => (
-              <Card key={mentor.name} elevated>
-                <div className="flex flex-wrap items-center gap-3">
-                  {mentor.ods.map((ods) => (
-                    <Badge key={ods} tone="brand" className="rounded-full px-3 py-1 text-[0.7rem] tracking-[0.2em]">
-                      {ods}
-                    </Badge>
-                  ))}
-                  <Badge tone="neutral" className="rounded-full px-3 py-1 text-[0.7rem] tracking-[0.2em]">
-                    {mentor.mode}
-                  </Badge>
-                </div>
-                <h2 className="mt-4 text-xl font-semibold text-brand-dark">{mentor.name}</h2>
-                <p className="mt-2 text-sm text-ink-muted">{mentor.bio}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {mentor.areas.map((area) => (
-                    <span key={area} className="rounded-full bg-surface-muted px-3 py-1 text-xs font-semibold text-ink">
-                      {area}
-                    </span>
-                  ))}
-                </div>
-              </Card>
-            ))}
+      <Section
+        title="Mentores e mentoras"
+        description="Encontre profissionais experientes para fortalecer suas iniciativas. Ajuste os filtros, explore a lista e escolha a pessoa ideal para sua jornada."
+      >
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6 rounded-3xl bg-emerald-50/60 p-6 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">Rede ativa</p>
+              <h3 className="mt-2 text-2xl font-extrabold text-slate-900">{mentors.length} mentores cadastrados</h3>
+              <p className="mt-2 max-w-xl text-sm text-slate-600">
+                {"Atualizamos constantemente esta rede com profissionais validados e alinhados aos valores da comunidade."}
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 text-sm text-slate-600" role="status" aria-live="polite">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Resultados atuais</span>
+              <strong className="text-lg text-slate-900">{sortedMentors.length} mentor(es) encontrado(s)</strong>
+            </div>
           </div>
 
-          {filteredMentors.length === 0 ? (
-            <p className="mt-10 text-sm text-ink-muted">Nenhum mentor encontrado para os filtros selecionados.</p>
-          ) : null}
-        </Section>
-      </main>
+          <div className="flex flex-col gap-6">
+            <Filters
+              value={draftFilters}
+              onChange={setDraftFilters}
+              onApply={handleApply}
+              onClear={handleClear}
+              options={{
+                expertise: expertiseOptions,
+                ods: odsOptions,
+                seniority: seniorityOptions,
+                languages: languagesOptions,
+                availability: availabilityOptions,
+              }}
+            />
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-lg font-semibold text-slate-900">Lista de mentores</h2>
+              <label className="flex items-center gap-3 text-sm text-slate-600">
+                Ordenar por
+                <select
+                  value={sort}
+                  onChange={(event) => setSort(event.target.value as SortOption)}
+                  className="h-10 rounded-full border border-slate-200 px-4 text-sm text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+                  aria-label="Ordenar lista de mentores"
+                >
+                  {sortOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            {sortedMentors.length > 0 ? (
+              <div role="list" className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {sortedMentors.map((mentor) => (
+                  <MentorCard key={mentor.slug} mentor={mentor} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
+                <p className="text-xl font-semibold text-slate-900">Nenhum mentor encontrado</p>
+                <p className="max-w-md text-sm text-slate-600">
+                  Ajuste os filtros para ampliar sua busca. Você também pode entrar em contato com a nossa equipe para receber indicações personalizadas.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </Section>
     </>
   );
 }
