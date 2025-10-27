@@ -1,40 +1,48 @@
-export interface MentorExperience {
-  role: string;
-  organization: string;
-  period: string;
-  description: string;
+export type ProgramWindow = {
+  start: string
+  end: string
+  label?: string
 }
 
-export interface MentorEducation {
-  course: string;
-  institution: string;
-  year: string;
+export type MentorCase = {
+  title: string
+  result: string
+  ods?: number
 }
 
-export interface MentorLink {
-  label: string;
-  url: string;
+export type MentorLinks = {
+  linkedin?: string
+  lattes?: string
+  website?: string
 }
 
-export interface Mentor {
-  slug: string;
-  name: string;
-  headline: string;
-  avatarUrl?: string;
-  summary: string;
-  expertise: string[];
-  ods: number[];
-  location: string;
-  remote: boolean;
-  availability: string;
-  seniority: string;
-  languages: string[];
-  interests: string[];
-  education: MentorEducation[];
-  experience: MentorExperience[];
-  links: MentorLink[];
-  nextWindow?: string;
-  recommendationScore: number;
-  lastActiveAt: string;
-  joinedAt: string;
+export type MentorLocation = {
+  city?: string
+  state?: string
+  country?: string
+  remote?: true
+}
+
+export type Mentor = {
+  id: string
+  slug: string
+  name: string
+  headline: string
+  avatarUrl?: string
+  location?: MentorLocation
+  seniority: "Pleno" | "Sênior" | "Especialista"
+  expertise: string[]
+  ods: number[]
+  languages: string[]
+  summary: string
+  helpsWith: string[]
+  cases?: MentorCase[]
+  program: {
+    sessionFrequency: "weekly"
+    sessionLengthMin: 60
+    channel: "remote"
+    windows: ProgramWindow[]
+  }
+  links?: MentorLinks
+  updatedAt: string
 }

@@ -1,64 +1,105 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import mentorsData from "@/data/mentors.json";
-import type { Mentor } from "@/types/mentor";
-import { SEO } from "@/lib/seo";
-import { Section } from "@/components/Section";
-import { MentorCard } from "@/components/mentors/MentorCard";
-import { Filters } from "@/components/mentors/Filters";
+import { useCallback, useEffect, useMemo, useState } from "react"
+import mentorsData from "@/data/mentors.json"
+import type { Mentor } from "@/types/mentor"
+import { SEO } from "@/lib/seo"
+import { Section } from "@/components/Section"
+import { MentorCard } from "@/components/mentors/MentorCard"
+import { Filters } from "@/components/mentors/Filters"
 import {
   type AppliedFilters,
   type Filters as QueryFilters,
   filterMentors,
   sortMentors,
-} from "@/lib/mentors/search";
-import { useQueryState } from "@/lib/hooks/useQueryState";
+  type ProgramWindowOption,
+  createProgramWindowId,
+} from "@/lib/mentors/search"
+import { useQueryState } from "@/lib/hooks/useQueryState"
+import { PolicyModal } from "@/components/PolicyModal"
+import { Button } from "@/components/Button"
 
-const mentors = mentorsData as Mentor[];
+const mentors = mentorsData as Mentor[]
 
 const BASE_FILTERS: AppliedFilters = {
   q: "",
   expertise: [],
   ods: [],
-  seniority: undefined,
   lang: [],
-  location: "",
   remote: undefined,
-  available: undefined,
-};
+  programWindows: [],
+}
 
 const INITIAL_STATE: QueryFilters = {
   ...BASE_FILTERS,
   sort: "recommended",
-};
+}
 
-const PAGE_SIZE = 20;
-
-const sortOptions: Array<{ value: NonNullable<QueryFilters["sort"]>; label: string }> = [
-  { value: "recommended", label: "Mais recomendados" },
-  { value: "availability", label: "Maior disponibilidade" },
-  { value: "recent", label: "Mais recentes" },
-];
+const PAGE_SIZE = 20
 
 function normalizeFilters(state: QueryFilters): AppliedFilters {
-  const { sort: _sort, ...rest } = state;
+  const { sort: _sort, ...rest } = state
   return {
     ...BASE_FILTERS,
     ...rest,
     expertise: rest.expertise ?? [],
     ods: rest.ods ?? [],
     lang: rest.lang ?? [],
+    programWindows: rest.programWindows ?? [],
     q: rest.q ?? "",
-    location: rest.location ?? "",
-  };
+  }
+}
+
+function aggregateOptions(data: Mentor[]): {
+  expertise: string[]
+  ods: number[]
+  languages: string[]
+  programWindows: ProgramWindowOption[]
+} {
+  const expertiseSet = new Set<string>()
+  const odsSet = new Set<number>()
+  const languagesSet = new Set<string>()
+  const programWindowMap = new Map<string, ProgramWindowOption>()
+
+  data.forEach((mentor) => {
+    mentor.expertise.forEach((item) => expertiseSet.add(item))
+    mentor.ods.forEach((item) => odsSet.add(item))
+    mentor.languages.forEach((item) => languagesSet.add(item))
+    mentor.program?.windows.forEach((window) => {
+      const id = createProgramWindowId(window)
+      if (!programWindowMap.has(id)) {
+        programWindowMap.set(id, {
+          id,
+          label: window.label,
+          start: window.start,
+          end: window.end,
+        })
+      }
+    })
+  })
+
+  const programWindows = Array.from(programWindowMap.values()).sort((a, b) => {
+    const aTime = a.start ? new Date(a.start).getTime() : Number.POSITIVE_INFINITY
+    const bTime = b.start ? new Date(b.start).getTime() : Number.POSITIVE_INFINITY
+    return aTime - bTime
+  })
+
+  return {
+    expertise: Array.from(expertiseSet).sort((a, b) => a.localeCompare(b, "pt-BR")),
+    ods: Array.from(odsSet).sort((a, b) => a - b),
+    languages: Array.from(languagesSet).sort((a, b) => a.localeCompare(b, "pt-BR")),
+    programWindows,
+  }
 }
 
 export default function Mentores() {
-  const [queryState, setQueryState] = useQueryState(INITIAL_STATE);
-  const [page, setPage] = useState(1);
-  const [isFiltersOpen, setFiltersOpen] = useState(false);
+  const [queryState, setQueryState] = useQueryState(INITIAL_STATE)
+  const [page, setPage] = useState(1)
+  const [isFiltersOpen, setFiltersOpen] = useState(false)
+  const [isPolicyOpen, setPolicyOpen] = useState(false)
 
-  const sortOrder = queryState.sort ?? "recommended";
-  const activeFilters = useMemo(() => normalizeFilters(queryState), [queryState]);
+  const sortOrder = queryState.sort ?? "recommended"
+  const activeFilters = useMemo(() => normalizeFilters(queryState), [queryState])
+
+  const options = useMemo(() => aggregateOptions(mentors), [])
 
   const filtersSignature = useMemo(
     () =>
@@ -66,43 +107,41 @@ export default function Mentores() {
         q: activeFilters.q ?? "",
         expertise: activeFilters.expertise,
         ods: activeFilters.ods,
-        seniority: activeFilters.seniority ?? "",
         lang: activeFilters.lang ?? [],
-        location: activeFilters.location ?? "",
         remote: activeFilters.remote ?? null,
-        available: activeFilters.available ?? null,
+        programWindows: activeFilters.programWindows ?? [],
       }),
     [activeFilters],
-  );
+  )
 
   useEffect(() => {
-    setPage(1);
-  }, [filtersSignature]);
+    setPage(1)
+  }, [filtersSignature])
 
   const { items } = useMemo(
     () => filterMentors(mentors, { ...activeFilters, sort: sortOrder }),
     [activeFilters, sortOrder],
-  );
+  )
 
-  const sortedMentors = useMemo(() => sortMentors(items, sortOrder), [items, sortOrder]);
-  const totalResults = sortedMentors.length;
-  const totalPages = Math.max(1, Math.ceil(totalResults / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
+  const sortedMentors = useMemo(() => sortMentors(items, sortOrder), [items, sortOrder])
+  const totalResults = sortedMentors.length
+  const totalPages = Math.max(1, Math.ceil(totalResults / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
 
   useEffect(() => {
     if (currentPage !== page) {
-      setPage(currentPage);
+      setPage(currentPage)
     }
-  }, [currentPage, page]);
+  }, [currentPage, page])
 
   const paginatedMentors = useMemo(
     () => sortedMentors.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
     [sortedMentors, currentPage],
-  );
+  )
 
   const applyFilters = useCallback(
     (next: AppliedFilters) => {
-      setPage(1);
+      setPage(1)
       setQueryState((prev) => ({
         ...prev,
         ...next,
@@ -110,35 +149,26 @@ export default function Mentores() {
         ods: next.ods ?? [],
         lang: next.lang ?? [],
         q: next.q ?? "",
-        location: next.location ?? "",
-        seniority: next.seniority,
+        programWindows: next.programWindows ?? [],
         remote: next.remote,
-        available: next.available,
-      }));
+      }))
     },
     [setQueryState],
-  );
-
-  const handleSortChange = (value: NonNullable<QueryFilters["sort"]>) => {
-    setQueryState((prev) => ({
-      ...prev,
-      sort: value,
-    }));
-  };
+  )
 
   const goToPage = (nextPage: number) => {
-    setPage(nextPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    setPage(nextPage)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 
   const suggestionChips = useMemo(() => {
-    const chips: Array<{ label: string; onClick: () => void }> = [];
+    const chips: Array<{ label: string; onClick: () => void }> = []
 
     if (activeFilters.q) {
       chips.push({
         label: `Remover busca "${activeFilters.q}"`,
         onClick: () => applyFilters({ ...activeFilters, q: "" }),
-      });
+      })
     }
 
     activeFilters.expertise.forEach((item) => {
@@ -149,8 +179,8 @@ export default function Mentores() {
             ...activeFilters,
             expertise: activeFilters.expertise.filter((value) => value !== item),
           }),
-      });
-    });
+      })
+    })
 
     activeFilters.ods.forEach((item) => {
       chips.push({
@@ -160,10 +190,10 @@ export default function Mentores() {
             ...activeFilters,
             ods: activeFilters.ods.filter((value) => value !== item),
           }),
-      });
-    });
+      })
+    })
 
-    (activeFilters.lang ?? []).forEach((item) => {
+    ;(activeFilters.lang ?? []).forEach((item) => {
       chips.push({
         label: `Remover idioma ${item}`,
         onClick: () =>
@@ -171,70 +201,64 @@ export default function Mentores() {
             ...activeFilters,
             lang: (activeFilters.lang ?? []).filter((value) => value !== item),
           }),
-      });
-    });
+      })
+    })
 
-    if (activeFilters.location) {
+    ;(activeFilters.programWindows ?? []).forEach((id) => {
+      const option = options.programWindows.find((window) => window.id === id)
+      const label = option?.label ?? "janela"
       chips.push({
-        label: "Limpar localização",
-        onClick: () => applyFilters({ ...activeFilters, location: "" }),
-      });
-    }
+        label: `Remover ${label}`,
+        onClick: () =>
+          applyFilters({
+            ...activeFilters,
+            programWindows: (activeFilters.programWindows ?? []).filter((value) => value !== id),
+          }),
+      })
+    })
 
     if (activeFilters.remote) {
       chips.push({
-        label: "Ver também presenciais",
+        label: "Incluir atendimentos presenciais",
         onClick: () => applyFilters({ ...activeFilters, remote: undefined }),
-      });
+      })
     }
 
-    if (activeFilters.available) {
-      chips.push({
-        label: "Incluir agendas completas",
-        onClick: () => applyFilters({ ...activeFilters, available: undefined }),
-      });
-    }
+    chips.push({ label: "Ver todos os mentores", onClick: () => applyFilters(BASE_FILTERS) })
 
-    if (activeFilters.seniority) {
-      chips.push({
-        label: "Todas as senioridades",
-        onClick: () => applyFilters({ ...activeFilters, seniority: undefined }),
-      });
-    }
-
-    chips.push({ label: "Ver todos os mentores", onClick: () => applyFilters(BASE_FILTERS) });
-
-    return chips.slice(0, 6);
-  }, [activeFilters, applyFilters]);
+    return chips.slice(0, 6)
+  }, [activeFilters, applyFilters, options.programWindows])
 
   return (
     <>
       <SEO
         title="Rede de mentores e mentoras voluntárias"
-        description="Conheça especialistas que apoiam iniciativas socioambientais com mentorias estratégicas. Utilize a busca e os filtros rápidos para encontrar quem está disponível, atende remoto ou fala inglês."
+        description="Conheça especialistas que apoiam iniciativas socioambientais com mentorias estratégicas mediadas pelo programa Mentoria Solidária."
         canonical="/mentores"
       />
       <Section
         title="Mentores e mentoras"
-        description="Encontre profissionais experientes para fortalecer suas iniciativas. Ajuste os filtros, explore a lista e escolha a pessoa ideal para sua jornada."
+        description="Todas as conexões acontecem pelas janelas oficiais do programa. Ajuste os filtros para encontrar o apoio ideal e solicite sua mentoria pelo Mentoria Solidária."
       >
         <div className="flex flex-col gap-8">
-          <div className="flex flex-col gap-6 rounded-3xl bg-emerald-50/60 p-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">Rede ativa</p>
-              <h3 className="mt-2 text-2xl font-extrabold text-slate-900">{mentors.length} mentores cadastrados</h3>
-              <p className="mt-2 max-w-xl text-sm text-slate-600">
-                Atualizamos constantemente esta rede com profissionais validados e alinhados aos valores da comunidade.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 text-sm text-slate-600" role="status" aria-live="polite">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Resultados atuais</span>
-              <strong className="text-lg text-slate-900">{totalResults} mentor(es) encontrado(s)</strong>
+          <div
+            role="region"
+            aria-label="Informações do programa"
+            className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6"
+          >
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-base font-semibold text-emerald-900">Mentoria voluntária, 1x por semana.</p>
+                <p className="mt-2 text-sm text-emerald-900">
+                  As sessões acontecem em janelas fixas do programa. Contatos diretos com mentores não são permitidos — toda comunicação acontece pelo Mentoria Solidária.
+                </p>
+              </div>
+              <Button onClick={() => setPolicyOpen(true)}>Entenda como funciona</Button>
             </div>
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <button
                 type="button"
                 onClick={() => setFiltersOpen(true)}
@@ -246,12 +270,13 @@ export default function Mentores() {
                 Filtrar resultados
               </button>
 
-              <div className="hidden md:block w-full">
+              <div className="hidden w-full md:block">
                 <Filters
                   value={activeFilters}
                   initialValue={BASE_FILTERS}
                   totalResults={totalResults}
                   onApply={applyFilters}
+                  options={options}
                 />
               </div>
             </div>
@@ -280,33 +305,17 @@ export default function Mentores() {
                     initialValue={BASE_FILTERS}
                     totalResults={totalResults}
                     onApply={(next) => {
-                      applyFilters(next);
+                      applyFilters(next)
                     }}
+                    options={options}
                   />
                 </div>
               </div>
             )}
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">
-                Lista de mentores
-                <span className="ml-2 text-sm font-normal text-slate-500">({totalResults})</span>
-              </h2>
-              <label className="flex items-center gap-3 text-sm text-slate-600">
-                Ordenar por
-                <select
-                  value={sortOrder}
-                  onChange={(event) => handleSortChange(event.target.value as NonNullable<QueryFilters["sort"]>)}
-                  className="h-11 rounded-full border border-slate-200 px-4 text-sm text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-                  aria-label="Ordenar lista de mentores"
-                >
-                  {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+            <div className="flex flex-col gap-2" role="status" aria-live="polite">
+              <span className="text-sm text-slate-500">{mentors.length} mentores voluntários na rede</span>
+              <strong className="text-lg text-slate-900">{totalResults} mentor(es) encontrado(s)</strong>
             </div>
 
             {paginatedMentors.length > 0 ? (
@@ -366,6 +375,7 @@ export default function Mentores() {
           </div>
         </div>
       </Section>
+      <PolicyModal open={isPolicyOpen} onOpenChange={setPolicyOpen} />
     </>
-  );
+  )
 }

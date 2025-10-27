@@ -1,34 +1,38 @@
-import type { KeyboardEvent } from "react";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import { ADVANCED_SENIORITY_VALUE, type AppliedFilters } from "@/lib/mentors/search";
+import type { KeyboardEvent, ReactNode } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
+import { cn } from "@/lib/utils"
+import type { AppliedFilters, ProgramWindowOption } from "@/lib/mentors/search"
 
 interface FiltersProps {
-  value: AppliedFilters;
-  initialValue: AppliedFilters;
-  totalResults: number;
-  onApply: (value: AppliedFilters) => void;
+  value: AppliedFilters
+  initialValue: AppliedFilters
+  totalResults: number
+  onApply: (value: AppliedFilters) => void
+  options: {
+    expertise: string[]
+    ods: number[]
+    languages: string[]
+    programWindows: ProgramWindowOption[]
+  }
 }
 
 function filtersAreEqual(a: AppliedFilters, b: AppliedFilters): boolean {
   return (
     (a.q ?? "") === (b.q ?? "") &&
-    (a.location ?? "") === (b.location ?? "") &&
-    (a.seniority ?? "") === (b.seniority ?? "") &&
     a.remote === b.remote &&
-    a.available === b.available &&
     arraysAreEqual(a.expertise, b.expertise) &&
     arraysAreEqual(a.ods, b.ods) &&
-    arraysAreEqual(a.lang ?? [], b.lang ?? [])
-  );
+    arraysAreEqual(a.lang ?? [], b.lang ?? []) &&
+    arraysAreEqual(a.programWindows ?? [], b.programWindows ?? [])
+  )
 }
 
 function arraysAreEqual<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) {
-    return false;
+    return false
   }
 
-  return a.every((item, index) => item === b[index]);
+  return a.every((item, index) => item === b[index])
 }
 
 function Chip({
@@ -38,18 +42,18 @@ function Chip({
   count,
   className,
 }: {
-  label: string;
-  active: boolean;
-  onToggle: () => void;
-  count?: number;
-  className?: string;
+  label: string
+  active: boolean
+  onToggle: () => void
+  count?: number
+  className?: string
 }) {
   const handleKeyDown = (event: KeyboardEvent<HTMLSpanElement>) => {
     if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      onToggle();
+      event.preventDefault()
+      onToggle()
     }
-  };
+  }
 
   return (
     <span
@@ -73,94 +77,108 @@ function Chip({
         </span>
       )}
     </span>
-  );
+  )
 }
 
-export function Filters({ value, initialValue, totalResults, onApply }: FiltersProps) {
-  const [draft, setDraft] = useState<AppliedFilters>(value);
-  const hasHydratedRef = useRef(false);
-  const skipAutoApplyRef = useRef(false);
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{title}</span>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  )
+}
+
+function formatProgramWindowLabel(option: ProgramWindowOption): string {
+  if (option.label) {
+    return option.label
+  }
+
+  if (option.start && option.end) {
+    return `${option.start} – ${option.end}`
+  }
+
+  return "Janela do programa"
+}
+
+export function Filters({ value, initialValue, totalResults, onApply, options }: FiltersProps) {
+  const [draft, setDraft] = useState<AppliedFilters>(value)
+  const hasHydratedRef = useRef(false)
+  const skipAutoApplyRef = useRef(false)
+
   useEffect(() => {
     if (!filtersAreEqual(value, draft)) {
-      setDraft(value);
+      setDraft(value)
     }
-  }, [draft, value]);
+  }, [draft, value])
 
   useEffect(() => {
     if (!hasHydratedRef.current) {
-      hasHydratedRef.current = true;
-      return;
+      hasHydratedRef.current = true
+      return
     }
 
     if (skipAutoApplyRef.current) {
-      skipAutoApplyRef.current = false;
-      return;
+      skipAutoApplyRef.current = false
+      return
     }
 
     if (filtersAreEqual(draft, value)) {
-      return;
+      return
     }
 
     const timeout = window.setTimeout(() => {
-      onApply(draft);
-    }, 250);
+      onApply(draft)
+    }, 250)
 
-    return () => window.clearTimeout(timeout);
-  }, [draft, onApply, value]);
+    return () => window.clearTimeout(timeout)
+  }, [draft, onApply, value])
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    skipAutoApplyRef.current = true;
-    onApply(draft);
-  };
+    event.preventDefault()
+    skipAutoApplyRef.current = true
+    onApply(draft)
+  }
 
-  const handleQuickToggle = (key: "available" | "remote" | "seniority" | "lang") => {
+  const handleQuickToggle = (key: "remote" | "lang") => {
     setDraft((current) => {
-      if (key === "available") {
-        return { ...current, available: current.available ? undefined : true };
-      }
-
       if (key === "remote") {
-        return { ...current, remote: current.remote ? undefined : true };
+        return { ...current, remote: current.remote ? undefined : true }
       }
 
-      if (key === "seniority") {
-        const nextValue = current.seniority === ADVANCED_SENIORITY_VALUE ? undefined : ADVANCED_SENIORITY_VALUE;
-        return { ...current, seniority: nextValue };
-      }
-
-      const targetLanguage = "Inglês";
-      const currentLang = current.lang ?? [];
+      const targetLanguage = "Inglês"
+      const currentLang = current.lang ?? []
       const nextLang = currentLang.includes(targetLanguage)
         ? currentLang.filter((item) => item !== targetLanguage)
-        : [...currentLang, targetLanguage];
+        : [...currentLang, targetLanguage]
 
-      return { ...current, lang: nextLang };
-    });
-  };
+      return { ...current, lang: nextLang }
+    })
+  }
+
+  const toggleArrayValue = <T,>(list: T[] | undefined, value: T): T[] => {
+    const current = list ?? []
+    return current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
+  }
 
   const quickFilters = [
-    {
-      key: "available" as const,
-      label: "Disponível",
-      active: Boolean(draft.available),
-    },
     {
       key: "remote" as const,
       label: "Remoto",
       active: Boolean(draft.remote),
     },
     {
-      key: "seniority" as const,
-      label: "Sênior/Especialista",
-      active: draft.seniority === ADVANCED_SENIORITY_VALUE,
-    },
-    {
       key: "lang" as const,
       label: "Fala inglês",
       active: (draft.lang ?? []).some((language) => language.toLowerCase().includes("ingl")),
     },
-  ];
+  ]
+
+  const handleClearAll = () => {
+    skipAutoApplyRef.current = true
+    setDraft(initialValue)
+    onApply(initialValue)
+  }
 
   return (
     <section aria-label="Filtros de mentores" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -171,7 +189,7 @@ export function Filters({ value, initialValue, totalResults, onApply }: FiltersP
             <input
               id="mentor-search"
               type="search"
-              placeholder="Busque por nome, expertise, ODS ou cidade"
+              placeholder="Busque por nome, expertise, ODS ou palavra-chave"
               value={draft.q ?? ""}
               onChange={(event) => setDraft((current) => ({ ...current, q: event.target.value }))}
               className="h-12 rounded-full border border-slate-200 px-5 text-sm text-slate-700 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
@@ -198,7 +216,98 @@ export function Filters({ value, initialValue, totalResults, onApply }: FiltersP
             {totalResults === 1 ? "1 resultado" : `${totalResults} resultados`}
           </div>
         </div>
+
+        <Section title="Janelas do programa">
+          {options.programWindows.length > 0 ? (
+            options.programWindows.map((option) => {
+              const label = formatProgramWindowLabel(option)
+              const isActive = (draft.programWindows ?? []).includes(option.id)
+              return (
+                <Chip
+                  key={option.id}
+                  label={label}
+                  active={isActive}
+                  onToggle={() =>
+                    setDraft((current) => ({
+                      ...current,
+                      programWindows: toggleArrayValue(current.programWindows, option.id),
+                    }))
+                  }
+                />
+              )
+            })
+          ) : (
+            <span className="text-sm text-slate-500">Nenhuma janela cadastrada</span>
+          )}
+        </Section>
+
+        <Section title="Expertise">
+          {options.expertise.map((area) => (
+            <Chip
+              key={area}
+              label={area}
+              active={draft.expertise.includes(area)}
+              onToggle={() =>
+                setDraft((current) => ({
+                  ...current,
+                  expertise: toggleArrayValue(current.expertise, area),
+                }))
+              }
+            />
+          ))}
+        </Section>
+
+        <Section title="ODS">
+          {options.ods.map((goal) => {
+            const label = `ODS ${goal}`
+            return (
+              <Chip
+                key={goal}
+                label={label}
+                active={draft.ods.includes(goal)}
+                onToggle={() =>
+                  setDraft((current) => ({
+                    ...current,
+                    ods: toggleArrayValue(current.ods, goal),
+                  }))
+                }
+              />
+            )
+          })}
+        </Section>
+
+        <Section title="Idiomas">
+          {options.languages.map((language) => (
+            <Chip
+              key={language}
+              label={language}
+              active={(draft.lang ?? []).includes(language)}
+              onToggle={() =>
+                setDraft((current) => ({
+                  ...current,
+                  lang: toggleArrayValue(current.lang, language),
+                }))
+              }
+            />
+          ))}
+        </Section>
+
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <button
+            type="submit"
+            className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Aplicar filtros
+          </button>
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="text-sm font-semibold text-emerald-700 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          >
+            Limpar tudo
+          </button>
+        </div>
       </form>
     </section>
-  );
+  )
 }
