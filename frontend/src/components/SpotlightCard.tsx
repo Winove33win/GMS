@@ -24,7 +24,7 @@ export function SpotlightCard({ title, subtitle, bullets, className }: Spotlight
   return (
     <motion.div
       className={cn(
-        "relative overflow-hidden rounded-[2rem] border border-white/40 bg-white/70 p-8 shadow-[var(--ms-shadow-spotlight)] backdrop-blur-xl",
+        "relative overflow-hidden rounded-[2rem] border border-white/40 bg-white/70 p-8 shadow-[var(--shadow-spotlight)] backdrop-blur-xl",
         "md:p-10",
         className,
       )}

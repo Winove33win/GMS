@@ -16,7 +16,6 @@ import { BrandShapes } from "@/components/BrandShapes";
 import { SpotlightCard } from "@/components/SpotlightCard";
 import { StatsCounter } from "@/components/StatsCounter";
 import { Timeline } from "@/components/Timeline";
-import { PartnersMarquee } from "@/components/PartnersMarquee";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { ProjectCard } from "@/components/ProjectCard";
 
@@ -55,17 +54,17 @@ const timelineSteps = [
   {
     icon: <Sparkles className="h-6 w-6" aria-hidden />,
     title: "Inscreva-se",
-    description: "Conte sobre sua iniciativa e objetivos para encontrar o par ideal.",
+    description: "Preencha o formulário e escolha a próxima janela disponível do programa.",
   },
   {
     icon: <Target className="h-6 w-6" aria-hidden />,
     title: "Encaixe com mentor",
-    description: "Combinamos expertise e desafios para gerar match estratégico.",
+    description: "Combinamos voluntários da rede com base nos desafios e objetivos priorizados.",
   },
   {
     icon: <CalendarCheck className="h-6 w-6" aria-hidden />,
     title: "Acompanhamento semanal",
-    description: "Planos de ação, rituais e indicadores para manter o ritmo.",
+    description: "Sessões remotas de 60 minutos, uma vez por semana, mediadas pelo Mentoria Solidária.",
   },
 ] as const;
 
@@ -125,47 +124,41 @@ const projects = [
     kpi: "+120",
     label: "estudantes",
     ods: 4,
-    title: "Reforço escolar comunitário",
-    description: "Rede de aulas de apoio para estudantes do ensino médio em territórios periféricos.",
+    title: "Trilhas de reforço escolar comunitário",
+    description: "Mentorias estruturaram indicadores de impacto e planos de estudos colaborativos.",
   },
   {
-    kpi: "+35",
-    label: "produtores",
-    ods: 12,
-    title: "Agroecologia conectada",
-    description: "Mentoria para cooperativas estruturarem canais de venda direta e logística reversa.",
+    kpi: "Plano",
+    label: "climático",
+    ods: 13,
+    title: "Governança para metas de carbono",
+    description: "Mentores apoiaram a criação de roteiros de adaptação e mitigação climática.",
   },
   {
-    kpi: "92%",
-    label: "retenção",
-    ods: 8,
-    title: "Trilhas de empregabilidade jovem",
-    description: "Programa de mentorias com foco em habilidades socioemocionais e digitais.",
+    kpi: "Filtro",
+    label: "de água",
+    ods: 6,
+    title: "Tecnologia acessível para saneamento",
+    description: "Rede cocriou melhorias no produto e na estratégia de distribuição comunitária.",
   },
-] as const;
-
-const partnerLogos = [
-  { name: "inovaBra", src: "/assets/logo-inovabra.svg" },
-  { name: "Fundação BB", src: "/assets/logo-fundacao-bb.svg" },
-  { name: "Impact Hub", src: "/assets/logo-impact-hub.svg" },
-  { name: "Itaú Social", src: "/assets/logo-itau-social.svg" },
-  { name: "Arredondar", src: "/assets/logo-arredondar.svg" },
-  { name: "Sistema B", src: "/assets/logo-sistema-b.svg" },
 ] as const;
 
 const testimonials = [
   {
-    quote: "A mentoria trouxe clareza para priorizarmos ações e desbloquear parcerias estratégicas.",
+    quote:
+      "A curadoria do GMS nos conectou com uma mentora que entendeu nossos desafios desde o primeiro encontro.",
     author: "Bruna Almeida",
     role: "Coordenadora, Coletivo Sementes",
   },
   {
-    quote: "Em poucas semanas tínhamos um plano estruturado com indicadores que conseguimos acompanhar.",
+    quote:
+      "Em oito semanas, saímos com um plano validado, indicadores claros e rituais para manter a evolução.",
     author: "Marcelo Tavares",
     role: "Fundador, Instituto Horizonte",
   },
   {
-    quote: "Os encontros semanais mantiveram o foco e aceleraram entregas críticas do nosso programa.",
+    quote:
+      "O acompanhamento semanal e os materiais compartilhados transformaram a forma como conduzimos o projeto.",
     author: "Clara Souza",
     role: "Diretora, Rede Jovem Verde",
   },
@@ -174,10 +167,10 @@ const testimonials = [
 const organizationLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Mentoria Solidária",
+  name: "Mentoria Solidária (GMS)",
   url: "https://mentoriasolidaria.org",
   description:
-    "Conectamos mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos ODS.",
+    "Rede colaborativa para acelerar soluções alinhadas aos ODS por meio de mentoria voluntária.",
 };
 
 export default function Home() {
@@ -207,8 +200,8 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Mentoria Solidária — Rede colaborativa de impacto"
-        description="Conectamos mentores voluntários e iniciativas socioambientais para acelerar soluções alinhadas aos ODS."
+        title="Mentoria Solidária — GMS"
+        description="Rede colaborativa para acelerar soluções alinhadas aos ODS por meio de mentoria voluntária."
         canonical="/"
         jsonLd={jsonLd}
       />
@@ -221,7 +214,7 @@ export default function Home() {
               {...(fadeIn ?? {})}
             >
               <span className="inline-flex max-w-max items-center rounded-full bg-brand-green/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-green">
-                Programa mentoria solidária
+                Rede colaborativa de impacto
               </span>
               <h1 className="font-display text-[clamp(2.25rem,3.5vw,3.5rem)] font-semibold leading-tight text-ink">
                 Mentoria Solidária
@@ -231,29 +224,29 @@ export default function Home() {
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link
-                  to="/participar"
+                  to="/mentores"
                   className={buttonClasses("primary", "justify-center sm:w-auto")}
                 >
-                  Quero participar
+                  Conheça os mentores
                 </Link>
                 <Link
-                  to="/mentores"
+                  to="/participar"
                   className={buttonClasses(
                     "secondary",
                     "justify-center border-brand-green/30 bg-transparent text-brand-green sm:w-auto",
                   )}
                 >
-                  Conheça os mentores
+                  Quero participar
                 </Link>
               </div>
             </motion.div>
             <div className="lg:col-span-5">
               <SpotlightCard
-                title="Mentorias desenhadas para gerar soluções concretas"
+                title="Mentorias voluntárias com foco em impacto real"
                 bullets={[
-                  "Encaixe estratégico entre mentor e projeto",
-                  "Plano de ação com metas e métricas",
-                  "Conexões com parceiros da rede",
+                  "Curadoria de mentores alinhada aos desafios priorizados",
+                  "Planos de ação acompanhados semanalmente",
+                  "Apoio contínuo da equipe Mentoria Solidária",
                 ]}
               />
             </div>
@@ -296,9 +289,9 @@ export default function Home() {
               <span className="text-xs font-semibold uppercase tracking-wide text-brand-green">
                 Como funciona
               </span>
-              <h2 className="text-3xl font-semibold text-ink">Metodologia inovaBRA aplicada à transformação social</h2>
+              <h2 className="text-3xl font-semibold text-ink">Trilha guiada nas janelas do programa</h2>
               <p className="text-base text-ink-muted">
-                Processos ágeis, indicadores claros e mentorias personalizadas para acelerar a entrega de impacto.
+                Toda a jornada é voluntária, remota e mediada pelo Mentoria Solidária. Escolha a janela, receba o match e avance com encontros semanais.
               </p>
             </motion.div>
             <Timeline steps={timelineSteps} />
@@ -313,7 +306,7 @@ export default function Home() {
               </span>
               <h2 className="text-3xl font-semibold text-ink">Especialistas com match alto para o seu desafio</h2>
               <p className="text-base text-ink-muted">
-                Equilibramos conhecimento técnico, repertório de impacto e soft skills para gerar conexões que realmente avançam projetos.
+                Atendimento pelo programa • 1×/semana • remoto. Conexões cuidadas pela equipe GMS para garantir foco nas entregas.
               </p>
             </motion.div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -337,15 +330,20 @@ export default function Home() {
                       )}
                     </div>
                     <p className="text-sm leading-relaxed text-ink-muted">{mentor.expertise}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-green/80">
+                      Atendimento pelo programa • 1×/semana • remoto
+                    </p>
                   </div>
                   <div className="flex flex-col gap-3 text-sm text-ink-muted">
-                    <span className="font-semibold text-ink">Próxima janela: {mentor.nextWindow}</span>
+                    <span className="font-semibold text-ink">
+                      Próxima janela do programa: {mentor.nextWindow}
+                    </span>
                     <div className="flex flex-col gap-3 sm:flex-row">
                       <Link
                         to={`/participar?mentor=${mentor.slug}`}
                         className={buttonClasses("primary", "justify-center sm:flex-1")}
                       >
-                        Conectar
+                        Conectar pelo programa
                       </Link>
                       <Link
                         to={`/mentores/${mentor.slug}`}
@@ -370,9 +368,9 @@ export default function Home() {
               <span className="text-xs font-semibold uppercase tracking-wide text-brand-green">
                 Projetos apoiados
               </span>
-              <h2 className="text-3xl font-semibold text-ink">Mentorias com resultados e KPIs claros</h2>
+              <h2 className="text-3xl font-semibold text-ink">ODS na prática com o Mentoria Solidária</h2>
               <p className="text-base text-ink-muted">
-                Cada jornada é acompanhada por indicadores que mostram evolução tangível para pessoas e territórios atendidos.
+                Exemplos de resultados alcançados pelas iniciativas acompanhadas nas janelas do programa GMS.
               </p>
             </motion.div>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -383,30 +381,15 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-surface-muted py-16 sm:py-20">
-          <div className="container flex flex-col gap-12">
-            <motion.div className="max-w-2xl space-y-4" {...(fadeIn ?? {})}>
-              <span className="text-xs font-semibold uppercase tracking-wide text-brand-green">
-                Parcerias
-              </span>
-              <h2 className="text-3xl font-semibold text-ink">Uma rede que amplia conexões</h2>
-              <p className="text-base text-ink-muted">
-                Instituições que investem tempo, conhecimento e recursos para acelerar soluções alinhadas aos ODS.
-              </p>
-            </motion.div>
-            <PartnersMarquee logos={partnerLogos} speed="slow" pauseOnHover />
-          </div>
-        </section>
-
         <section id="depoimentos" className="py-16 sm:py-20">
           <div className="container grid gap-12 lg:grid-cols-[1fr_minmax(0,1fr)] lg:items-center">
             <motion.div className="space-y-4" {...(fadeIn ?? {})}>
               <span className="text-xs font-semibold uppercase tracking-wide text-brand-green">
                 Depoimentos
               </span>
-              <h2 className="text-3xl font-semibold text-ink">Histórias que mostram a força da mentoria</h2>
+              <h2 className="text-3xl font-semibold text-ink">Transformações acompanhadas pelo GMS</h2>
               <p className="text-base text-ink-muted">
-                Micro vitórias semanais geram transformações consistentes e nos ajudam a medir impacto coletivo.
+                A voz de quem vivenciou encontros semanais, materiais compartilhados e suporte contínuo da rede colaborativa.
               </p>
             </motion.div>
             <TestimonialsCarousel items={testimonials} autoplay={9000} pauseOnHover />
@@ -415,7 +398,7 @@ export default function Home() {
 
         <section className="relative overflow-hidden py-16 sm:py-20">
           <div className="container">
-            <div className="relative overflow-hidden rounded-[2rem] bg-cta-gradient p-10 text-white shadow-[var(--ms-shadow-spotlight)]">
+            <div className="relative overflow-hidden rounded-[2rem] bg-cta-gradient p-10 text-white shadow-[var(--shadow-spotlight)]">
               <div className="absolute inset-0 opacity-50">
                 <BrandShapes className="absolute inset-0" />
               </div>
@@ -425,7 +408,7 @@ export default function Home() {
                     Vamos mentorar juntos?
                   </h2>
                   <p className="text-sm text-white/90">
-                    Junte-se à Mentoria Solidária para acelerar soluções socioambientais alinhadas aos ODS.
+                    Faça parte da rede colaborativa Mentoria Solidária e acelere soluções socioambientais alinhadas aos ODS.
                   </p>
                 </div>
                 <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-end">

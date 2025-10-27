@@ -1,5 +1,5 @@
 :root {
-  accent-color: var(--ms-color-brand-green);
+  accent-color: var(--brand);
 }
 
 [aria-live] {
@@ -12,21 +12,21 @@
 
 .chip-toggle:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.45);
+  box-shadow: 0 0 0 2px rgba(47, 180, 100, 0.45);
 }
 
 .bg-brand-gradient {
-  background-image: var(--ms-gradient-brand);
+  background-image: var(--gradient-brand);
   background-size: cover;
 }
 
 .bg-cta-gradient {
-  background-image: var(--ms-gradient-cta);
+  background-image: var(--gradient-cta);
   background-size: cover;
 }
 
 .bg-highlight-gradient {
-  background-image: var(--ms-gradient-highlight);
+  background-image: var(--gradient-highlight);
 }
 
 .focus-ring {
@@ -36,7 +36,7 @@
 
 .match-badge {
   background: linear-gradient(120deg, rgba(47, 180, 100, 0.12) 0%, rgba(47, 180, 100, 0.5) 100%);
-  color: var(--ms-color-brand-green-dark);
+  color: var(--brand);
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;

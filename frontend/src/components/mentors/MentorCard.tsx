@@ -77,7 +77,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
             <h3 id={`${mentor.slug}-title`} className="text-xl font-semibold text-slate-900">
               {mentor.name}
             </h3>
-            <p className="text-sm font-medium text-emerald-700">{mentor.headline}</p>
+            <p className="text-sm font-medium text-brand-green">{mentor.headline}</p>
             <p className="text-sm text-slate-600">{summary}</p>
           </div>
         </header>
@@ -86,7 +86,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
           {expertisePreview.map((area) => (
             <span
               key={area}
-              className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"
+              className="inline-flex items-center rounded-full bg-brand-green/10 px-3 py-1 text-xs font-semibold text-brand-green"
               title={area}
             >
               {area}
@@ -106,22 +106,23 @@ export function MentorCard({ mentor }: MentorCardProps) {
         </div>
 
         <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
-          <p className="font-semibold text-slate-900">Sessões: 1× por semana • 60 min</p>
-          <p>Canal: remoto</p>
-          <p>Próxima janela do programa: {nextWindowLabel}</p>
+          <p className="font-semibold text-slate-900">
+            Atendimento pelo programa • 1×/semana • 60 min • remoto
+          </p>
+          <p className="text-slate-600">Próxima janela do programa: {nextWindowLabel}</p>
         </div>
       </div>
 
       <div className="mt-2 flex flex-col gap-3 sm:flex-row">
         <Link
           to={`/participar?mentor=${mentor.slug}`}
-          className="btn btn-primary inline-flex flex-1 items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          className="btn btn-primary inline-flex flex-1 items-center justify-center rounded-full bg-brand-green px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-brand-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
         >
           Conectar pelo programa
         </Link>
         <Link
           to={`/mentores/${mentor.slug}`}
-          className="inline-flex flex-1 items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+          className="inline-flex flex-1 items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
         >
           Ver perfil
         </Link>

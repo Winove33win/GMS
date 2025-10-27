@@ -63,10 +63,10 @@ function Chip({
       onClick={onToggle}
       onKeyDown={handleKeyDown}
       className={cn(
-        "chip-toggle inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2",
+        "chip-toggle inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2",
         active
-          ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-          : "border-slate-200 bg-white text-slate-600 hover:border-emerald-200 hover:text-emerald-700",
+          ? "border-brand-green bg-brand-green/10 text-brand-green"
+          : "border-slate-200 bg-white text-slate-600 hover:border-brand-green/40 hover:text-brand-green",
         className,
       )}
     >
@@ -192,7 +192,7 @@ export function Filters({ value, initialValue, totalResults, onApply, options }:
               placeholder="Busque por nome, expertise, ODS ou palavra-chave"
               value={draft.q ?? ""}
               onChange={(event) => setDraft((current) => ({ ...current, q: event.target.value }))}
-              className="h-12 rounded-full border border-slate-200 px-5 text-sm text-slate-700 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+              className="h-12 rounded-full border border-slate-200 px-5 text-sm text-slate-700 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green"
               aria-label="Buscar mentores"
             />
           </label>
@@ -295,14 +295,14 @@ export function Filters({ value, initialValue, totalResults, onApply, options }:
         <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             type="submit"
-            className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-full bg-brand-green px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-brand-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
           >
             Aplicar filtros
           </button>
           <button
             type="button"
             onClick={handleClearAll}
-            className="text-sm font-semibold text-emerald-700 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+            className="text-sm font-semibold text-brand-green underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
           >
             Limpar tudo
           </button>
