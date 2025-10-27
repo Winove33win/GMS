@@ -51,6 +51,7 @@
     "express": "^4.21.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "framer-motion": "^11.2.10",
     "embla-carousel-react": "^8.3.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",

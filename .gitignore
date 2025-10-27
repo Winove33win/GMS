@@ -46,3 +46,7 @@ frontend/public/img/hero-*.avif
 frontend/public/img/hero-*.webp
 frontend/public/img/hero-*.jpg
 frontend/public/fonts/PlayfairDisplay-800.woff2
+
+# Generated via Base64 asset pipeline
+frontend/public/assets/logo-*.svg
+frontend/public/assets/images/default-share.png
