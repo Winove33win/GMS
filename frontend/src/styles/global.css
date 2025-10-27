@@ -1,3 +1,7 @@
+:root {
+  accent-color: var(--ms-color-brand-green);
+}
+
 [aria-live] {
   display: block;
 }
@@ -9,4 +13,73 @@
 .chip-toggle:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.45);
+}
+
+.bg-brand-gradient {
+  background-image: var(--ms-gradient-brand);
+  background-size: cover;
+}
+
+.bg-cta-gradient {
+  background-image: var(--ms-gradient-cta);
+  background-size: cover;
+}
+
+.bg-highlight-gradient {
+  background-image: var(--ms-gradient-highlight);
+}
+
+.focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(47, 180, 100, 0.35);
+}
+
+.match-badge {
+  background: linear-gradient(120deg, rgba(47, 180, 100, 0.12) 0%, rgba(47, 180, 100, 0.5) 100%);
+  color: var(--ms-color-brand-green-dark);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.match-badge svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+@keyframes marquee-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-slide 22s linear infinite;
+}
+
+.marquee-track.is-slow {
+  animation-duration: 32s;
+}
+
+.marquee-track.is-paused,
+.marquee-root:not(.no-hover-pause):hover .marquee-track,
+.marquee-root:not(.no-hover-pause):focus-visible .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transform: translateX(0) !important;
+  }
 }
