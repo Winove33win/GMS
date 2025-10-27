@@ -4,6 +4,7 @@
     "slug": "lia-monteiro",
     "name": "Lia Monteiro",
     "headline": "Estrategista de impacto socioambiental e governança",
+    "valueStatement": "Traduz estratégia em indicadores mensuráveis para organizações de impacto.",
     "avatarUrl": "https://avatar.vercel.sh/lia.monteiro",
     "location": {
       "city": "São Paulo",
@@ -37,15 +38,12 @@
         "ods": 13
       }
     ],
+    "cohorts": ["Nov/2025", "Fev/2026", "Mai/2026"],
     "program": {
+      "format": "collective",
       "sessionFrequency": "weekly",
       "sessionLengthMin": 60,
-      "channel": "remote",
-      "windows": [
-        { "start": "2025-11-07", "end": "2025-11-15", "label": "Nov • 7–15" },
-        { "start": "2026-02-10", "end": "2026-02-18", "label": "Fev • 10–18" },
-        { "start": "2026-05-05", "end": "2026-05-13", "label": "Mai • 5–13" }
-      ]
+      "channel": "remote"
     },
     "links": {
       "linkedin": "https://www.linkedin.com/in/liamonteiro",
@@ -58,6 +56,7 @@
     "slug": "caio-ferraz",
     "name": "Caio Ferraz",
     "headline": "Especialista em dados e produtos digitais de impacto",
+    "valueStatement": "Transforma dados em decisões de produto que aceleram impacto social.",
     "avatarUrl": "https://avatar.vercel.sh/caio.ferraz",
     "location": {
       "city": "Belo Horizonte",
@@ -87,15 +86,12 @@
         "ods": 4
       }
     ],
+    "cohorts": ["Set/2025", "Nov/2025", "Jan/2026"],
     "program": {
+      "format": "collective",
       "sessionFrequency": "weekly",
       "sessionLengthMin": 60,
-      "channel": "remote",
-      "windows": [
-        { "start": "2025-09-02", "end": "2025-09-10", "label": "Set • 2–10" },
-        { "start": "2025-11-07", "end": "2025-11-15", "label": "Nov • 7–15" },
-        { "start": "2026-01-20", "end": "2026-01-28", "label": "Jan • 20–28" }
-      ]
+      "channel": "remote"
     },
     "links": {
       "linkedin": "https://www.linkedin.com/in/caioferraz",
@@ -108,6 +104,7 @@
     "slug": "marina-salles",
     "name": "Marina Salles",
     "headline": "Captadora e estrategista de parcerias institucionais",
+    "valueStatement": "Fortalece narrativas e parcerias para sustentar iniciativas socioambientais.",
     "avatarUrl": "https://avatar.vercel.sh/marina.salles",
     "location": {
       "city": "Recife",
@@ -137,15 +134,12 @@
         "ods": 5
       }
     ],
+    "cohorts": ["Ago/2025", "Nov/2025", "Mar/2026"],
     "program": {
+      "format": "collective",
       "sessionFrequency": "weekly",
       "sessionLengthMin": 60,
-      "channel": "remote",
-      "windows": [
-        { "start": "2025-08-12", "end": "2025-08-20", "label": "Ago • 12–20" },
-        { "start": "2025-11-07", "end": "2025-11-15", "label": "Nov • 7–15" },
-        { "start": "2026-03-11", "end": "2026-03-19", "label": "Mar • 11–19" }
-      ]
+      "channel": "remote"
     },
     "links": {
       "linkedin": "https://www.linkedin.com/in/marinasalles"

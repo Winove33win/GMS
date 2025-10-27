@@ -1,31 +1,25 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import mentorsData from "@/data/mentors.json"
+import sessionsData from "@/data/sessions.json"
 import type { Mentor } from "@/types/mentor"
+import type { CollectiveSession } from "@/types/program"
 import { SEO } from "@/lib/seo"
 import { Section } from "@/components/Section"
 import { MentorCard } from "@/components/mentors/MentorCard"
 import { Filters } from "@/components/mentors/Filters"
-import {
-  type AppliedFilters,
-  type Filters as QueryFilters,
-  filterMentors,
-  sortMentors,
-  type ProgramWindowOption,
-  createProgramWindowId,
-} from "@/lib/mentors/search"
+import { type AppliedFilters, type Filters as QueryFilters, filterMentors, sortMentors } from "@/lib/mentors/search"
 import { useQueryState } from "@/lib/hooks/useQueryState"
-import { PolicyModal } from "@/components/PolicyModal"
-import { Button } from "@/components/Button"
+import { ProgramBanner } from "@/components/ProgramBanner"
+import { SessionsRail } from "@/components/SessionsRail"
 
 const mentors = mentorsData as Mentor[]
+const sessions = sessionsData as CollectiveSession[]
 
 const BASE_FILTERS: AppliedFilters = {
   q: "",
   expertise: [],
   ods: [],
   lang: [],
-  remote: undefined,
-  programWindows: [],
 }
 
 const INITIAL_STATE: QueryFilters = {
@@ -43,7 +37,6 @@ function normalizeFilters(state: QueryFilters): AppliedFilters {
     expertise: rest.expertise ?? [],
     ods: rest.ods ?? [],
     lang: rest.lang ?? [],
-    programWindows: rest.programWindows ?? [],
     q: rest.q ?? "",
   }
 }
@@ -52,41 +45,21 @@ function aggregateOptions(data: Mentor[]): {
   expertise: string[]
   ods: number[]
   languages: string[]
-  programWindows: ProgramWindowOption[]
 } {
   const expertiseSet = new Set<string>()
   const odsSet = new Set<number>()
   const languagesSet = new Set<string>()
-  const programWindowMap = new Map<string, ProgramWindowOption>()
 
   data.forEach((mentor) => {
     mentor.expertise.forEach((item) => expertiseSet.add(item))
     mentor.ods.forEach((item) => odsSet.add(item))
     mentor.languages.forEach((item) => languagesSet.add(item))
-    mentor.program?.windows.forEach((window) => {
-      const id = createProgramWindowId(window)
-      if (!programWindowMap.has(id)) {
-        programWindowMap.set(id, {
-          id,
-          label: window.label,
-          start: window.start,
-          end: window.end,
-        })
-      }
-    })
-  })
-
-  const programWindows = Array.from(programWindowMap.values()).sort((a, b) => {
-    const aTime = a.start ? new Date(a.start).getTime() : Number.POSITIVE_INFINITY
-    const bTime = b.start ? new Date(b.start).getTime() : Number.POSITIVE_INFINITY
-    return aTime - bTime
   })
 
   return {
     expertise: Array.from(expertiseSet).sort((a, b) => a.localeCompare(b, "pt-BR")),
     ods: Array.from(odsSet).sort((a, b) => a - b),
     languages: Array.from(languagesSet).sort((a, b) => a.localeCompare(b, "pt-BR")),
-    programWindows,
   }
 }
 
@@ -94,7 +67,6 @@ export default function Mentores() {
   const [queryState, setQueryState] = useQueryState(INITIAL_STATE)
   const [page, setPage] = useState(1)
   const [isFiltersOpen, setFiltersOpen] = useState(false)
-  const [isPolicyOpen, setPolicyOpen] = useState(false)
 
   const sortOrder = queryState.sort ?? "recommended"
   const activeFilters = useMemo(() => normalizeFilters(queryState), [queryState])
@@ -108,8 +80,6 @@ export default function Mentores() {
         expertise: activeFilters.expertise,
         ods: activeFilters.ods,
         lang: activeFilters.lang ?? [],
-        remote: activeFilters.remote ?? null,
-        programWindows: activeFilters.programWindows ?? [],
       }),
     [activeFilters],
   )
@@ -149,8 +119,6 @@ export default function Mentores() {
         ods: next.ods ?? [],
         lang: next.lang ?? [],
         q: next.q ?? "",
-        programWindows: next.programWindows ?? [],
-        remote: next.remote,
       }))
     },
     [setQueryState],
@@ -204,58 +172,24 @@ export default function Mentores() {
       })
     })
 
-    ;(activeFilters.programWindows ?? []).forEach((id) => {
-      const option = options.programWindows.find((window) => window.id === id)
-      const label = option?.label ?? "janela"
-      chips.push({
-        label: `Remover ${label}`,
-        onClick: () =>
-          applyFilters({
-            ...activeFilters,
-            programWindows: (activeFilters.programWindows ?? []).filter((value) => value !== id),
-          }),
-      })
-    })
-
-    if (activeFilters.remote) {
-      chips.push({
-        label: "Incluir atendimentos presenciais",
-        onClick: () => applyFilters({ ...activeFilters, remote: undefined }),
-      })
-    }
-
     chips.push({ label: "Ver todos os mentores", onClick: () => applyFilters(BASE_FILTERS) })
 
     return chips.slice(0, 6)
-  }, [activeFilters, applyFilters, options.programWindows])
+  }, [activeFilters, applyFilters])
 
   return (
     <>
       <SEO
         title="Mentores voluntários — Mentoria Solidária (GMS)"
-        description="Rede de especialistas voluntários com atendimento mediado pelo programa Mentoria Solidária."
+        description="Rede de especialistas voluntários conectados em encontros coletivos semanais do programa Mentoria Solidária."
         canonical="/mentores"
       />
       <Section
         title="Encontre mentores do programa"
-        description="Use os filtros para explorar a rede GMS. Toda mentoria é voluntária, acontece uma vez por semana e segue as janelas oficiais do Mentoria Solidária."
+        description="Use os filtros para explorar a rede GMS. A participação acontece em encontros coletivos semanais com mediação da equipe Mentoria Solidária."
       >
         <div className="flex flex-col gap-8">
-          <div
-            role="region"
-            aria-label="Informações do programa"
-            className="rounded-3xl border border-brand-green/25 bg-brand-green/10 p-6 text-brand-dark"
-          >
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-base font-semibold text-brand-dark">Mentoria voluntária, 1× por semana.</p>
-                <p className="mt-2 text-sm text-brand-dark/90">
-                  As sessões acontecem em janelas fixas do programa. Contatos diretos com mentores não são permitidos — toda a comunicação acontece pelo Mentoria Solidária.
-                </p>
-              </div>
-              <Button onClick={() => setPolicyOpen(true)}>Entenda como funciona</Button>
-            </div>
-          </div>
+          <ProgramBanner />
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -332,7 +266,7 @@ export default function Mentores() {
               >
                 <p className="text-xl font-semibold text-slate-900">Nenhum mentor encontrado</p>
                 <p className="max-w-md text-sm text-slate-600">
-                  Ajuste os filtros para ampliar sua busca. Você também pode entrar em contato com a nossa equipe para receber indicações personalizadas.
+                  Ajuste os filtros para ampliar sua busca. Você também pode participar dos encontros coletivos para conhecer a rede completa de mentores.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {suggestionChips.map((chip) => (
@@ -373,9 +307,10 @@ export default function Mentores() {
               </nav>
             )}
           </div>
+
+          <SessionsRail sessions={sessions} mentors={mentors} />
         </div>
       </Section>
-      <PolicyModal open={isPolicyOpen} onOpenChange={setPolicyOpen} />
     </>
   )
 }

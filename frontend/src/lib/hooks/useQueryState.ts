@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import type { Filters } from "@/lib/mentors/search"
 
-type QueryKeys = "q" | "expertise" | "ods" | "lang" | "remote" | "programWindows" | "sort"
+type QueryKeys = "q" | "expertise" | "ods" | "lang" | "sort"
 const SORT_VALUES: Array<NonNullable<Filters["sort"]>> = ["recommended", "recent"]
 
 function parseCsv(value: string | null): string[] {
@@ -20,22 +20,6 @@ function parseNumberCsv(value: string | null): number[] {
   return parseCsv(value).map((part) => Number.parseInt(part, 10)).filter((num) => Number.isFinite(num))
 }
 
-function parseBoolean(value: string | null): boolean | undefined {
-  if (value === null) {
-    return undefined
-  }
-
-  if (value === "1" || value === "true") {
-    return true
-  }
-
-  if (value === "0" || value === "false") {
-    return false
-  }
-
-  return undefined
-}
-
 function buildSearchParams(state: Filters): URLSearchParams {
   const params = new URLSearchParams()
 
@@ -44,8 +28,6 @@ function buildSearchParams(state: Filters): URLSearchParams {
     ["expertise", state.expertise?.length ? state.expertise : undefined],
     ["ods", state.ods?.length ? state.ods.map(String) : undefined],
     ["lang", state.lang?.length ? state.lang : undefined],
-    ["remote", state.remote],
-    ["programWindows", state.programWindows?.length ? state.programWindows : undefined],
     ["sort", state.sort],
   ]
 
@@ -62,11 +44,6 @@ function buildSearchParams(state: Filters): URLSearchParams {
       continue
     }
 
-    if (typeof value === "boolean") {
-      params.set(key, value ? "1" : "0")
-      continue
-    }
-
     params.set(key, String(value))
   }
 
@@ -80,8 +57,6 @@ function parseSearch(search: string, fallback: Filters): Filters {
     expertise: parseCsv(params.get("expertise")),
     ods: parseNumberCsv(params.get("ods")),
     lang: parseCsv(params.get("lang")),
-    remote: parseBoolean(params.get("remote")),
-    programWindows: parseCsv(params.get("programWindows")),
     sort: params.get("sort") as Filters["sort"],
   }
 
@@ -97,7 +72,6 @@ function parseSearch(search: string, fallback: Filters): Filters {
     expertise: state.expertise,
     ods: state.ods,
     lang: state.lang,
-    programWindows: state.programWindows,
   }
 }
 
@@ -109,11 +83,9 @@ function filtersAreEqual(a: Filters, b: Filters): boolean {
   return (
     (a.q ?? "") === (b.q ?? "") &&
     (a.sort ?? "") === (b.sort ?? "") &&
-    a.remote === b.remote &&
     arraysAreEqual(a.expertise ?? [], b.expertise ?? []) &&
     arraysAreEqual(a.ods ?? [], b.ods ?? []) &&
-    arraysAreEqual(a.lang ?? [], b.lang ?? []) &&
-    arraysAreEqual(a.programWindows ?? [], b.programWindows ?? [])
+    arraysAreEqual(a.lang ?? [], b.lang ?? [])
   )
 }
 
@@ -158,7 +130,6 @@ export function useQueryState(initial: Filters): [Filters, SetQueryState] {
           expertise: next.expertise ?? [],
           ods: next.ods ?? [],
           lang: next.lang ?? [],
-          programWindows: next.programWindows ?? [],
         }
       })
     },

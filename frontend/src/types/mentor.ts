@@ -1,9 +1,3 @@
-export type ProgramWindow = {
-  start: string
-  end: string
-  label?: string
-}
-
 export type MentorCase = {
   title: string
   result: string
@@ -23,11 +17,19 @@ export type MentorLocation = {
   remote?: true
 }
 
+export type MentorProgram = {
+  format: "collective"
+  sessionFrequency: "weekly"
+  sessionLengthMin: number
+  channel: "remote"
+}
+
 export type Mentor = {
   id: string
   slug: string
   name: string
   headline: string
+  valueStatement: string
   avatarUrl?: string
   location?: MentorLocation
   seniority: "Pleno" | "Sênior" | "Especialista"
@@ -37,12 +39,8 @@ export type Mentor = {
   summary: string
   helpsWith: string[]
   cases?: MentorCase[]
-  program: {
-    sessionFrequency: "weekly"
-    sessionLengthMin: 60
-    channel: "remote"
-    windows: ProgramWindow[]
-  }
+  cohorts?: string[]
+  program: MentorProgram
   links?: MentorLinks
   updatedAt: string
 }

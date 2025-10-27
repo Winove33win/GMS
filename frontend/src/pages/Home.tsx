@@ -10,6 +10,10 @@ import {
   Users,
 } from "lucide-react";
 
+import sessionsData from "@/data/sessions.json";
+import mentorsData from "@/data/mentors.json";
+import type { CollectiveSession } from "@/types/program";
+import type { Mentor } from "@/types/mentor";
 import { SEO } from "@/lib/seo";
 import { buttonClasses } from "@/components/Button";
 import { BrandShapes } from "@/components/BrandShapes";
@@ -18,6 +22,7 @@ import { StatsCounter } from "@/components/StatsCounter";
 import { Timeline } from "@/components/Timeline";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { ProjectCard } from "@/components/ProjectCard";
+import { SessionsRail } from "@/components/SessionsRail";
 
 const stats = [
   {
@@ -173,6 +178,9 @@ const organizationLd = {
     "Rede colaborativa para acelerar soluções alinhadas aos ODS por meio de mentoria voluntária.",
 };
 
+const homeMentors = mentorsData as Mentor[];
+const upcomingSessions = sessionsData as CollectiveSession[];
+
 export default function Home() {
   const shouldReduceMotion = useReducedMotion();
   const jsonLd = [
@@ -297,6 +305,16 @@ export default function Home() {
             <Timeline steps={timelineSteps} />
           </div>
         </section>
+
+        <div className="bg-white/60 py-16 sm:py-20">
+          <div className="container">
+            <SessionsRail
+              sessions={upcomingSessions}
+              mentors={homeMentors}
+              description="Inscreva-se para acompanhar o coletivo da sua coorte."
+            />
+          </div>
+        </div>
 
         <section id="mentores" className="bg-surface-muted py-16 sm:py-20">
           <div className="container flex flex-col gap-12">
