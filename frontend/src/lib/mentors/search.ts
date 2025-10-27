@@ -1,12 +1,10 @@
-import type { Mentor, ProgramWindow } from "@/types/mentor"
+import type { Mentor } from "@/types/mentor"
 
 export type Filters = {
   q?: string
   expertise: string[]
   ods: number[]
   lang?: string[]
-  remote?: boolean
-  programWindows?: string[]
   sort?: "recommended" | "recent"
 }
 
@@ -18,34 +16,11 @@ export interface FilterCounts {
   expertise: Record<string, number>
   ods: Record<number, number>
   lang: Record<string, number>
-  programWindows: Record<string, number>
 }
 
 export interface FilterResult {
   items: MentorWithScore[]
   counts: FilterCounts
-}
-
-export type ProgramWindowOption = {
-  id: string
-  label: string
-  start?: string
-  end?: string
-}
-
-export function createProgramWindowId(window: Pick<ProgramWindow, "start" | "end" | "label">): string {
-  const parts = [window.start ?? "", window.end ?? "", window.label ?? ""]
-  return parts.join("|")
-}
-
-export function parseProgramWindowId(id: string): ProgramWindowOption {
-  const [start = "", end = "", label = ""] = id.split("|")
-  return {
-    id,
-    start: start || undefined,
-    end: end || undefined,
-    label: label || undefined,
-  }
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -138,6 +113,7 @@ function matchesQuery(mentor: Mentor, queryTokens: string[]): boolean {
       mentor.name,
       mentor.headline,
       mentor.summary,
+      mentor.valueStatement,
       locationParts,
       mentor.expertise.join(" "),
       mentor.ods.join(" "),
@@ -145,14 +121,6 @@ function matchesQuery(mentor: Mentor, queryTokens: string[]): boolean {
   )
 
   return queryTokens.every((token) => haystack.includes(token))
-}
-
-function matchesRemote(mentor: Mentor, remote?: boolean): boolean {
-  if (remote === undefined) {
-    return true
-  }
-
-  return Boolean(mentor.location?.remote) === remote
 }
 
 function matchesLanguages(mentor: Mentor, languages: string[] = []): boolean {
@@ -181,48 +149,6 @@ function matchesOds(mentor: Mentor, ods: number[] = []): boolean {
   return mentor.ods.some((value) => ods.includes(value))
 }
 
-function windowOverlaps(target: ProgramWindow, filterWindow: ProgramWindowOption): boolean {
-  const normalizedLabel = normalize(filterWindow.label ?? "")
-  if (normalizedLabel) {
-    const currentLabel = normalize(target.label ?? "")
-    if (currentLabel.includes(normalizedLabel) || normalizedLabel.includes(currentLabel)) {
-      return true
-    }
-  }
-
-  if (!filterWindow.start || !filterWindow.end || !target.start || !target.end) {
-    return false
-  }
-
-  const filterStart = new Date(filterWindow.start).getTime()
-  const filterEnd = new Date(filterWindow.end).getTime()
-  const targetStart = new Date(target.start).getTime()
-  const targetEnd = new Date(target.end).getTime()
-
-  if (Number.isNaN(filterStart) || Number.isNaN(filterEnd) || Number.isNaN(targetStart) || Number.isNaN(targetEnd)) {
-    return false
-  }
-
-  return targetStart <= filterEnd && targetEnd >= filterStart
-}
-
-function matchesProgramWindows(mentor: Mentor, selected: string[] = []): boolean {
-  if (!selected || selected.length === 0) {
-    return true
-  }
-
-  const mentorWindows = mentor.program?.windows ?? []
-  if (mentorWindows.length === 0) {
-    return false
-  }
-
-  const filters = selected.map((id) => parseProgramWindowId(id))
-
-  return filters.some((filterWindow) =>
-    mentorWindows.some((window) => windowOverlaps(window, filterWindow)),
-  )
-}
-
 function updateCounts(counts: FilterCounts, mentor: Mentor) {
   mentor.expertise.forEach((item) => {
     counts.expertise[item] = (counts.expertise[item] ?? 0) + 1
@@ -235,24 +161,17 @@ function updateCounts(counts: FilterCounts, mentor: Mentor) {
   mentor.languages.forEach((item) => {
     counts.lang[item] = (counts.lang[item] ?? 0) + 1
   })
-
-  mentor.program?.windows.forEach((window) => {
-    const id = createProgramWindowId(window)
-    counts.programWindows[id] = (counts.programWindows[id] ?? 0) + 1
-  })
 }
 
 export function filterMentors(mentors: Mentor[], filters: Filters): FilterResult {
   const queryTokens = filters.q ? normalize(filters.q).split(" ").filter(Boolean) : []
-  const counts: FilterCounts = { expertise: {}, ods: {}, lang: {}, programWindows: {} }
+  const counts: FilterCounts = { expertise: {}, ods: {}, lang: {} }
 
   const items = mentors
     .filter((mentor) => matchesQuery(mentor, queryTokens))
-    .filter((mentor) => matchesRemote(mentor, filters.remote))
     .filter((mentor) => matchesExpertise(mentor, filters.expertise))
     .filter((mentor) => matchesOds(mentor, filters.ods))
     .filter((mentor) => matchesLanguages(mentor, filters.lang ?? []))
-    .filter((mentor) => matchesProgramWindows(mentor, filters.programWindows))
 
   items.forEach((mentor) => updateCounts(counts, mentor))
 

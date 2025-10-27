@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactNode } from "react"
 import { FormEvent, useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
-import type { AppliedFilters, ProgramWindowOption } from "@/lib/mentors/search"
+import type { AppliedFilters } from "@/lib/mentors/search"
 
 interface FiltersProps {
   value: AppliedFilters
@@ -12,18 +12,15 @@ interface FiltersProps {
     expertise: string[]
     ods: number[]
     languages: string[]
-    programWindows: ProgramWindowOption[]
   }
 }
 
 function filtersAreEqual(a: AppliedFilters, b: AppliedFilters): boolean {
   return (
     (a.q ?? "") === (b.q ?? "") &&
-    a.remote === b.remote &&
     arraysAreEqual(a.expertise, b.expertise) &&
     arraysAreEqual(a.ods, b.ods) &&
-    arraysAreEqual(a.lang ?? [], b.lang ?? []) &&
-    arraysAreEqual(a.programWindows ?? [], b.programWindows ?? [])
+    arraysAreEqual(a.lang ?? [], b.lang ?? [])
   )
 }
 
@@ -89,18 +86,6 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   )
 }
 
-function formatProgramWindowLabel(option: ProgramWindowOption): string {
-  if (option.label) {
-    return option.label
-  }
-
-  if (option.start && option.end) {
-    return `${option.start} – ${option.end}`
-  }
-
-  return "Janela do programa"
-}
-
 export function Filters({ value, initialValue, totalResults, onApply, options }: FiltersProps) {
   const [draft, setDraft] = useState<AppliedFilters>(value)
   const hasHydratedRef = useRef(false)
@@ -123,16 +108,12 @@ export function Filters({ value, initialValue, totalResults, onApply, options }:
       return
     }
 
-    if (filtersAreEqual(draft, value)) {
-      return
-    }
-
     const timeout = window.setTimeout(() => {
       onApply(draft)
-    }, 250)
+    }, 150)
 
     return () => window.clearTimeout(timeout)
-  }, [draft, onApply, value])
+  }, [draft, onApply])
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -140,39 +121,10 @@ export function Filters({ value, initialValue, totalResults, onApply, options }:
     onApply(draft)
   }
 
-  const handleQuickToggle = (key: "remote" | "lang") => {
-    setDraft((current) => {
-      if (key === "remote") {
-        return { ...current, remote: current.remote ? undefined : true }
-      }
-
-      const targetLanguage = "Inglês"
-      const currentLang = current.lang ?? []
-      const nextLang = currentLang.includes(targetLanguage)
-        ? currentLang.filter((item) => item !== targetLanguage)
-        : [...currentLang, targetLanguage]
-
-      return { ...current, lang: nextLang }
-    })
-  }
-
   const toggleArrayValue = <T,>(list: T[] | undefined, value: T): T[] => {
     const current = list ?? []
     return current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
   }
-
-  const quickFilters = [
-    {
-      key: "remote" as const,
-      label: "Remoto",
-      active: Boolean(draft.remote),
-    },
-    {
-      key: "lang" as const,
-      label: "Fala inglês",
-      active: (draft.lang ?? []).some((language) => language.toLowerCase().includes("ingl")),
-    },
-  ]
 
   const handleClearAll = () => {
     skipAutoApplyRef.current = true
@@ -197,49 +149,10 @@ export function Filters({ value, initialValue, totalResults, onApply, options }:
             />
           </label>
 
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Filtros rápidos</span>
-            <div className="flex gap-3 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible">
-              {quickFilters.map((filter) => (
-                <Chip
-                  key={filter.key}
-                  label={filter.label}
-                  active={filter.active}
-                  onToggle={() => handleQuickToggle(filter.key)}
-                  className="whitespace-nowrap"
-                />
-              ))}
-            </div>
-          </div>
-
           <div role="status" aria-live="polite" className="text-sm text-slate-500">
             {totalResults === 1 ? "1 resultado" : `${totalResults} resultados`}
           </div>
         </div>
-
-        <Section title="Janelas do programa">
-          {options.programWindows.length > 0 ? (
-            options.programWindows.map((option) => {
-              const label = formatProgramWindowLabel(option)
-              const isActive = (draft.programWindows ?? []).includes(option.id)
-              return (
-                <Chip
-                  key={option.id}
-                  label={label}
-                  active={isActive}
-                  onToggle={() =>
-                    setDraft((current) => ({
-                      ...current,
-                      programWindows: toggleArrayValue(current.programWindows, option.id),
-                    }))
-                  }
-                />
-              )
-            })
-          ) : (
-            <span className="text-sm text-slate-500">Nenhuma janela cadastrada</span>
-          )}
-        </Section>
 
         <Section title="Expertise">
           {options.expertise.map((area) => (
@@ -258,22 +171,19 @@ export function Filters({ value, initialValue, totalResults, onApply, options }:
         </Section>
 
         <Section title="ODS">
-          {options.ods.map((goal) => {
-            const label = `ODS ${goal}`
-            return (
-              <Chip
-                key={goal}
-                label={label}
-                active={draft.ods.includes(goal)}
-                onToggle={() =>
-                  setDraft((current) => ({
-                    ...current,
-                    ods: toggleArrayValue(current.ods, goal),
-                  }))
-                }
-              />
-            )
-          })}
+          {options.ods.map((goal) => (
+            <Chip
+              key={goal}
+              label={`ODS ${goal}`}
+              active={draft.ods.includes(goal)}
+              onToggle={() =>
+                setDraft((current) => ({
+                  ...current,
+                  ods: toggleArrayValue(current.ods, goal),
+                }))
+              }
+            />
+          ))}
         </Section>
 
         <Section title="Idiomas">
@@ -292,20 +202,25 @@ export function Filters({ value, initialValue, totalResults, onApply, options }:
           ))}
         </Section>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center rounded-full bg-brand-green px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-brand-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
-          >
-            Aplicar filtros
-          </button>
-          <button
-            type="button"
-            onClick={handleClearAll}
-            className="text-sm font-semibold text-brand-green underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
-          >
-            Limpar tudo
-          </button>
+        <div className="flex flex-col gap-3 border-t border-slate-100 pt-4">
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Ações</span>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center rounded-full bg-brand-green px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-brand-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
+              >
+                Aplicar filtros
+              </button>
+              <button
+                type="button"
+                onClick={handleClearAll}
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-brand-green/40 hover:text-brand-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
+              >
+                Limpar tudo
+              </button>
+            </div>
+          </div>
         </div>
       </form>
     </section>

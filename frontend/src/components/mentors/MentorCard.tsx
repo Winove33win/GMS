@@ -10,36 +10,6 @@ function getInitials(name: string) {
     .join("")
 }
 
-function truncateSummary(summary: string) {
-  const maxLength = 120
-  if (summary.length <= maxLength) {
-    return summary
-  }
-  return `${summary.slice(0, maxLength - 1).trim()}…`
-}
-
-function formatProgramWindowLabel(windows: MentorWithScore["program"]["windows"]) {
-  if (!windows || windows.length === 0) {
-    return "Em breve"
-  }
-
-  const sorted = [...windows].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
-  const next = sorted[0]
-  if (next.start && next.end) {
-    const startDate = new Date(next.start)
-    const endDate = new Date(next.end)
-    if (!Number.isNaN(startDate.getTime()) && !Number.isNaN(endDate.getTime())) {
-      const month = startDate
-        .toLocaleDateString("pt-BR", { month: "short" })
-        .replace(".", "")
-        .toLowerCase()
-      return `${startDate.getDate()}–${endDate.getDate()}/${month}`
-    }
-  }
-
-  return next.label ?? "Em breve"
-}
-
 interface MentorCardProps {
   mentor: MentorWithScore
 }
@@ -48,8 +18,6 @@ export function MentorCard({ mentor }: MentorCardProps) {
   const initials = getInitials(mentor.name)
   const expertisePreview = mentor.expertise.slice(0, 3)
   const odsPreview = mentor.ods.slice(0, 4)
-  const summary = truncateSummary(mentor.summary)
-  const nextWindowLabel = formatProgramWindowLabel(mentor.program.windows)
 
   return (
     <article
@@ -61,12 +29,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
         <header className="flex items-start gap-4">
           <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
             {mentor.avatarUrl ? (
-              <img
-                src={mentor.avatarUrl}
-                alt={`Foto de ${mentor.name}`}
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
+              <img src={mentor.avatarUrl} alt={`Foto de ${mentor.name}`} className="h-full w-full object-cover" loading="lazy" />
             ) : (
               <span className="flex h-full w-full items-center justify-center text-lg font-semibold uppercase text-slate-600">
                 {initials}
@@ -78,7 +41,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
               {mentor.name}
             </h3>
             <p className="text-sm font-medium text-brand-green">{mentor.headline}</p>
-            <p className="text-sm text-slate-600">{summary}</p>
+            <p className="text-sm text-slate-600">{mentor.valueStatement}</p>
           </div>
         </header>
 
@@ -106,19 +69,16 @@ export function MentorCard({ mentor }: MentorCardProps) {
         </div>
 
         <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
-          <p className="font-semibold text-slate-900">
-            Atendimento pelo programa • 1×/semana • 60 min • remoto
-          </p>
-          <p className="text-slate-600">Próxima janela do programa: {nextWindowLabel}</p>
+          <p className="font-semibold text-slate-900">Formato: encontro coletivo • 1×/semana • 60 min • remoto</p>
         </div>
       </div>
 
       <div className="mt-2 flex flex-col gap-3 sm:flex-row">
         <Link
-          to={`/participar?mentor=${mentor.slug}`}
+          to="/participar"
           className="btn btn-primary inline-flex flex-1 items-center justify-center rounded-full bg-brand-green px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-brand-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
         >
-          Conectar pelo programa
+          Participar do encontro coletivo
         </Link>
         <Link
           to={`/mentores/${mentor.slug}`}

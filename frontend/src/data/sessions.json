@@ -1,0 +1,20 @@
+[
+  {
+    "id": "2025-11-07-19h",
+    "date": "2025-11-07",
+    "time": "19:00",
+    "durationMin": 60,
+    "mentors": ["ana-ribeiro", "joao-martins", "larissa-couto", "paulo-vicente"],
+    "lang": ["pt"],
+    "ods": [4, 13]
+  },
+  {
+    "id": "2025-11-14-19h",
+    "date": "2025-11-14",
+    "time": "19:00",
+    "durationMin": 60,
+    "mentors": ["renata-lopes", "tiago-pereira", "ana-ribeiro"],
+    "lang": ["pt", "en"],
+    "ods": [9, 11]
+  }
+]
