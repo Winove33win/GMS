@@ -1,0 +1,98 @@
+[
+  {
+    "id": "aurora",
+    "name": "Instituto Aurora",
+    "slug": "instituto-aurora",
+    "categories": ["Conhecimento", "Fundação"],
+    "logo": { "kind": "component", "name": "LogoInstitutoAurora" },
+    "summary": "Apoia trilhas de formação e métricas de impacto.",
+    "url": "https://exemplo.org",
+    "cases": [
+      { "title": "Reforço escolar comunitário", "kpi": "+120 estudantes atendidos", "ods": 4 }
+    ]
+  },
+  {
+    "id": "impact-lab",
+    "name": "Impact Lab",
+    "slug": "impact-lab",
+    "categories": ["Conhecimento", "Pesquisa"],
+    "logo": { "kind": "component", "name": "LogoImpactLab" },
+    "summary": "Laboratório de inovação social com avaliação de impacto contínua.",
+    "url": "https://impacto.exemplo",
+    "cases": [
+      { "title": "Mapeamento de competências socioemocionais", "kpi": "85% dos jovens evoluíram planos de carreira", "ods": 8 }
+    ]
+  },
+  {
+    "id": "horizonte",
+    "name": "Horizonte Coletivo",
+    "slug": "horizonte-coletivo",
+    "categories": ["Comunicação", "Rede"],
+    "logo": { "kind": "component", "name": "LogoHorizonte" },
+    "summary": "Articula narrativas e conteúdos para ampliar alcance das iniciativas.",
+    "url": "https://horizonte.exemplo",
+    "cases": [
+      { "title": "Campanha de voluntariado intergeracional", "kpi": "Alcance orgânico de 250 mil pessoas", "ods": 17 }
+    ]
+  },
+  {
+    "id": "coletivo-raiz",
+    "name": "Coletivo Raiz",
+    "slug": "coletivo-raiz",
+    "categories": ["Comunidade", "Governança"],
+    "logo": { "kind": "component", "name": "LogoColetivoRaiz" },
+    "summary": "Conecta lideranças comunitárias e mentores especialistas em governança.",
+    "url": "https://coletivo.exemplo",
+    "cases": [
+      { "title": "Ciclo de governança participativa", "kpi": "10 conselhos locais estruturados", "ods": 16 }
+    ]
+  },
+  {
+    "id": "eco-viva",
+    "name": "Eco Viva",
+    "slug": "eco-viva",
+    "categories": ["Infraestrutura", "Sustentabilidade"],
+    "logo": { "kind": "component", "name": "LogoEcoViva" },
+    "summary": "Disponibiliza infraestrutura verde para projetos de educação ambiental.",
+    "url": "https://ecoviva.exemplo",
+    "cases": [
+      { "title": "Jardins produtivos em escolas públicas", "kpi": "18 hortas pedagógicas implementadas", "ods": 12 }
+    ]
+  },
+  {
+    "id": "rede-futuro",
+    "name": "Rede Futuro",
+    "slug": "rede-futuro",
+    "categories": ["Tecnologia", "Rede"],
+    "logo": { "kind": "component", "name": "LogoRedeFuturo" },
+    "summary": "Compartilha ferramentas tecnológicas e rede de especialistas.",
+    "url": "https://redefuturo.exemplo",
+    "cases": [
+      { "title": "Plataforma de mentorias híbridas", "kpi": "92% de satisfação das iniciativas mentoradas", "ods": 9 }
+    ]
+  },
+  {
+    "id": "inova-cidade",
+    "name": "Inova Cidade",
+    "slug": "inova-cidade",
+    "categories": ["Universidade", "Inovação"],
+    "logo": { "kind": "component", "name": "LogoInovaCidade" },
+    "summary": "Universidade parceira que fomenta pesquisa aplicada e extensão.",
+    "url": "https://inovac.exemplo",
+    "cases": [
+      { "title": "Laboratórios urbanos colaborativos", "kpi": "6 protótipos testados em territórios", "ods": 11 }
+    ]
+  },
+  {
+    "id": "cruzada-social",
+    "name": "Cruzada Social",
+    "slug": "cruzada-social",
+    "categories": ["Financiamento", "Fundação"],
+    "logo": { "kind": "component", "name": "LogoCruzadaSocial" },
+    "summary": "Fundo filantrópico dedicado a programas de aceleração socioambiental.",
+    "url": "https://cruzada.exemplo",
+    "cases": [
+      { "title": "Fundo semente para negócios de impacto", "kpi": "R$ 1,2 mi aportados em soluções locais", "ods": 1 }
+    ]
+  }
+]
