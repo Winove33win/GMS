@@ -18,9 +18,9 @@ export function PolicyModal({ open, onOpenChange }: PolicyModalProps) {
         </DialogHeader>
         <ul className="list-disc space-y-2 pl-5 text-sm text-slate-700">
           <li>Mentoria voluntária, sem custo.</li>
-          <li>Encontros 1×/semana, 60 min, por 6–8 semanas.</li>
-          <li>Agendamento apenas nas janelas do programa.</li>
-          <li>Toda comunicação acontece pelo Mentoria Solidária.</li>
+          <li>Sessões 1×/semana, 60 minutos, mediadas pelo programa.</li>
+          <li>Agendamentos acontecem apenas nas janelas oficiais do Mentoria Solidária.</li>
+          <li>Contatos diretos com mentores não são permitidos; toda comunicação ocorre pelo Mentoria Solidária.</li>
         </ul>
         <DialogFooter>
           <Button type="button" onClick={() => onOpenChange(false)}>

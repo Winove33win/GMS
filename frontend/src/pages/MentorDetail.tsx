@@ -90,7 +90,7 @@ export default function MentorDetail() {
           </p>
           <Link
             to="/mentores"
-            className="mt-6 inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-2 text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+            className="mt-6 inline-flex items-center justify-center rounded-full bg-brand-green px-6 py-2 text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
           >
             Voltar para mentores
           </Link>
@@ -125,7 +125,7 @@ export default function MentorDetail() {
                   )}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">{mentor.seniority}</span>
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-green">{mentor.seniority}</span>
                   <h1 className="text-3xl font-extrabold text-slate-900">{mentor.name}</h1>
                   <p className="text-base text-slate-600">{mentor.headline}</p>
                   <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
@@ -148,7 +148,7 @@ export default function MentorDetail() {
               </div>
               <Link
                 to={`/participar?mentor=${mentor.slug}`}
-                className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                className="inline-flex items-center justify-center rounded-full bg-brand-green px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-brand-green/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
               >
                 Solicitar mentoria pelo programa
               </Link>
@@ -222,13 +222,18 @@ export default function MentorDetail() {
           {verifiedLinks.length > 0 && (
             <section aria-labelledby="links" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 id="links" className="text-xl font-semibold text-slate-900">
-                Links verificados
+                Links verificados (somente leitura)
               </h2>
               <ul className="mt-4 flex flex-col gap-3">
                 {verifiedLinks.map((link) => (
-                  <li key={link.url} className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
+                  <li key={link.url} className="flex items-center gap-2 text-sm font-semibold text-brand-green">
                     <ExternalLink className="h-4 w-4" aria-hidden />
-                    <a href={link.url} target="_blank" rel="nofollow noopener" className="underline-offset-4 hover:underline">
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="nofollow noopener"
+                      className="underline-offset-4 hover:underline"
+                    >
                       {link.label}
                     </a>
                   </li>
@@ -237,15 +242,15 @@ export default function MentorDetail() {
             </section>
           )}
 
-          <div className="rounded-3xl border border-emerald-100 bg-emerald-50 p-6 text-sm text-emerald-900">
-            <h2 className="text-base font-semibold text-emerald-900">Política do programa</h2>
-            <p className="mt-2 text-sm text-emerald-900">
-              Mentoria voluntária, com encontros semanais de 60 minutos e comunicação mediada pelo Mentoria Solidária.
+          <div className="rounded-3xl border border-brand-green/25 bg-brand-green/10 p-6 text-sm text-brand-dark">
+            <h2 className="text-base font-semibold text-brand-dark">Política do programa</h2>
+            <p className="mt-2 text-sm text-brand-dark/90">
+              Mentoria voluntária, encontros remotos de 60 minutos por semana e comunicação mediada pelo Mentoria Solidária.
             </p>
             <button
               type="button"
               onClick={() => setPolicyOpen(true)}
-              className="mt-4 inline-flex items-center justify-center rounded-full border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:border-emerald-400 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+              className="mt-4 inline-flex items-center justify-center rounded-full border border-brand-green/40 px-4 py-2 text-sm font-semibold text-brand-green transition hover:border-brand-green/60 hover:text-brand-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
             >
               Entenda como funciona
             </button>

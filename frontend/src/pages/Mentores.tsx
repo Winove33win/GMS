@@ -232,25 +232,25 @@ export default function Mentores() {
   return (
     <>
       <SEO
-        title="Rede de mentores e mentoras voluntárias"
-        description="Conheça especialistas que apoiam iniciativas socioambientais com mentorias estratégicas mediadas pelo programa Mentoria Solidária."
+        title="Mentores voluntários — Mentoria Solidária (GMS)"
+        description="Rede de especialistas voluntários com atendimento mediado pelo programa Mentoria Solidária."
         canonical="/mentores"
       />
       <Section
-        title="Mentores e mentoras"
-        description="Todas as conexões acontecem pelas janelas oficiais do programa. Ajuste os filtros para encontrar o apoio ideal e solicite sua mentoria pelo Mentoria Solidária."
+        title="Encontre mentores do programa"
+        description="Use os filtros para explorar a rede GMS. Toda mentoria é voluntária, acontece uma vez por semana e segue as janelas oficiais do Mentoria Solidária."
       >
         <div className="flex flex-col gap-8">
           <div
             role="region"
             aria-label="Informações do programa"
-            className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6"
+            className="rounded-3xl border border-brand-green/25 bg-brand-green/10 p-6 text-brand-dark"
           >
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-base font-semibold text-emerald-900">Mentoria voluntária, 1x por semana.</p>
-                <p className="mt-2 text-sm text-emerald-900">
-                  As sessões acontecem em janelas fixas do programa. Contatos diretos com mentores não são permitidos — toda comunicação acontece pelo Mentoria Solidária.
+                <p className="text-base font-semibold text-brand-dark">Mentoria voluntária, 1× por semana.</p>
+                <p className="mt-2 text-sm text-brand-dark/90">
+                  As sessões acontecem em janelas fixas do programa. Contatos diretos com mentores não são permitidos — toda a comunicação acontece pelo Mentoria Solidária.
                 </p>
               </div>
               <Button onClick={() => setPolicyOpen(true)}>Entenda como funciona</Button>
@@ -262,7 +262,7 @@ export default function Mentores() {
               <button
                 type="button"
                 onClick={() => setFiltersOpen(true)}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-200 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 md:hidden"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-brand-green/40 hover:text-brand-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2 md:hidden"
                 aria-controls="mobile-filters"
                 aria-expanded={isFiltersOpen}
               >
@@ -295,7 +295,7 @@ export default function Mentores() {
                     <button
                       type="button"
                       onClick={() => setFiltersOpen(false)}
-                      className="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                      className="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
                     >
                       Fechar
                     </button>
@@ -340,7 +340,7 @@ export default function Mentores() {
                       key={chip.label}
                       type="button"
                       onClick={chip.onClick}
-                      className="chip-toggle inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-emerald-200 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                      className="chip-toggle inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-green/40 hover:text-brand-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2"
                     >
                       {chip.label}
                     </button>
@@ -355,7 +355,7 @@ export default function Mentores() {
                   type="button"
                   onClick={() => goToPage(Math.max(1, currentPage - 1))}
                   disabled={currentPage === 1}
-                  className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition enabled:hover:border-emerald-200 enabled:hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 disabled:opacity-50"
+                  className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition enabled:hover:border-brand-green/40 enabled:hover:text-brand-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2 disabled:opacity-50"
                 >
                   Anterior
                 </button>
@@ -366,7 +366,7 @@ export default function Mentores() {
                   type="button"
                   onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
                   disabled={currentPage === totalPages}
-                  className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition enabled:hover:border-emerald-200 enabled:hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 disabled:opacity-50"
+                  className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition enabled:hover:border-brand-green/40 enabled:hover:text-brand-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2 disabled:opacity-50"
                 >
                   Próxima
                 </button>
