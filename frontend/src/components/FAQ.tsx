@@ -1,28 +1,46 @@
 const faqs = [
-  { q: "Quanto custa?", a: "A mentoria é voluntária." },
-  { q: "Como funciona a seleção?", a: "Analisamos aderência e disponibilidade de mentores." },
-  { q: "Qual a carga horária?", a: "Encontros semanais de 60–90 minutos." },
-  { q: "Quem pode ser mentor?", a: "Profissionais com vivência prática e vontade de contribuir." },
-  { q: "Como começo?", a: "Clique em “Quero participar” e preencha o formulário." },
+  {
+    question: "Quanto custa?",
+    answer: "A mentoria é voluntária.",
+  },
+  {
+    question: "Como funciona a seleção?",
+    answer: "Analisamos aderência e disponibilidade de mentores.",
+  },
+  {
+    question: "Qual a carga horária?",
+    answer: "Encontros semanais de 60–90 minutos.",
+  },
+  {
+    question: "Quem pode ser mentor?",
+    answer: "Profissionais com vivência prática e vontade de contribuir.",
+  },
+  {
+    question: "Como começo?",
+    answer: "Clique em “Quero participar” e preencha o formulário.",
+  },
 ];
 
-export default function FAQ() {
+export function FAQ() {
   return (
-    <div className="py-16 lg:py-20">
-      <h2 id="duvidas" className="text-2xl font-bold text-neutral-900">
-        Dúvidas frequentes
-      </h2>
-      <div className="mt-6 divide-y divide-neutral-200">
-        {faqs.map((item) => (
-          <details key={item.q} className="group py-4" aria-label={`Pergunta frequente: ${item.q}`}>
-            <summary className="flex cursor-pointer items-center justify-between text-left font-medium text-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
-              {item.q}
-              <span className="ml-4 text-sm text-neutral-500 transition-transform duration-200 group-open:rotate-180">⌄</span>
-            </summary>
-            <p className="mt-2 text-sm text-neutral-600">{item.a}</p>
-          </details>
-        ))}
-      </div>
+    <div className="space-y-4">
+      {faqs.map((faq) => (
+        <details
+          key={faq.question}
+          className="group rounded-[1.25rem] border border-[rgba(15,15,15,0.08)] bg-white p-6 shadow-none transition hover:shadow-card-soft"
+        >
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-base font-semibold text-brand-dark">
+            {faq.question}
+            <span
+              className="ml-auto rounded-full border border-brand-green/20 bg-brand-green/10 px-3 py-1 text-xs font-semibold text-brand-green transition group-open:rotate-45"
+              aria-hidden
+            >
+              +
+            </span>
+          </summary>
+          <p className="mt-3 text-sm text-ink-muted">{faq.answer}</p>
+        </details>
+      ))}
     </div>
   );
 }

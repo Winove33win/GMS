@@ -1,44 +1,75 @@
 import { Link } from "react-router-dom";
+import { Card } from "@/components/Card";
+import { Badge } from "@/components/Badge";
+import { buttonClasses } from "@/components/Button";
 
-const mentors = Array.from({ length: 6 }).map((_, index) => ({
-  name: `Mentor ${index + 1}`,
-  area: "Impacto / Gestão",
-  avatar: `https://api.dicebear.com/9.x/initials/svg?seed=M${index + 1}`,
-}));
+const mentors = [
+  {
+    name: "Ana Lima",
+    area: "Estratégia & Impacto",
+    tags: ["ODS 17", "Governança"],
+  },
+  {
+    name: "Bruno Medeiros",
+    area: "Dados & Avaliação",
+    tags: ["ODS 4", "Analytics"],
+  },
+  {
+    name: "Carla Souza",
+    area: "ESG & Governança",
+    tags: ["ODS 13", "ESG"],
+  },
+  {
+    name: "Diego Freitas",
+    area: "Produto & MVP",
+    tags: ["ODS 9", "Produto"],
+  },
+  {
+    name: "Elisa Cardoso",
+    area: "Captação & Parcerias",
+    tags: ["ODS 8", "Captação"],
+  },
+  {
+    name: "Fábio Nunes",
+    area: "Operações & Escala",
+    tags: ["ODS 11", "Processos"],
+  },
+];
 
-export default function FeaturedMentors() {
+function avatarUrl(name: string) {
+  return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=2fb464ff&fontWeight=700`;
+}
+
+export function FeaturedMentors() {
   return (
-    <div className="py-16 lg:py-20">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 id="mentores" className="text-2xl font-bold text-neutral-900">
-            Mentores em destaque
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm text-neutral-600">
-            Uma rede multidisciplinar com experiência prática para apoiar desafios de impacto socioambiental.
-          </p>
-        </div>
-        <Link to="/mentores" className="link" aria-label="Ver todos os mentores">
-          Ver todos os mentores
-        </Link>
-      </div>
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+    <div className="space-y-8">
+      <div className="grid gap-4 md:grid-cols-3">
         {mentors.map((mentor) => (
-          <article key={mentor.name} className="card flex items-center gap-4 p-4">
-            <img
-              src={mentor.avatar}
-              alt={`Avatar ilustrativo de ${mentor.name}`}
-              width={56}
-              height={56}
-              className="h-14 w-14 rounded-full border border-neutral-200 bg-white object-cover"
-              loading="lazy"
-            />
-            <div>
-              <p className="font-medium text-neutral-900">{mentor.name}</p>
-              <p className="text-sm text-neutral-600">{mentor.area}</p>
+          <Card key={mentor.name} elevated className="flex flex-col">
+            <div className="flex items-center gap-4">
+              <img
+                src={avatarUrl(mentor.name)}
+                alt={`Foto de ${mentor.name}`}
+                className="h-14 w-14 rounded-full border border-[rgba(15,15,15,0.08)] bg-white object-cover"
+                loading="lazy"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-brand-dark">{mentor.name}</h3>
+                <p className="text-sm text-ink-muted">{mentor.area}</p>
+              </div>
             </div>
-          </article>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {mentor.tags.map((tag) => (
+                <Badge key={tag} tone="neutral" className="rounded-full px-3 py-1 text-[0.7rem] uppercase tracking-[0.2em]">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </Card>
         ))}
+      </div>
+      <div className="flex justify-center">
+        <Link to="/mentores" className={buttonClasses("secondary")}>Ver todos os mentores</Link>
       </div>
     </div>
   );

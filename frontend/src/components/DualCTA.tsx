@@ -1,28 +1,31 @@
 import { Link } from "react-router-dom";
+import { Card } from "@/components/Card";
+import { buttonClasses } from "@/components/Button";
 
-export default function DualCTA() {
+export function DualCTA() {
   return (
-    <div className="py-16 lg:py-20">
-      <div className="grid gap-6 md:grid-cols-2">
-        <article className="card p-6">
-          <h3 className="text-lg font-semibold text-neutral-900">Quero ser mentor(a)</h3>
-          <p className="mt-2 text-sm text-neutral-600">
+    <div className="grid gap-6 md:grid-cols-2">
+      <Card elevated className="flex flex-col justify-between border-white/20 bg-brand-green text-white">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/80">Quero ser mentor(a)</p>
+          <h3 className="mt-4 text-2xl font-bold">Ofereça sua experiência</h3>
+          <p className="mt-3 text-sm text-white/80">
             Ofereça sua experiência em encontros semanais para apoiar projetos em ODS.
           </p>
-          <Link to="/mentores" className="btn btn-secondary mt-4">
-            Ver mentores
-          </Link>
-        </article>
-        <article className="card p-6">
-          <h3 className="text-lg font-semibold text-neutral-900">Tenho um projeto</h3>
-          <p className="mt-2 text-sm text-neutral-600">
+        </div>
+        <Link to="/mentores" className={buttonClasses("secondary", "mt-6 w-full justify-center bg-white text-brand-dark hover:bg-white/90")}>Ver mentores</Link>
+      </Card>
+
+      <Card elevated className="flex flex-col justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-orange">Tenho um projeto</p>
+          <h3 className="mt-4 text-2xl font-bold text-brand-dark">Traga sua ideia para evoluir</h3>
+          <p className="mt-3 text-sm text-ink-muted">
             Traga sua ideia: seguimos um roteiro simples de cinco perguntas para evoluir juntos.
           </p>
-          <Link to="/participar" className="btn btn-primary mt-4">
-            Apresentar projeto
-          </Link>
-        </article>
-      </div>
+        </div>
+        <Link to="/participar" className={buttonClasses("primary", "mt-6 w-full justify-center")}>Apresentar projeto</Link>
+      </Card>
     </div>
   );
 }
