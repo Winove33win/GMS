@@ -1,70 +1,41 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import Index from "./pages/Index";
-import { BlogList } from "./pages/BlogList";
-import { BlogPost } from "./pages/BlogPost";
-import { CasesList } from "./pages/CasesList";
-import { CaseDetail } from "./pages/CaseDetail";
-import { Admin } from "./pages/Admin";
-import Templates from "./pages/Templates";
-import TemplateDetail from "./pages/TemplateDetail";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import PaymentCanceled from "./pages/PaymentCanceled";
-import EmailCorporativo from "./pages/EmailCorporativo";
-import ChatWhatsapp from "@/pages/ChatWhatsapp";
-import { CentralAtendimento } from "@/pages/CentralAtendimento";
-import Promocoes from "./pages/Promocoes";
-import NotFound from "./pages/NotFound";
-import LibrasPage from "./pages/Libras";
-import Cursos from "./pages/Cursos";
-import Mentores from "./pages/Mentores";
-import Participar from "./pages/Participar";
-
-const queryClient = new QueryClient();
+import Home from "@/pages/Home";
+import Mentores from "@/pages/Mentores";
+import Projetos from "@/pages/Projetos";
+import Sobre from "@/pages/Sobre";
+import Participar from "@/pages/Participar";
+import Termos from "@/pages/Termos";
+import Privacidade from "@/pages/Privacidade";
+import NotFound from "@/pages/NotFound";
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Header />
-        <main id="app" className="flex min-h-screen flex-col bg-white text-neutral-900">
-          <div className="flex-1">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/mentores" element={<Mentores />} />
-              <Route path="/participar" element={<Participar />} />
-              <Route path="/blog" element={<BlogList />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/cases" element={<CasesList />} />
-              <Route path="/cases/:slug" element={<CaseDetail />} />
-              <Route path="/templates" element={<Templates />} />
-              <Route path="/templates/:slug" element={<TemplateDetail />} />
-              <Route path="/email-corporativo" element={<EmailCorporativo />} />
-              <Route path="/cursos" element={<Cursos />} />
-              <Route path="/chat-whatsapp" element={<ChatWhatsapp />} />
-              <Route path="/chatwhatsapp" element={<ChatWhatsapp />} />
-              <Route path="/central-atendimento" element={<CentralAtendimento />} />
-              <Route path="/promocoes" element={<Promocoes />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="/payment-canceled" element={<PaymentCanceled />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/servicos/libras" element={<LibrasPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-          <Footer />
-        </main>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <TooltipProvider>
+    <Toaster />
+    <Sonner />
+    <BrowserRouter>
+      <Header />
+      <main id="conteudo-principal" className="flex min-h-screen flex-col bg-white text-ink">
+        <div className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/mentores" element={<Mentores />} />
+            <Route path="/projetos" element={<Projetos />} />
+            <Route path="/sobre" element={<Sobre />} />
+            <Route path="/participar" element={<Participar />} />
+            <Route path="/termos" element={<Termos />} />
+            <Route path="/privacidade" element={<Privacidade />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+        <Footer />
+      </main>
+    </BrowserRouter>
+  </TooltipProvider>
 );
 
 export default App;
